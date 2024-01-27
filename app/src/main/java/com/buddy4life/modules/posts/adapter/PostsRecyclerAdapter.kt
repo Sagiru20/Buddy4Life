@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.R
 import com.buddy4life.model.Post
-import com.buddy4life.modules.posts.PostsRecyclerViewActivity
+import com.buddy4life.modules.posts.PostsFragment
 
-class PostsRecyclerAdapter(private var posts: List<Post>?) :
+class PostsRecyclerAdapter(var posts: List<Post>?) :
     RecyclerView.Adapter<PostViewHolder>() {
-    var listener: PostsRecyclerViewActivity.OnItemClickListener? = null
+
+    var listener: PostsFragment.OnItemClickListener? = null
 
     override fun getItemCount(): Int = posts?.size ?: 0
 

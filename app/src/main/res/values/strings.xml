@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">Buddy4Life</string>
+
     <string name="log_in">Log in</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="or">OR CONNECT WITH</string>
     <string name="sign_in">Sign in</string>
-    <string name="dog_image">Dog Image</string>
+
+    <string name="menu_item_posts">Posts</string>
+    <string name="menu_item_my_posts">My Posts</string>
+    <string name="menu_item_account">Account</string>
+    <string name="menu_item_add_post">Add Post</string>
 </resources>

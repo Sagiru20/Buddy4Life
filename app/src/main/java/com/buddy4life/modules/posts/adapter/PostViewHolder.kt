@@ -4,13 +4,13 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.buddy4life.modules.posts.PostsFragment
 import com.buddy4life.R
 import com.buddy4life.model.Post
-import com.buddy4life.modules.posts.PostsRecyclerViewActivity
 
 class PostViewHolder(
     private val itemView: View,
-    private val listener: PostsRecyclerViewActivity.OnItemClickListener?,
+    private val listener: PostsFragment.OnItemClickListener?,
     var posts: List<Post>?
 ) : RecyclerView.ViewHolder(itemView) {
 
