@@ -28,12 +28,6 @@ class PostsFragment : Fragment() {
     ): View {
         binding = FragmentPostsBinding.inflate(inflater, container, false)
 
-        Model.instance.getAllPosts { posts ->
-            this.posts = posts
-            adapter?.posts = posts
-            adapter?.notifyDataSetChanged()
-        }
-
         postsRecyclerView = binding.rvPosts
         postsRecyclerView?.setHasFixedSize(true)
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
@@ -46,6 +40,12 @@ class PostsFragment : Fragment() {
             override fun onPostClicked(post: Post?) {
                 Log.i("TAG", "POST $post")
             }
+        }
+
+        Model.instance.getAllPosts { posts ->
+            this.posts = posts
+            adapter?.posts = posts
+            adapter?.notifyDataSetChanged()
         }
 
         postsRecyclerView?.adapter = adapter

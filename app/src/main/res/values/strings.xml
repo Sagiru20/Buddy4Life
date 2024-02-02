@@ -11,4 +11,6 @@
     <string name="menu_item_my_posts">My Posts</string>
     <string name="menu_item_account">Account</string>
     <string name="menu_item_add_post">Add Post</string>
+    <string name="add_post_cancel_button">Cancel</string>
+    <string name="add_post_save_button">Save</string>
 </resources>

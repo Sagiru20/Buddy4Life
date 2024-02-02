@@ -31,6 +31,7 @@ class PostViewHolder(
         this.post = post
         nameTextView?.text = post?.name
         breedTextView?.text = post?.breed
-        breedTextView?.text = post?.age.toString()
+        ageTextView?.text = post?.age.toString()
     }
+
 }

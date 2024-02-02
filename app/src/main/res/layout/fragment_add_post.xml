@@ -99,7 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
         android:layout_marginBottom="30dp"
-        android:text="SAVE"
+        android:text="@string/add_post_save_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnAddPostCancel"
         app:layout_constraintHorizontal_bias="0.5"
@@ -110,23 +110,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
-        android:text="CANCEL"
+        android:text="@string/add_post_cancel_button"
         app:layout_constraintBaseline_toBaselineOf="@+id/btnAddPostSave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnAddPostSave" />
-
-    <TextView
-        android:id="@+id/tvAddPostSaved"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginBottom="30dp"
-        android:text="TextView"
-        android:textColor="@color/black_200"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddPostSave"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDogAge" />
 </androidx.constraintlayout.widget.ConstraintLayout>

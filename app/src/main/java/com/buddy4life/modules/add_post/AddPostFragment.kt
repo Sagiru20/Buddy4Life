@@ -1,5 +1,6 @@
 package com.buddy4life.modules.add_post
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,6 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -30,7 +30,6 @@ class AddPostFragment : Fragment() {
     private var nameTextField: EditText? = null
     private var breedAutoCompleteTextField: AutoCompleteTextView? = null
     private var ageTextField: EditText? = null
-    private var messageTextView: TextView? = null
     private var saveButton: Button? = null
     private var cancelButton: Button? = null
 
@@ -44,14 +43,13 @@ class AddPostFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupUI(view: View) {
         nameTextField = binding.etDogName
         breedAutoCompleteTextField = binding.actvDogBreed
         ageTextField = binding.etDogAge
-        messageTextView = binding.tvAddPostSaved
         saveButton = binding.btnAddPostSave
         cancelButton = binding.btnAddPostCancel
-        messageTextView?.text = ""
 
         val apiService = RetrofitInstance.getRetrofitInstance().create(DogBreedApi::class.java)
         val responseLiveData: LiveData<Response<List<Breed>>> = liveData {
@@ -76,9 +74,11 @@ class AddPostFragment : Fragment() {
             val breed = breedAutoCompleteTextField?.text.toString()
             val age: Int = ageTextField?.text.toString().toInt()
 
-            val post = Post(name, breed, age)
-            Model.instance.addPost(post) {
-                Navigation.findNavController(it).navigate(R.id.postsFragment)
+            if (breed.isNotEmpty() && breedsNames?.contains(breed) == true) {
+                val post = Post(name, breed, age)
+                Model.instance.addPost(post) {
+                    Navigation.findNavController(it).navigate(R.id.postsFragment)
+                }
             }
         }
     }

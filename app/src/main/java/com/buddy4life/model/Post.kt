@@ -5,6 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Post(
-    @PrimaryKey val name: String, val breed: String, val age: Int
+    @PrimaryKey val name: String,
+    val breed: String,
+    val age: Int
 )
 
