@@ -1,17 +1,14 @@
 package com.buddy4life.modules.posts.adapter
 
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.buddy4life.modules.posts.PostsFragment
 import com.buddy4life.R
 import com.buddy4life.model.Post
+import com.buddy4life.modules.posts.PostsFragment
 
 class PostViewHolder(
-    private val itemView: View,
-    private val listener: PostsFragment.OnItemClickListener?,
-    var posts: List<Post>?
+    itemView: View, private val listener: PostsFragment.OnItemClickListener?
 ) : RecyclerView.ViewHolder(itemView) {
 
     private var nameTextView: TextView? = null
@@ -25,8 +22,6 @@ class PostViewHolder(
         ageTextView = itemView.findViewById(R.id.tvDogAge)
 
         itemView.setOnClickListener {
-            Log.i("TAG", "PostViewHolder: Position clicked $adapterPosition")
-
             listener?.onItemClick(adapterPosition)
             listener?.onPostClicked(post)
         }

@@ -13,8 +13,5 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
 
-    <color name="add_post">#FFDFDF</color>
-    <color name="posts">#DADEFF</color>
-    <color name="my_posts">#FFF5E8</color>
-    <color name="account">#E0FFDA</color>
+    <color name="posts">#9BB1E8</color>
 </resources>

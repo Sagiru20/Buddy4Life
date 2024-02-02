@@ -7,8 +7,7 @@ import com.buddy4life.R
 import com.buddy4life.model.Post
 import com.buddy4life.modules.posts.PostsFragment
 
-class PostsRecyclerAdapter(var posts: List<Post>?) :
-    RecyclerView.Adapter<PostViewHolder>() {
+class PostsRecyclerAdapter(var posts: List<Post>?) : RecyclerView.Adapter<PostViewHolder>() {
 
     var listener: PostsFragment.OnItemClickListener? = null
 
@@ -18,7 +17,7 @@ class PostsRecyclerAdapter(var posts: List<Post>?) :
         val itemView = LayoutInflater.from(parent.context).inflate(
             R.layout.posts_list_row, parent, false
         )
-        return PostViewHolder(itemView, listener, posts)
+        return PostViewHolder(itemView, listener)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {

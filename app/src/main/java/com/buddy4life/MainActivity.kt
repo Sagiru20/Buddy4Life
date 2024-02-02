@@ -1,7 +1,6 @@
 package com.buddy4life
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -25,10 +24,8 @@ class MainActivity : AppCompatActivity() {
 
         navController?.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.addPostFragment) {
-                Log.i("HERE", "add post!!!!!")
                 bottomNavigationView?.visibility = View.GONE
             } else {
-                Log.i("HERE", "else!!!!!")
                 bottomNavigationView?.visibility = View.VISIBLE
             }
         }

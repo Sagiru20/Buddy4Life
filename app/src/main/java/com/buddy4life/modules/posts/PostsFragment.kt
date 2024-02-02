@@ -1,5 +1,6 @@
 package com.buddy4life.modules.posts
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,18 +15,18 @@ import com.buddy4life.model.Post
 import com.buddy4life.modules.posts.adapter.PostsRecyclerAdapter
 
 class PostsFragment : Fragment() {
+    private lateinit var binding: FragmentPostsBinding
+
     private var postsRecyclerView: RecyclerView? = null
-    private var posts: List<Post>? = null
     private var adapter: PostsRecyclerAdapter? = null
 
-    private var _binding: FragmentPostsBinding? = null
-    private val binding get() = _binding!!
+    private var posts: List<Post>? = null
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPostsBinding.inflate(inflater, container, false)
-        val view = binding.root
+        binding = FragmentPostsBinding.inflate(inflater, container, false)
 
         Model.instance.getAllPosts { posts ->
             this.posts = posts
@@ -48,7 +49,7 @@ class PostsFragment : Fragment() {
         }
 
         postsRecyclerView?.adapter = adapter
-        return view
+        return binding.root
     }
 
     interface OnItemClickListener {
@@ -56,6 +57,7 @@ class PostsFragment : Fragment() {
         fun onPostClicked(post: Post?)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
         Model.instance.getAllPosts { posts ->
@@ -63,10 +65,5 @@ class PostsFragment : Fragment() {
             adapter?.posts = posts
             adapter?.notifyDataSetChanged()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }
