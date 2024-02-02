@@ -2,13 +2,11 @@ package com.buddy4life.modules.add_post
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -25,32 +23,21 @@ import retrofit2.Response
 
 
 class AddPostFragment : Fragment() {
-    private lateinit var binding: FragmentAddPostBinding
-
-    private var nameTextField: EditText? = null
-    private var breedAutoCompleteTextField: AutoCompleteTextView? = null
-    private var ageTextField: EditText? = null
-    private var saveButton: Button? = null
-    private var cancelButton: Button? = null
+    private var _binding: FragmentAddPostBinding? = null
+    private val binding get() = _binding!!
 
     private var breedsNames: List<String>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddPostBinding.inflate(inflater, container, false)
+        _binding = FragmentAddPostBinding.inflate(inflater, container, false)
         setupUI(binding.root)
         return binding.root
     }
 
     @SuppressLint("SetTextI18n")
     private fun setupUI(view: View) {
-        nameTextField = binding.etDogName
-        breedAutoCompleteTextField = binding.actvDogBreed
-        ageTextField = binding.etDogAge
-        saveButton = binding.btnAddPostSave
-        cancelButton = binding.btnAddPostCancel
-
         val apiService = RetrofitInstance.getRetrofitInstance().create(DogBreedApi::class.java)
         val responseLiveData: LiveData<Response<List<Breed>>> = liveData {
             val response = apiService.getBreeds()
@@ -62,17 +49,27 @@ class AddPostFragment : Fragment() {
             val adapter = ArrayAdapter(
                 view.context, android.R.layout.simple_dropdown_item_1line, breedsNames!!
             )
-            breedAutoCompleteTextField?.setAdapter(adapter)
+            binding.actvDogBreed.setAdapter(adapter)
         })
 
-        cancelButton?.setOnClickListener {
+        binding.btnAddPostCancel.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.postsFragment)
         }
 
-        saveButton?.setOnClickListener {
-            val name = nameTextField?.text.toString()
-            val breed = breedAutoCompleteTextField?.text.toString()
-            val age: Int = ageTextField?.text.toString().toInt()
+        binding.btnAddPostSave.setOnClickListener {
+            val name = binding.etDogName.text.toString()
+            val breed = binding.actvDogBreed.text.toString()
+            val age: Int = binding.etDogAge.text.toString().toInt()
+
+            if (TextUtils.isEmpty(binding.etDogName.text.toString())) {
+                binding.textInputLayoutDogName.error = "Required"
+            }
+            if (TextUtils.isEmpty(binding.actvDogBreed.text.toString())) {
+                binding.textInputLayoutDogBreed.error = "Required"
+            }
+            if (TextUtils.isEmpty(binding.etDogAge.text.toString())) {
+                binding.textInputLayoutDogAge.error = "Required"
+            }
 
             if (breed.isNotEmpty() && breedsNames?.contains(breed) == true) {
                 val post = Post(name, breed, age)
@@ -81,5 +78,10 @@ class AddPostFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
