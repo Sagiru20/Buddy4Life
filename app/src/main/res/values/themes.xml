@@ -14,6 +14,40 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AddPostTheme.OutlinedBox" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="helperTextTextColor">@color/helper_text_color</item>
+        <item name="android:textColorHint">@drawable/text_color_hint</item>
+        <item name="endIconTint">@color/colorPrimary</item>
+        <item name="counterTextColor">@color/colorPrimary</item>
+
+    </style>
+
+    <style name="AddPostTheme.OutlinedBox.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="helperTextTextColor">@color/helper_text_color</item>
+        <item name="android:textColorHint">@drawable/text_color_hint</item>
+        <item name="endIconTint">@color/colorPrimary</item>
+    </style>
+
+    <style name="AddPostTheme.TextField" parent="Widget.AppCompat.EditText">
+        <!-- Customize the text color inside the box when typing -->
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="AddPostTheme.AutoCompleteTextView" parent="Widget.AppCompat.AutoCompleteTextView">
+        <!-- Customize the text color for the AutoCompleteTextView -->
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
     <style name="Theme.BottomNavigation" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/black_200</item>
