@@ -1,17 +1,22 @@
 package com.buddy4life.modules.add_post
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.liveData
 import androidx.navigation.Navigation
+import coil.load
 import com.buddy4life.R
 import com.buddy4life.databinding.FragmentAddPostBinding
 import com.buddy4life.dog_breed_api.DogBreedApi
@@ -27,6 +32,14 @@ class AddPostFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var breedsNames: List<String>? = null
+
+    private var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
+        ActivityResultContracts.PickVisualMedia()
+    ) { result ->
+        binding.ivDogAvatar.load(result) {
+            crossfade(true)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -51,6 +64,12 @@ class AddPostFragment : Fragment() {
             )
             binding.actvDogBreed.setAdapter(adapter)
         })
+
+        binding.ivDogAvatar.setOnClickListener {
+            launcher.launch(
+                PickVisualMediaRequest.Builder().setMediaType(ImageOnly).build()
+            );
+        }
 
         binding.etDogName.doOnTextChanged { text, _, _, _ ->
             if (text!!.isNotEmpty()) {
