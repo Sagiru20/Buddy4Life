@@ -9,6 +9,7 @@
     <color name="background_color_reverse">#161a29</color>
     <color name="loading_overlay_color">#1A525050</color>
 
+    <color name="red">#FF0000</color>
     <color name="black_200">#272727</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
