@@ -11,6 +11,7 @@
 
     <color name="red">#FF0000</color>
     <color name="black_200">#272727</color>
+    <color name="grey_secondary">#4C4C4C</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="helper_text_color">#808080</color>

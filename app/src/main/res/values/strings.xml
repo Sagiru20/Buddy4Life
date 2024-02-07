@@ -20,4 +20,5 @@
     <string name="weight">Weight</string>
     <string name="height">Height</string>
     <string name="optional">Optional</string>
+    <string name="read_more">Read More</string>
 </resources>
