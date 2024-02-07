@@ -68,7 +68,7 @@ class AddPostFragment : Fragment() {
         binding.ivDogAvatar.setOnClickListener {
             launcher.launch(
                 PickVisualMediaRequest.Builder().setMediaType(ImageOnly).build()
-            );
+            )
         }
 
         binding.etDogName.doOnTextChanged { text, _, _, _ ->
