@@ -30,16 +30,21 @@
                 app:titleTextColor="@color/white" />
 
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivDogAvatar"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="20dp"
-                android:scaleType="centerInside"
+                android:background="@color/posts"
+                android:padding="5dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/addPostToolbar"
-                app:srcCompat="@drawable/dog_avatar" />
+                app:shapeAppearanceOverlay="@style/add_post_circular_image"
+                app:srcCompat="@drawable/dog_icon"
+                app:strokeColor="#FFFFFF"
+                app:strokeWidth="6dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutDogName"
