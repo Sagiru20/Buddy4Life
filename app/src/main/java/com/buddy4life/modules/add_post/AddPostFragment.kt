@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -49,7 +50,7 @@ class AddPostFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     private fun setupUI(view: View) {
         val apiService = RetrofitInstance.getRetrofitInstance().create(DogBreedApi::class.java)
         val responseLiveData: LiveData<Response<List<Breed>>> = liveData {
@@ -95,6 +96,29 @@ class AddPostFragment : Fragment() {
             }
         }
 
+        binding.etDogDescription.doOnTextChanged { text, _, _, _ ->
+            if (text!!.isNotEmpty()) {
+                binding.textInputLayoutDogDescription.error = null
+            } else {
+                binding.textInputLayoutDogDescription.error = "Required*"
+            }
+        }
+
+        binding.etDogDescription.setOnTouchListener { touchView, motionEvent ->
+            if (touchView.id == binding.etDogDescription.id) {
+                when (motionEvent.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> touchView.parent.requestDisallowInterceptTouchEvent(
+                        true
+                    )
+
+                    MotionEvent.ACTION_UP -> touchView.parent.requestDisallowInterceptTouchEvent(
+                        false
+                    )
+                }
+            }
+            false
+        }
+
         binding.btnAddPostCancel.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.postsFragment)
         }
@@ -102,6 +126,7 @@ class AddPostFragment : Fragment() {
         binding.btnAddPostSave.setOnClickListener {
             val name: String? = binding.etDogName.text?.toString()
             val breed: String? = binding.actvDogBreed.text?.toString()
+            val description: String? = binding.etDogDescription.text?.toString()
             val ageText: String? = binding.etDogAge.text?.toString()
             val age = try {
                 ageText?.toInt()
@@ -118,10 +143,13 @@ class AddPostFragment : Fragment() {
             if (binding.etDogAge.text.toString().isEmpty()) {
                 binding.textInputLayoutDogAge.error = "Required*"
             }
+            if (binding.etDogDescription.text.toString().isEmpty()) {
+                binding.textInputLayoutDogDescription.error = "Required*"
+            }
 
 //            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && age != null) {
-            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && age != null) {
-                val post = Post(name, breed, age)
+            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && age != null && !description.isNullOrEmpty()) {
+                val post = Post(name, breed, age, description)
                 Model.instance.addPost(post) {
                     Navigation.findNavController(it).navigate(R.id.postsFragment)
                 }

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Post(
     @PrimaryKey val name: String,
     val breed: String,
-    val age: Int
+    val age: Int,
+    val description: String
 )
 

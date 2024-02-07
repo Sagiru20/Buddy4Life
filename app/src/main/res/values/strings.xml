@@ -21,4 +21,5 @@
     <string name="height">Height</string>
     <string name="optional">Optional</string>
     <string name="read_more">Read More</string>
+    <string name="dog_description">Description</string>
 </resources>

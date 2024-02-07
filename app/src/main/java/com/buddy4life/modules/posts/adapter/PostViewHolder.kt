@@ -14,17 +14,14 @@ class PostViewHolder(
     private var nameTextView: TextView? = null
     private var breedTextView: TextView? = null
     private var ageTextView: TextView? = null
+    private var descriptionTextView: TextView? = null
     private var post: Post? = null
 
     init {
         nameTextView = itemView.findViewById(R.id.tvDogName)
         breedTextView = itemView.findViewById(R.id.tvDogBreed)
         ageTextView = itemView.findViewById(R.id.tvDogAge)
-
-        itemView.setOnClickListener {
-            listener?.onItemClick(adapterPosition)
-            listener?.onPostClicked(post)
-        }
+        descriptionTextView = itemView.findViewById(R.id.tvDogDescription)
     }
 
     fun bind(post: Post?) {
@@ -32,6 +29,7 @@ class PostViewHolder(
         nameTextView?.text = post?.name
         breedTextView?.text = post?.breed
         ageTextView?.text = post?.age.toString()
+        descriptionTextView?.text = post?.description.toString()
     }
 
 }
