@@ -19,7 +19,6 @@ class FirebaseModel {
         val settings = com.google.firebase.firestore.firestoreSettings {
             setLocalCacheSettings(memoryCacheSettings {  })
 //            setLocalCacheSettings(persistentCacheSettings {  })
-//            isPersistenceEnabled = false
         }
         db.firestoreSettings = settings
     }
@@ -31,14 +30,7 @@ class FirebaseModel {
                 true -> {
                     val posts: MutableList<Post> = mutableListOf()
                     for (json in it.result) {
-                        val id = json.getString("id") ?: ""
-                        val name = json.getString("name") ?: ""
-                        val breed = json.getString("breed") ?: ""
-                        val age = json.getLong("age") ?: 0
-
-                        // cast age from Long to Int
-                        val ageInt = age.toInt()
-                        val post = Post(name, breed, ageInt)
+                        val post = Post.fromJSON(json.data)
                         posts.add(post)
                     }
                     callback(posts)
@@ -57,22 +49,11 @@ class FirebaseModel {
 //
     fun addPost(post: Post, callback: () -> Unit) {
 
-    // Create a new user with a first and last name
-    val post = hashMapOf(
-        "name" to post.name,
-        "breed" to post.breed,
-        "age" to post.age,
-    )
-
-//    db.collection(POSTS_COLLECTION_PATH).document(post.id).set(post.json).addOnSuccessListener {
-//        callback()
-//    }
-
     // Add a new document with a generated ID
     db.collection(POSTS_COLLECTION_NAME)
-    .add(post)
+    .add(post.json)
     .addOnSuccessListener { documentReference ->
-        Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
+        callback()
     }
     .addOnFailureListener { e ->
         Log.w("TAG", "Error adding document", e)
