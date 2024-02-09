@@ -23,21 +23,11 @@ class Model private constructor() {
     fun getAllPosts(callback: (List<Post>) -> Unit) {
 
         firebaseModel.getAllPosts(callback)
-//        executor.execute {
-//            val posts = database.postDao().getAll()
-//            mainHandler.post {
-//                callback(posts)
-//            }
-//        }
+
     }
 
     fun addPost(post: Post, callback: () -> Unit) {
         firebaseModel.addPost(post, callback)
-//        executor.execute {
-//            database.postDao().insert(post)
-//            mainHandler.post {
-//                callback()
-//            }
-//        }
+
     }
 }

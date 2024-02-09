@@ -18,7 +18,6 @@ class FirebaseModel {
     init {
         val settings = com.google.firebase.firestore.firestoreSettings {
             setLocalCacheSettings(memoryCacheSettings {  })
-//            setLocalCacheSettings(persistentCacheSettings {  })
         }
         db.firestoreSettings = settings
     }
@@ -38,12 +37,6 @@ class FirebaseModel {
 
                 false -> callback(listOf())
             }
-//        executor.execute {
-//            val posts = database.postDao().getAll()
-//            mainHandler.post {
-//                callback(posts)
-//            }
-//        }
         }
     }
 //
