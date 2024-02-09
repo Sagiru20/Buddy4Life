@@ -101,28 +101,76 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayoutDogAge"
-                    style="@style/AddPostTheme.OutlinedBox"
+                <LinearLayout
+                    android:id="@+id/ageAndGenderLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/age"
-                    app:errorEnabled="true"
-                    app:helperText="@string/required"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textInputLayoutDogBreed">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etDogAge"
-                        style="@style/AddPostTheme.TextField"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number" />
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/gender"
+                            android:textColor="@color/colorPrimary" />
+
+                        <RadioGroup
+                            android:id="@+id/radioGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/rbMale"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/male"
+                                android:textColor="@color/black_100"
+                                app:buttonTint="@drawable/radio_button_selector" />
+
+                            <RadioButton
+                                android:id="@+id/rbFemale"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/female"
+                                android:textColor="@color/black_100"
+                                app:buttonTint="@drawable/radio_button_selector" />
+                        </RadioGroup>
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutDogAge"
+                        style="@style/AddPostTheme.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:hint="@string/age"
+                        app:errorEnabled="true"
+                        app:helperText="@string/required">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDogAge"
+                            style="@style/AddPostTheme.TextField"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayoutDogDescription"
@@ -131,12 +179,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/dog_description"
+                    android:hint="@string/description"
                     app:errorEnabled="true"
                     app:helperText="@string/required"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayoutDogAge">
+                    app:layout_constraintTop_toBottomOf="@id/ageAndGenderLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDogDescription"
@@ -173,7 +221,8 @@
                         android:layout_marginEnd="4dp"
                         android:layout_weight="1"
                         android:hint="@string/weight"
-                        app:helperText="@string/optional">
+                        app:helperText="@string/optional"
+                        app:suffixText="kg">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDogWeight"
@@ -192,7 +241,8 @@
                         android:layout_marginStart="4dp"
                         android:layout_weight="1"
                         android:hint="@string/height"
-                        app:helperText="@string/optional">
+                        app:helperText="@string/optional"
+                        app:suffixText="cm">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDogHeight"
