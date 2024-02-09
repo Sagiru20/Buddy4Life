@@ -127,7 +127,7 @@
                             android:textColor="@color/colorPrimary" />
 
                         <RadioGroup
-                            android:id="@+id/radioGroup"
+                            android:id="@+id/rgGender"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
@@ -148,6 +148,16 @@
                                 android:textColor="@color/black_100"
                                 app:buttonTint="@drawable/radio_button_selector" />
                         </RadioGroup>
+
+                        <TextView
+                            android:id="@+id/tvGenderRadioGroupError"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/required"
+                            android:textColor="@color/red"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <com.google.android.material.textfield.TextInputLayout

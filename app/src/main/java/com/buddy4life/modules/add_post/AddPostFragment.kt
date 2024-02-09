@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.RadioButton
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
@@ -23,10 +24,12 @@ import com.buddy4life.databinding.FragmentAddPostBinding
 import com.buddy4life.dog_breed_api.DogBreedApi
 import com.buddy4life.dog_breed_api.RetrofitInstance
 import com.buddy4life.model.Breed
+import com.buddy4life.model.Gender
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
 import retrofit2.Response
 
+private const val REQUIRED = "*required"
 
 class AddPostFragment : Fragment() {
     private var _binding: FragmentAddPostBinding? = null
@@ -39,6 +42,7 @@ class AddPostFragment : Fragment() {
     ) { result ->
         binding.ivDogAvatar.load(result) {
             crossfade(true)
+            placeholder(R.drawable.dog_icon)
         }
     }
 
@@ -58,6 +62,7 @@ class AddPostFragment : Fragment() {
             emit(response)
         }
 
+        // Get all the dog breeds names from an external API using an HTTP request
         responseLiveData.observe(viewLifecycleOwner, Observer { response ->
             breedsNames = response.body()?.map { it.breedName } ?: emptyList()
             val adapter = ArrayAdapter(
@@ -76,7 +81,7 @@ class AddPostFragment : Fragment() {
             if (text!!.isNotEmpty()) {
                 binding.textInputLayoutDogName.error = null
             } else {
-                binding.textInputLayoutDogName.error = "Required*"
+                binding.textInputLayoutDogName.error = REQUIRED
             }
         }
 
@@ -84,7 +89,7 @@ class AddPostFragment : Fragment() {
             if (text!!.isNotEmpty()) {
                 binding.textInputLayoutDogBreed.error = null
             } else {
-                binding.textInputLayoutDogBreed.error = "Required*"
+                binding.textInputLayoutDogBreed.error = REQUIRED
             }
         }
 
@@ -92,7 +97,7 @@ class AddPostFragment : Fragment() {
             if (text!!.isNotEmpty()) {
                 binding.textInputLayoutDogAge.error = null
             } else {
-                binding.textInputLayoutDogAge.error = "Required*"
+                binding.textInputLayoutDogAge.error = REQUIRED
             }
         }
 
@@ -100,7 +105,15 @@ class AddPostFragment : Fragment() {
             if (text!!.isNotEmpty()) {
                 binding.textInputLayoutDogDescription.error = null
             } else {
-                binding.textInputLayoutDogDescription.error = "Required*"
+                binding.textInputLayoutDogDescription.error = REQUIRED
+            }
+        }
+
+        binding.rgGender.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == -1) {
+                binding.tvGenderRadioGroupError.visibility = View.VISIBLE
+            } else {
+                binding.tvGenderRadioGroupError.visibility = View.GONE
             }
         }
 
@@ -127,6 +140,22 @@ class AddPostFragment : Fragment() {
             val name: String? = binding.etDogName.text?.toString()
             val breed: String? = binding.actvDogBreed.text?.toString()
             val description: String? = binding.etDogDescription.text?.toString()
+
+            val rbGenderCheckedId: Int = binding.rgGender.checkedRadioButtonId
+            val gender: Gender?
+            if (rbGenderCheckedId != -1) {
+                gender = try {
+                    val checkedRadioButton: RadioButton =
+                        binding.rgGender.findViewById(rbGenderCheckedId)
+                    Gender.valueOf(checkedRadioButton.text.toString().uppercase())
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            } else {
+                gender = null
+                binding.tvGenderRadioGroupError.visibility = View.VISIBLE
+            }
+
             val ageText: String? = binding.etDogAge.text?.toString()
             val age = try {
                 ageText?.toInt()
@@ -134,24 +163,24 @@ class AddPostFragment : Fragment() {
                 null
             }
 
-            if (binding.etDogName.text.toString().isEmpty()) {
-                binding.textInputLayoutDogName.error = "Required*"
-            }
-            if (binding.actvDogBreed.text.toString().isEmpty()) {
-                binding.textInputLayoutDogBreed.error = "Required*"
-            }
-            if (binding.etDogAge.text.toString().isEmpty()) {
-                binding.textInputLayoutDogAge.error = "Required*"
-            }
-            if (binding.etDogDescription.text.toString().isEmpty()) {
-                binding.textInputLayoutDogDescription.error = "Required*"
-            }
-
 //            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && age != null) {
-            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && age != null && !description.isNullOrEmpty()) {
-                val post = Post(name, breed, age, description)
+            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && gender != null && age != null && !description.isNullOrEmpty()) {
+                val post = Post(name, breed, gender, age, description)
                 Model.instance.addPost(post) {
                     Navigation.findNavController(it).navigate(R.id.postsFragment)
+                }
+            } else {
+                if (binding.etDogName.text.toString().isEmpty()) {
+                    binding.textInputLayoutDogName.error = REQUIRED
+                }
+                if (binding.actvDogBreed.text.toString().isEmpty()) {
+                    binding.textInputLayoutDogBreed.error = REQUIRED
+                }
+                if (binding.etDogAge.text.toString().isEmpty()) {
+                    binding.textInputLayoutDogAge.error = REQUIRED
+                }
+                if (binding.etDogDescription.text.toString().isEmpty()) {
+                    binding.textInputLayoutDogDescription.error = REQUIRED
                 }
             }
         }
