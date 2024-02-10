@@ -24,9 +24,9 @@ class PostFragment : Fragment() {
         val postId = PostFragmentArgs.fromBundle(requireArguments()).postId
         Model.instance.getPost(postId) { post ->
             this.post = post
+            setupUI()
         }
 
-        setupUI()
         return binding.root
     }
 
