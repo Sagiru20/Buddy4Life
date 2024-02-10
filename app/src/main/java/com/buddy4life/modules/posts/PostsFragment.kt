@@ -2,7 +2,6 @@ package com.buddy4life.modules.posts
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,15 +31,6 @@ class PostsFragment : Fragment() {
         postsRecyclerView?.setHasFixedSize(true)
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
         adapter = PostsRecyclerAdapter(posts)
-        adapter?.listener = object : OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                Log.i("TAG", "PostsRecyclerAdapter: Position clicked $position")
-            }
-
-            override fun onPostClicked(post: Post?) {
-                Log.i("TAG", "POST $post")
-            }
-        }
 
         Model.instance.getAllPosts { posts ->
             this.posts = posts

@@ -11,13 +11,18 @@ enum class Gender(private val label: String) {
     }
 }
 
-
 @Entity
 data class Post(
-    @PrimaryKey val name: String,
+    @PrimaryKey(true) val id: Long,
+    val name: String,
     val breed: String,
     val gender: Gender,
     val age: Int,
-    val description: String
-)
-
+    val description: String,
+    val weight: Int? = null,
+    val height: Int? = null,
+) {
+    constructor(
+        name: String, breed: String, gender: Gender, age: Int, description: String
+    ) : this(0, name, breed, gender, age, description)
+}

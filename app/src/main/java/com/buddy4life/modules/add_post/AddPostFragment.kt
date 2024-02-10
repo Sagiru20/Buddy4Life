@@ -132,9 +132,11 @@ class AddPostFragment : Fragment() {
             false
         }
 
-        binding.btnAddPostCancel.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.postsFragment)
-        }
+        binding.btnAddPostCancel.setOnClickListener(
+            Navigation.createNavigateOnClickListener(
+                R.id.action_addPostFragment_to_postsFragment
+            )
+        )
 
         binding.btnAddPostSave.setOnClickListener {
             val name: String? = binding.etDogName.text?.toString()
@@ -163,11 +165,11 @@ class AddPostFragment : Fragment() {
                 null
             }
 
-//            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && age != null) {
-            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && gender != null && age != null && !description.isNullOrEmpty()) {
+            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
                 val post = Post(name, breed, gender, age, description)
                 Model.instance.addPost(post) {
-                    Navigation.findNavController(it).navigate(R.id.postsFragment)
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_addPostFragment_to_postsFragment)
                 }
             } else {
                 if (binding.etDogName.text.toString().isEmpty()) {

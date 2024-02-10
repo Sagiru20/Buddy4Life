@@ -190,6 +190,8 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
                     android:hint="@string/description"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="1000"
                     app:errorEnabled="true"
                     app:helperText="@string/required"
                     app:layout_constraintEnd_toEndOf="parent"
