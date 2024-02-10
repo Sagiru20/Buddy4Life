@@ -42,8 +42,8 @@ class PostFragment : Fragment() {
         binding.tvDogInfoBreed.text = post?.breed
         binding.tvDogInfoGender.text = post?.gender.toString()
         binding.tvDogInfoAge.text = post?.age.toString()
-        binding.tvDogInfoWeight.text = post?.weight.toString()
-        binding.tvDogInfoHeight.text = post?.height.toString()
+        binding.tvDogInfoWeight.text = post?.weight?.toString() ?: "-"
+        binding.tvDogInfoHeight.text = post?.height?.toString() ?: "-"
     }
 
     override fun onDestroyView() {
