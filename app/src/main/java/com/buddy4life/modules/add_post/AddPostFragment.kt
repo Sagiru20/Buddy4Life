@@ -142,6 +142,9 @@ class AddPostFragment : Fragment() {
             val name: String? = binding.etDogName.text?.toString()
             val breed: String? = binding.actvDogBreed.text?.toString()
             val description: String? = binding.etDogDescription.text?.toString()
+            val age: Int? = binding.etDogAge.text?.toString()?.toInt()
+            val weight: Int? = binding.etDogWeight.text?.toString()?.toInt()
+            val height: Int? = binding.etDogHeight.text?.toString()?.toInt()
 
             val rbGenderCheckedId: Int = binding.rgGender.checkedRadioButtonId
             val gender: Gender?
@@ -158,15 +161,8 @@ class AddPostFragment : Fragment() {
                 binding.tvGenderRadioGroupError.visibility = View.VISIBLE
             }
 
-            val ageText: String? = binding.etDogAge.text?.toString()
-            val age = try {
-                ageText?.toInt()
-            } catch (e: NumberFormatException) {
-                null
-            }
-
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
-                val post = Post(name, breed, gender, age, description)
+                val post = Post(name, breed, gender, age, description, weight, height)
                 Model.instance.addPost(post) {
                     Navigation.findNavController(it)
                         .navigate(R.id.action_addPostFragment_to_postsFragment)

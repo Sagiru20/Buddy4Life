@@ -23,6 +23,12 @@ data class Post(
     val height: Int? = null,
 ) {
     constructor(
-        name: String, breed: String, gender: Gender, age: Int, description: String
-    ) : this(0, name, breed, gender, age, description)
+        name: String,
+        breed: String,
+        gender: Gender,
+        age: Int,
+        description: String,
+        weight: Int? = null,
+        height: Int? = null
+    ) : this(0, name, breed, gender, age, description, weight, height)
 }
