@@ -18,6 +18,6 @@ interface PostDao {
     @Delete
     fun delete(post: Post)
 
-    @Query("SELECT * FROM Post WHERE name =:name")
-    fun getPostByName(name: String): Post
+    @Query("SELECT * FROM Post WHERE id LIKE :id LIMIT 1")
+    fun getById(id: Long): Post
 }

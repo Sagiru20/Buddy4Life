@@ -17,7 +17,7 @@ class PostsRecyclerAdapter(var posts: List<Post>?) : RecyclerView.Adapter<PostVi
         val itemView = LayoutInflater.from(parent.context).inflate(
             R.layout.posts_list_row, parent, false
         )
-        return PostViewHolder(itemView, listener)
+        return PostViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {

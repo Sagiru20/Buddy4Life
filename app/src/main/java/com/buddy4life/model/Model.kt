@@ -28,6 +28,15 @@ class Model private constructor() {
         }
     }
 
+    fun getPost(id: Long, callback: (Post) -> Unit) {
+        executor.execute {
+            val post: Post = database.postDao().getById(id)
+            mainHandler.post {
+                callback(post)
+            }
+        }
+    }
+
     fun addPost(post: Post, callback: () -> Unit) {
         executor.execute {
             database.postDao().insert(post)

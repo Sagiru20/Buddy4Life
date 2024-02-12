@@ -5,13 +5,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
     </style>
 
     <style name="AddPostTheme.OutlinedBox" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -53,18 +48,11 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
-    <style name="Theme.BottomNavigation" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black_200</item>
-        <item name="colorPrimaryVariant">@color/black_200</item>
-        <item name="colorOnPrimary">@color/black_200</item>
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
 
-        <!-- Primary brand color. -->
-        <item name="colorSecondary">@color/black_200</item>
-        <item name="colorSecondaryVariant">@color/black_200</item>
-        <item name="colorOnSecondary">@color/black_200</item>
-
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorSecondaryVariant</item>
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorSecondaryContainer">#BBDEFB</item>
     </style>
 </resources>
