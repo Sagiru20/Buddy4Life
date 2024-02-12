@@ -37,7 +37,8 @@ class PostsFragment : Fragment() {
                 Log.i("TAG", "PostsRecyclerAdapter: Position clicked $position")
             }
 
-            override fun onPostClicked(post: Post?) {
+            override fun onPostClicked(post: Post, callback: () -> Unit) {
+//                Model.instance.deletePost(post, callback)
                 Log.i("TAG", "POST $post")
             }
         }
@@ -54,7 +55,7 @@ class PostsFragment : Fragment() {
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
-        fun onPostClicked(post: Post?)
+        fun onPostClicked(post: Post, callback: () -> Unit)
     }
 
     @SuppressLint("NotifyDataSetChanged")

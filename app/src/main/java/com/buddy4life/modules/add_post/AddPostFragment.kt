@@ -3,6 +3,7 @@ package com.buddy4life.modules.add_post
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -23,8 +24,11 @@ import com.buddy4life.databinding.FragmentAddPostBinding
 import com.buddy4life.dog_breed_api.DogBreedApi
 import com.buddy4life.dog_breed_api.RetrofitInstance
 import com.buddy4life.model.Breed
+import com.buddy4life.model.Gender
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import retrofit2.Response
 
 
@@ -34,15 +38,31 @@ class AddPostFragment : Fragment() {
 
     private var breedsNames: List<String>? = null
 
+    private var imageUri: Uri? = null
+
+    private var savedDocId: String? = ""
+
     private var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
         ActivityResultContracts.PickVisualMedia()
-    ) { result ->
-        binding.ivDogAvatar.load(result) {
+    ) { uri ->
+        binding.ivDogAvatar.load(uri) {
             crossfade(true)
         }
+//        binding.ivDogAvatar.setImageURI(uri)
+        imageUri = uri
     }
 
-    override fun onCreateView(
+
+//    val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
+//        val galleryUri = it
+//        try {
+//            binding.ivDogAvatar.setImageURI(galleryUri)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//    }
+
+        override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddPostBinding.inflate(inflater, container, false)
@@ -67,6 +87,7 @@ class AddPostFragment : Fragment() {
         })
 
         binding.ivDogAvatar.setOnClickListener {
+//            galleryLauncher.launch("image/*")
             launcher.launch(
                 PickVisualMediaRequest.Builder().setMediaType(ImageOnly).build()
             )
@@ -128,16 +149,27 @@ class AddPostFragment : Fragment() {
             val breed: String? = binding.actvDogBreed.text?.toString()
             val description: String? = binding.etDogDescription.text?.toString()
             val ageText: String? = binding.etDogAge.text?.toString()
-            //TODO implement the next fields; gender needs to be chose in addPost
-            val gender: String = ""
-            val createdTime: String = ""
-            val lastUpdated: String = ""
-            val postId: String = ""
-            val dogImageUrl: String = ""
-
+            //TODO implement gender
+            val gender: Gender = Gender.MALE
+            val weightText: String? = binding.etDogWeight.text?.toString()
+            val heightText: String? = binding.etDogHeight.text?.toString()
+            val dogUri: Uri? = imageUri
+            val dogRealUri: Uri
 
             val age = try {
                 ageText?.toInt()
+            } catch (e: NumberFormatException) {
+                null
+            }
+
+            val weight = try {
+                weightText?.toInt()
+            } catch (e: NumberFormatException) {
+                null
+            }
+
+            val height = try {
+                heightText?.toInt()
             } catch (e: NumberFormatException) {
                 null
             }
@@ -157,10 +189,19 @@ class AddPostFragment : Fragment() {
 
 //            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && age != null) {
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && age != null && !description.isNullOrEmpty()) {
-                val post = Post(name, breed, age, description, gender, createdTime, lastUpdated, postId, dogImageUrl )
-                Model.instance.addPost(post) {
+                val post = Post(name, breed, gender, age, description, dogUri, weight, height )
+                var docId: String? = ""
+                Model.instance.addPost(post, dogUri) {
+
                     Navigation.findNavController(it).navigate(R.id.postsFragment)
+
+                    Log.i("TAG", "when it assigned now it's: " + docId)
                 }
+                Log.i("TAG", "after func the docId is: " + savedDocId)
+//                Model.instance.addPostDogImage(dogUri, savedDocId) {
+//                //TODO make this function wait for the id from addPost somehow
+//                    Navigation.findNavController(it).navigate(R.id.postsFragment)
+//                }
             }
         }
     }
