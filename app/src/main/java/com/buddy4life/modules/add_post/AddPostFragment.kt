@@ -24,6 +24,7 @@ import com.buddy4life.databinding.FragmentAddPostBinding
 import com.buddy4life.dog_breed_api.DogBreedApi
 import com.buddy4life.dog_breed_api.RetrofitInstance
 import com.buddy4life.model.Breed
+import com.buddy4life.model.Category
 import com.buddy4life.model.Gender
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
@@ -38,7 +39,7 @@ class AddPostFragment : Fragment() {
 
     private var breedsNames: List<String>? = null
 
-    private var imageUri: Uri? = null
+    private var imageUri: String? = null
 
     private var savedDocId: String? = ""
 
@@ -49,7 +50,7 @@ class AddPostFragment : Fragment() {
             crossfade(true)
         }
 //        binding.ivDogAvatar.setImageURI(uri)
-        imageUri = uri
+        imageUri = uri.toString()
     }
 
 
@@ -149,12 +150,12 @@ class AddPostFragment : Fragment() {
             val breed: String? = binding.actvDogBreed.text?.toString()
             val description: String? = binding.etDogDescription.text?.toString()
             val ageText: String? = binding.etDogAge.text?.toString()
-            //TODO implement gender
+            //TODO implement gender and category
             val gender: Gender = Gender.MALE
+            val category: Category = Category.ADOPTION_REQUEST
             val weightText: String? = binding.etDogWeight.text?.toString()
             val heightText: String? = binding.etDogHeight.text?.toString()
-            val dogUri: Uri? = imageUri
-            val dogRealUri: Uri
+            val dogUri: String? = imageUri
 
             val age = try {
                 ageText?.toInt()
@@ -189,7 +190,7 @@ class AddPostFragment : Fragment() {
 
 //            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && age != null) {
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && age != null && !description.isNullOrEmpty()) {
-                val post = Post(name, breed, gender, age, description, dogUri, weight, height )
+                val post = Post(name, breed, gender, age, description, dogUri, category, weight, height )
                 var docId: String? = ""
                 Model.instance.addPost(post, dogUri) {
 

@@ -23,19 +23,30 @@ enum class Gender(private val label: String) {
     }
 }
 
+enum class Category(private val label: String) {
+    ADOPTION_PROPOSAL("Adoption Proposal"),
+    ADOPTION_REQUEST("Adoption Request"),
+    DOG_LOST("Dog Lost");
+
+    override fun toString(): String {
+        return this.label
+    }
+}
+
     @Entity
 class Post(
-        @PrimaryKey(true) val id: String,
+        @PrimaryKey() val id: String,
         var name: String,
         val breed: String,
         val gender: Gender,
         val age: Int,
         var description: String,
-        val dogImageUri: Uri? = null,
+        val dogImageUri: String? = null,
+        val category: Category,
         val weight: Int? = null,
         val height: Int? = null,
-        var createdTime: FieldValue,
-        var lastUpdated: FieldValue
+        var createdTime: Long,
+        var lastUpdated: Long
 )
 {
 
@@ -46,9 +57,10 @@ class Post(
         gender: Gender,
         age: Int,
         description: String,
-        dogImageUri: Uri? = null,
+        dogImageUri: String? = null,
+        category: Category,
         weight: Int? = null,
-        height: Int? = null) : this("", name, breed, gender, age, description, dogImageUri, weight, height, FieldValue.serverTimestamp(), FieldValue.serverTimestamp())
+        height: Int? = null) : this("", name, breed, gender, age, description, dogImageUri, category, weight, height, System.currentTimeMillis() , System.currentTimeMillis() )
 
     companion object {
         const val ID_KEY = "id"
@@ -58,28 +70,31 @@ class Post(
         const val AGE_KEY = "age"
         const val DESCRIPTION_KEY = "description"
         const val DOG_IMAGE_URL_KEY = "dogImageUri"
+        const val CATEGORY_KEY = "category"
         const val WEIGHT_KEY = "weight"
         const val HEIGHT_KEY = "height"
         const val CREATED_TIME_KEY = "createdTime"
         const val LAST_UPDATED_KEY = "lastUpdated"
 
         fun fromJSON(postJson: Map<String, Any>, postId: String ): Post {
-            val id = postJson[ID_KEY] as? String ?: ""
+
+            val id = postId as? String ?: ""
             val name = postJson[NAME_KEY] as? String ?: ""
             val breed = postJson[BREED_KEY] as? String ?: ""
             val gender = postJson[GENDER_KEY] as? Gender ?: Gender.MALE
             val age = postJson[AGE_KEY] as? Long ?: 0
             val intAge = age.toInt()
             val description = postJson[DESCRIPTION_KEY] as? String ?: ""
-            val dogImageUri = postJson[DOG_IMAGE_URL_KEY] as? Uri ?: null
+            val dogImageUri = postJson[DOG_IMAGE_URL_KEY] as? String ?: ""
+            val category = postJson[CATEGORY_KEY] as? Category ?: Category.ADOPTION_REQUEST
             val weight = postJson[WEIGHT_KEY] as? Long ?: 0
             val intWeight = age.toInt()
             val height = postJson[HEIGHT_KEY] as? Long ?: 0
             val intHeight = age.toInt()
-            val createdTime = postJson[CREATED_TIME_KEY] as? FieldValue ?: FieldValue.serverTimestamp()
-            val lastUpdated = postJson[LAST_UPDATED_KEY] as? FieldValue ?: FieldValue.serverTimestamp()
+            val createdTime = postJson[CREATED_TIME_KEY] as? Long ?: 0
+            val lastUpdated = postJson[LAST_UPDATED_KEY] as? Long ?: 0
 
-            val post = Post(id, name, breed, gender, intAge, description, dogImageUri, intWeight, intHeight, createdTime, lastUpdated)
+            val post = Post(id, name, breed, gender, intAge, description, dogImageUri, category, intWeight, intHeight, createdTime, lastUpdated)
 
             return post
         }
@@ -95,6 +110,7 @@ class Post(
                 AGE_KEY to age,
                 DESCRIPTION_KEY to description,
                 DOG_IMAGE_URL_KEY to dogImageUri,
+                CATEGORY_KEY to category,
                 WEIGHT_KEY to weight,
                 HEIGHT_KEY to height,
                 CREATED_TIME_KEY to createdTime ,

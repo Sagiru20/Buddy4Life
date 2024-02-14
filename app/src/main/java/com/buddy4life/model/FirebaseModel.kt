@@ -1,6 +1,8 @@
 package com.buddy4life.model
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
@@ -69,7 +71,7 @@ class FirebaseModel {
 
     fun getUserPosts(callback: (List<Post>) -> Unit) {
         Log.d("TAG", "called: getUserPosts")
-        db.collection(POSTS_COLLECTION_NAME).whereEqualTo("age", 11).get().addOnCompleteListener {
+        db.collection(POSTS_COLLECTION_NAME).whereGreaterThan("age", 2).get().addOnCompleteListener {
             when (it.isSuccessful) {
                 true -> {
                     val posts: MutableList<Post> = mutableListOf()
@@ -102,7 +104,7 @@ class FirebaseModel {
 
 
     fun updatePost(post: Post, id: String , callback: () -> Unit) {
-        post.lastUpdated = FieldValue.serverTimestamp()
+        post.lastUpdated = System.currentTimeMillis()
         post.description ="Im updated all good"
         db.collection(POSTS_COLLECTION_NAME).document(id)
             .set(post.json)
@@ -116,50 +118,59 @@ class FirebaseModel {
 
     }
 
+    fun addPostDogImage(postId: String?,stringUri: String?,  callback: () -> Unit) {
 
-
-    fun addPostDogImage(postId: String?,uri: Uri?,  callback: () -> Unit) {
-        Log.i("TAG", "starting saving image")
-        // Create a storage reference from our app
-        var storageRef = storage.getReference(POSTS_DOG_PICTURE_FOLDER_NAME)
         var ref = FirebaseStorage.getInstance().reference
-
-//        var imagesRef: StorageReference? = storageRef.child("${POSTS_DOG_PICTURE_FOLDER_NAME}/test.png")
         var imagesRef: StorageReference? = null
-        Log.i("TAG", "the complete docId is: " + postId)
+
         postId?.let {
             imagesRef = ref.child("${POSTS_DOG_PICTURE_FOLDER_NAME}/${postId}")
         }
 
-        uri?.let {
-            var uploadTask = imagesRef?.putFile(uri)
-            Log.i("TAG", "uploaded?")
+        stringUri?.let {
+
+            var uploadTask = imagesRef?.putFile(stringUri.toUri())
+
             uploadTask?.addOnFailureListener {
+
                 Log.i("TAG", "failed to save dog image")
                 callback()
+
             }?.addOnSuccessListener { taskSnapshot ->
                 Log.i("TAG", "succeeded to save dog image!")
                 callback()
+
             }
         }
 
         callback()
-
-//        var file = Uri.fromFile(File("dog_icon_test.png"))
-//        val file = File("test.txt").toUri()
-//
-//        var uploadTask = dogsRef.putFile(file)
-//
-//        // Register observers to listen for when the download is done or if it fails
-//        uploadTask.addOnFailureListener {
-//            Log.i("TAG", "failed to save dog image")
-//            callback(listOf())
-//        }.addOnSuccessListener { taskSnapshot ->
-//            Log.i("TAG", "succeeded to save dog image!")
-//            callback(listOf())
-//        }
-
     }
+
+
+
+    fun getPostDogImageUri(postId: String?,  callback: (Uri?) -> Unit) {
+
+        var storageRef = storage.reference.child("${POSTS_DOG_PICTURE_FOLDER_NAME}/${postId}")
+
+        postId?.let {
+
+            storageRef.downloadUrl.addOnSuccessListener {uri ->
+
+                Log.i("TAG", "successeded to get Uri")
+                callback(uri)
+
+            }.addOnFailureListener {
+
+                Log.i("TAG", "succeeded to save dog image!")
+                callback(null)
+
+            }
+        }
+    }
+
+
+
+    
 
 
 }

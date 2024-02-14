@@ -1,5 +1,7 @@
 package com.buddy4life.model
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Looper
 import android.util.Log
@@ -28,12 +30,12 @@ class Model private constructor() {
 
     }
 
-    fun addPost(post: Post, dogUri: Uri?, callback: () -> Unit) {
+    fun addPost(post: Post, dogUri: String?, callback: () -> Unit) {
 
         firebaseModel.addPost(post) {
             val postId = it
             firebaseModel.addPostDogImage(postId, dogUri) {
-//                callback()
+
             }
             callback()
 
@@ -53,9 +55,13 @@ class Model private constructor() {
 
     }
 
-    fun addPostDogImage(uri: Uri?, docId: String?, callback: () -> Unit) {
 
-//        firebaseModel.addPostDogImage(uri, docId, callback)
+    fun getPostDogImageUri(postId: String?,  callback: (Uri?) -> Unit) {
+
+        firebaseModel.getPostDogImageUri(postId) { uri ->
+            callback(uri)
+        }
+
     }
 
     fun deletePost(postId: String, callback: () -> Unit) {
