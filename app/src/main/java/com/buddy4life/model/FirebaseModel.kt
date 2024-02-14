@@ -1,20 +1,15 @@
 package com.buddy4life.model
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
-import java.io.File
 
 class FirebaseModel {
 
@@ -23,7 +18,6 @@ class FirebaseModel {
 
     companion object {
         const val POSTS_COLLECTION_NAME = "posts"
-        const val USER_PROFILE_PICTURE_FOLDER_NAME = "UsersProfilePictures"
         const val POSTS_DOG_PICTURE_FOLDER_NAME = "PostsDogsPictures"
     }
 
@@ -117,6 +111,43 @@ class FirebaseModel {
             }
 
     }
+
+
+    fun getPost(id: String , callback: (Post?) -> Unit) {
+
+        db.collection(POSTS_COLLECTION_NAME).document(id)
+            .get()
+            .addOnCompleteListener {
+
+                when (it.isSuccessful) {
+                    true -> {
+
+                        Log.d("TAG", "DocumentSnapshot successfully retrieved!")
+                        val postJson = it.result
+                        val post = postJson.data?.let { data -> Post.fromJSON(data, postJson.id) }
+                        callback(post)
+
+                    }
+
+                    false -> {
+                        Log.w("TAG", "Error getting document")
+                        callback(null)
+                    }
+                }
+
+
+
+
+            }
+            .addOnFailureListener {
+
+            }
+
+    }
+
+
+
+
 
     fun addPostDogImage(postId: String?,stringUri: String?,  callback: () -> Unit) {
 

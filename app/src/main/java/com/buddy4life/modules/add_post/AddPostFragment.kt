@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.RadioButton
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
@@ -32,6 +33,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import retrofit2.Response
 
+private const val REQUIRED = "*required"
 
 class AddPostFragment : Fragment() {
     private var _binding: FragmentAddPostBinding? = null
@@ -41,29 +43,19 @@ class AddPostFragment : Fragment() {
 
     private var imageUri: String? = null
 
-    private var savedDocId: String? = ""
 
     private var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         binding.ivDogAvatar.load(uri) {
             crossfade(true)
+            placeholder(R.drawable.dog_icon)
         }
 //        binding.ivDogAvatar.setImageURI(uri)
-        imageUri = uri.toString()
+        imageUri = uri?.toString()
     }
 
-
-//    val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
-//        val galleryUri = it
-//        try {
-//            binding.ivDogAvatar.setImageURI(galleryUri)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
-
-        override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddPostBinding.inflate(inflater, container, false)
@@ -79,6 +71,7 @@ class AddPostFragment : Fragment() {
             emit(response)
         }
 
+        // Get all the dog breeds names from an external API using an HTTP request
         responseLiveData.observe(viewLifecycleOwner, Observer { response ->
             breedsNames = response.body()?.map { it.breedName } ?: emptyList()
             val adapter = ArrayAdapter(
@@ -88,7 +81,6 @@ class AddPostFragment : Fragment() {
         })
 
         binding.ivDogAvatar.setOnClickListener {
-//            galleryLauncher.launch("image/*")
             launcher.launch(
                 PickVisualMediaRequest.Builder().setMediaType(ImageOnly).build()
             )
@@ -98,7 +90,7 @@ class AddPostFragment : Fragment() {
             if (text!!.isNotEmpty()) {
                 binding.textInputLayoutDogName.error = null
             } else {
-                binding.textInputLayoutDogName.error = "Required*"
+                binding.textInputLayoutDogName.error = REQUIRED
             }
         }
 
@@ -106,7 +98,7 @@ class AddPostFragment : Fragment() {
             if (text!!.isNotEmpty()) {
                 binding.textInputLayoutDogBreed.error = null
             } else {
-                binding.textInputLayoutDogBreed.error = "Required*"
+                binding.textInputLayoutDogBreed.error = REQUIRED
             }
         }
 
@@ -114,7 +106,7 @@ class AddPostFragment : Fragment() {
             if (text!!.isNotEmpty()) {
                 binding.textInputLayoutDogAge.error = null
             } else {
-                binding.textInputLayoutDogAge.error = "Required*"
+                binding.textInputLayoutDogAge.error = REQUIRED
             }
         }
 
@@ -122,7 +114,15 @@ class AddPostFragment : Fragment() {
             if (text!!.isNotEmpty()) {
                 binding.textInputLayoutDogDescription.error = null
             } else {
-                binding.textInputLayoutDogDescription.error = "Required*"
+                binding.textInputLayoutDogDescription.error = REQUIRED
+            }
+        }
+
+        binding.rgGender.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == -1) {
+                binding.tvGenderRadioGroupError.visibility = View.VISIBLE
+            } else {
+                binding.tvGenderRadioGroupError.visibility = View.GONE
             }
         }
 
@@ -141,26 +141,34 @@ class AddPostFragment : Fragment() {
             false
         }
 
-        binding.btnAddPostCancel.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.postsFragment)
-        }
+        binding.btnAddPostCancel.setOnClickListener(
+            Navigation.createNavigateOnClickListener(
+                R.id.action_addPostFragment_to_postsFragment
+            )
+        )
 
         binding.btnAddPostSave.setOnClickListener {
             val name: String? = binding.etDogName.text?.toString()
             val breed: String? = binding.actvDogBreed.text?.toString()
             val description: String? = binding.etDogDescription.text?.toString()
             val ageText: String? = binding.etDogAge.text?.toString()
-            //TODO implement gender and category
-            val gender: Gender = Gender.MALE
-            val category: Category = Category.ADOPTION_REQUEST
             val weightText: String? = binding.etDogWeight.text?.toString()
             val heightText: String? = binding.etDogHeight.text?.toString()
+            val category: Category = Category.ADOPTION_REQUEST
             val dogUri: String? = imageUri
-
-            val age = try {
-                ageText?.toInt()
-            } catch (e: NumberFormatException) {
-                null
+            val rbGenderCheckedId: Int = binding.rgGender.checkedRadioButtonId
+            val gender: Gender?
+            if (rbGenderCheckedId != -1) {
+                gender = try {
+                    val checkedRadioButton: RadioButton =
+                        binding.rgGender.findViewById(rbGenderCheckedId)
+                    Gender.valueOf(checkedRadioButton.text.toString().uppercase())
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            } else {
+                gender = null
+                binding.tvGenderRadioGroupError.visibility = View.VISIBLE
             }
 
             val weight = try {
@@ -175,34 +183,32 @@ class AddPostFragment : Fragment() {
                 null
             }
 
-            if (binding.etDogName.text.toString().isEmpty()) {
-                binding.textInputLayoutDogName.error = "Required*"
-            }
-            if (binding.actvDogBreed.text.toString().isEmpty()) {
-                binding.textInputLayoutDogBreed.error = "Required*"
-            }
-            if (binding.etDogAge.text.toString().isEmpty()) {
-                binding.textInputLayoutDogAge.error = "Required*"
-            }
-            if (binding.etDogDescription.text.toString().isEmpty()) {
-                binding.textInputLayoutDogDescription.error = "Required*"
+            val age = try {
+                ageText?.toInt()
+            } catch (e: NumberFormatException) {
+                null
             }
 
-//            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && age != null) {
-            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && age != null && !description.isNullOrEmpty()) {
+            if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
                 val post = Post(name, breed, gender, age, description, dogUri, category, weight, height )
-                var docId: String? = ""
                 Model.instance.addPost(post, dogUri) {
-
-                    Navigation.findNavController(it).navigate(R.id.postsFragment)
-
-                    Log.i("TAG", "when it assigned now it's: " + docId)
+                    Log.i("TAG", "trying to call addPost")
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_addPostFragment_to_postsFragment)
                 }
-                Log.i("TAG", "after func the docId is: " + savedDocId)
-//                Model.instance.addPostDogImage(dogUri, savedDocId) {
-//                //TODO make this function wait for the id from addPost somehow
-//                    Navigation.findNavController(it).navigate(R.id.postsFragment)
-//                }
+            } else {
+                if (binding.etDogName.text.toString().isEmpty()) {
+                    binding.textInputLayoutDogName.error = REQUIRED
+                }
+                if (binding.actvDogBreed.text.toString().isEmpty()) {
+                    binding.textInputLayoutDogBreed.error = REQUIRED
+                }
+                if (binding.etDogAge.text.toString().isEmpty()) {
+                    binding.textInputLayoutDogAge.error = REQUIRED
+                }
+                if (binding.etDogDescription.text.toString().isEmpty()) {
+                    binding.textInputLayoutDogDescription.error = REQUIRED
+                }
             }
         }
     }

@@ -32,16 +32,6 @@ class PostsFragment : Fragment() {
         postsRecyclerView?.setHasFixedSize(true)
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
         adapter = PostsRecyclerAdapter(posts)
-        adapter?.listener = object : OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                Log.i("TAG", "PostsRecyclerAdapter: Position clicked $position")
-            }
-
-            override fun onPostClicked(post: Post, callback: () -> Unit) {
-//                Model.instance.deletePost(post, callback)
-                Log.i("TAG", "POST $post")
-            }
-        }
 
         Model.instance.getAllPosts { posts ->
             this.posts = posts
@@ -55,7 +45,7 @@ class PostsFragment : Fragment() {
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
-        fun onPostClicked(post: Post, callback: () -> Unit)
+        fun onPostClicked(post: Post?)
     }
 
     @SuppressLint("NotifyDataSetChanged")

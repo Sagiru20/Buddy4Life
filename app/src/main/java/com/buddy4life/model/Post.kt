@@ -1,19 +1,7 @@
 package com.buddy4life.model
 
-import android.content.Context
-import android.net.Uri
-import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.buddy4life.base.MyApplication
-import com.google.apphosting.datastore.testing.DatastoreTestTrace.FirestoreV1Action.CreateDocument
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.ServerTimestamp
-import com.google.type.Date
-
-
-
 
 enum class Gender(private val label: String) {
     MALE("Male"), FEMALE("Female");
@@ -49,7 +37,6 @@ class Post(
         var lastUpdated: Long
 )
 {
-
 
     constructor(
         name: String,
@@ -88,9 +75,9 @@ class Post(
             val dogImageUri = postJson[DOG_IMAGE_URL_KEY] as? String ?: ""
             val category = postJson[CATEGORY_KEY] as? Category ?: Category.ADOPTION_REQUEST
             val weight = postJson[WEIGHT_KEY] as? Long ?: 0
-            val intWeight = age.toInt()
+            val intWeight = weight.toInt()
             val height = postJson[HEIGHT_KEY] as? Long ?: 0
-            val intHeight = age.toInt()
+            val intHeight = height.toInt()
             val createdTime = postJson[CREATED_TIME_KEY] as? Long ?: 0
             val lastUpdated = postJson[LAST_UPDATED_KEY] as? Long ?: 0
 

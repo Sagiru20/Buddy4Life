@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import com.buddy4life.base.MyApplication
 import com.buddy4life.model.Post
 
-@Database(entities = [Post::class], version = 2, exportSchema = false)
+@Database(entities = [Post::class], version = 6, exportSchema = false)
 abstract class AppLocalDbRepository : RoomDatabase() {
     abstract fun postDao(): PostDao
 }

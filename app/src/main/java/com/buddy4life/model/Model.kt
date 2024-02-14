@@ -1,17 +1,15 @@
 package com.buddy4life.model
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Looper
 import android.util.Log
 import androidx.core.os.HandlerCompat
-//import com.buddy4life.dao.AppLocalDatabase
+import com.buddy4life.dao.AppLocalDatabase
 import java.util.concurrent.Executors
 
 class Model private constructor() {
 
-//    private val database = AppLocalDatabase.db
+    private val database = AppLocalDatabase.db
     private var executor = Executors.newSingleThreadExecutor()
     private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
     private val firebaseModel = FirebaseModel()
@@ -29,6 +27,15 @@ class Model private constructor() {
         firebaseModel.getAllPosts(callback)
 
     }
+
+    fun getPost(id: String, callback: (Post?) -> Unit) {
+
+        firebaseModel.getPost(id) { post ->
+            callback(post)
+        }
+
+    }
+
 
     fun addPost(post: Post, dogUri: String?, callback: () -> Unit) {
 
