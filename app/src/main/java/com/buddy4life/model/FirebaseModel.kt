@@ -181,10 +181,9 @@ class FirebaseModel {
 
     fun getPostDogImageUri(postId: String?,  callback: (Uri?) -> Unit) {
 
-        var storageRef = storage.reference.child("${POSTS_DOG_PICTURE_FOLDER_NAME}/${postId}")
-
         postId?.let {
 
+            var storageRef = storage.reference.child("${POSTS_DOG_PICTURE_FOLDER_NAME}/${postId}")
             storageRef.downloadUrl.addOnSuccessListener {uri ->
 
                 Log.i("TAG", "successeded to get Uri")
@@ -192,16 +191,18 @@ class FirebaseModel {
 
             }.addOnFailureListener {
 
-                Log.i("TAG", "succeeded to save dog image!")
+                Log.i("TAG", "failed to get dog image uri!")
                 callback(null)
 
             }
         }
+
+        callback(null)
     }
 
 
 
-    
+
 
 
 }
