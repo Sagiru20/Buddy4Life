@@ -2,6 +2,7 @@ package com.buddy4life.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.buddy4life.model.User.UserModel
 
 enum class Gender(private val label: String) {
     MALE("Male"), FEMALE("Female");
@@ -34,7 +35,8 @@ class Post(
         val weight: Int? = null,
         val height: Int? = null,
         var createdTime: Long,
-        var lastUpdated: Long
+        var lastUpdated: Long,
+        var ownerId: String? = ""
 )
 {
 
@@ -47,7 +49,7 @@ class Post(
         dogImageUri: String? = null,
         category: Category,
         weight: Int? = null,
-        height: Int? = null) : this("", name, breed, gender, age, description, dogImageUri, category, weight, height, System.currentTimeMillis() , System.currentTimeMillis() )
+        height: Int? = null) : this("", name, breed, gender, age, description, dogImageUri, category, weight, height, System.currentTimeMillis() , System.currentTimeMillis( ), UserModel.instance.currentUser()?.uid)
 
     companion object {
         const val ID_KEY = "id"
@@ -62,8 +64,9 @@ class Post(
         const val HEIGHT_KEY = "height"
         const val CREATED_TIME_KEY = "createdTime"
         const val LAST_UPDATED_KEY = "lastUpdated"
+        const val OWNER_EMAIL_KEY = "ownerEmail"
 
-        fun fromJSON(postJson: Map<String, Any>, postId: String ): Post {
+        fun fromJSON(postJson: Map<String, Any>, postId: String): Post {
 
             val id = postId as? String ?: ""
             val name = postJson[NAME_KEY] as? String ?: ""
@@ -80,8 +83,9 @@ class Post(
             val intHeight = height.toInt()
             val createdTime = postJson[CREATED_TIME_KEY] as? Long ?: 0
             val lastUpdated = postJson[LAST_UPDATED_KEY] as? Long ?: 0
+            val ownerEmail = postJson[OWNER_EMAIL_KEY] as? String ?: ""
 
-            val post = Post(id, name, breed, gender, intAge, description, dogImageUri, category, intWeight, intHeight, createdTime, lastUpdated)
+            val post = Post(id, name, breed, gender, intAge, description, dogImageUri, category, intWeight, intHeight, createdTime, lastUpdated, ownerEmail)
 
             return post
         }
@@ -102,6 +106,7 @@ class Post(
                 HEIGHT_KEY to height,
                 CREATED_TIME_KEY to createdTime ,
                 LAST_UPDATED_KEY to lastUpdated,
+                OWNER_EMAIL_KEY to ownerId
             )
         }
 }

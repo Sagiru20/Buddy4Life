@@ -13,6 +13,9 @@ import com.buddy4life.databinding.FragmentPostsBinding
 import com.buddy4life.model.Gender
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
+import com.buddy4life.model.User.FirebaseUserModel
+import com.buddy4life.model.User.User
+import com.buddy4life.model.User.UserModel
 import com.buddy4life.modules.posts.adapter.PostsRecyclerAdapter
 import com.google.firebase.firestore.FieldValue
 
@@ -34,6 +37,61 @@ class MyPostsFragment : Fragment() {
         postsRecyclerView?.setHasFixedSize(true)
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
         adapter = PostsRecyclerAdapter(posts)
+
+//        UserModel.instance.registerUser("fulltest@gmail.com", "password", "john doe", "someuri") {
+//
+//            Log.w("TAG", "Registered. Firebase User is: " +  it)
+//
+//        }
+        val user = User ("another1", "photoUrl1", "hi7599@gmail.com")
+        UserModel.instance.registerUser(user.email, "pass1234") {
+            if (it?.uid != null) {
+                user.uid = it.uid
+
+                UserModel.instance.addUser(user) {
+                    Log.d("TAG", "added user")
+
+//                    UserModel.instance.getCurrentUserInfo {
+//                        Log.d("TAG", "user return email: " + it?.email)
+//                        Log.d("TAG", "user retrurn photoUrl: " + it?.photoUrl)
+//                        Log.d("TAG", "user return uid is: " + it?.uid)
+//                        Log.d("TAG", "user return name is: " + it?.name)
+                    }
+                }
+             else {
+                Log.w("TAG", "Erro adding user to Firebase, no UID returned")
+            }
+
+
+        }
+
+//        UserModel.instance.signInUser("fulltest@gmail.com", "password") {
+//            UserModel.instance.updateUserProfile("jonny", "someuri"){
+//
+//            }
+//
+//        }
+
+
+
+//        UserModel.instance.getCurrentUserInfo() {
+//
+//            Log.w("TAG", "Firebase UserInfo is: " +  it)
+//            Log.w("TAG", "email  is: " +  it?.email)
+//        }
+
+
+
+//        UserModel.instance.updateUserProfile("newOriEmail@gmail.com") {
+//            Log.w("TAG", "finished updating. user name is: " + UserModel.instance.currentUser()?.displayName)
+//
+//        }
+
+//        UserModel.instance.updateUserPassword("password1") {
+//
+//            Log.w("TAG", "Finished updating password")
+//
+//        }
 
 
 //        var post1 :Post = Post("updated", "Afador", Gender.MALE, 24, "im trying things", null,100, height = 200)
