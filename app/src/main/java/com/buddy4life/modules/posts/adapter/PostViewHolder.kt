@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.R
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
+import com.buddy4life.model.User.UserModel
 import com.buddy4life.modules.myPosts.MyPostsFragmentDirections
 import com.squareup.picasso.Picasso
 import com.buddy4life.modules.posts.PostsFragmentDirections
@@ -24,6 +25,7 @@ class PostViewHolder(
     private var descriptionTextView: TextView? = null
     private var readMoreButton: Button? = null
     private var dogImageImageView: ImageView? = null
+//    private var deleteImageView: ImageView? = null
     private var post: Post? = null
 
     init {
@@ -33,6 +35,8 @@ class PostViewHolder(
         descriptionTextView = itemView.findViewById(R.id.tvDogDescription)
         dogImageImageView = itemView.findViewById(R.id.ivDogImage)
         readMoreButton = itemView.findViewById(R.id.btnReadMore)
+//        deleteImageView = itemView.findViewById(R.id.ivDeletePost)
+
     }
 
     fun bind(post: Post?) {
@@ -54,6 +58,10 @@ class PostViewHolder(
         readMoreButton?.setOnClickListener(action?.let { Navigation.createNavigateOnClickListener(it) })
 //        readMoreButton?.setOnClickListener(myPostsToPostAction?.let { Navigation.createNavigateOnClickListener(it) })
 
+//        val currentUserUID = UserModel.instance.currentUser()?.uid
+//        val isUserPost = (post?.ownerId == currentUserUID)
+//        Log.d("TAG", "value of isUserPost is: $isUserPost")
+//        deleteImageView?.visibility = if (isUserPost) View.VISIBLE else View.GONE
 
         Model.instance.getPostDogImageUri(post?.id) { uri ->
             uri?.let {

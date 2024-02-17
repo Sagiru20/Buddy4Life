@@ -5,10 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import com.buddy4life.R
 import com.buddy4life.databinding.FragmentPostBinding
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
+import com.buddy4life.model.User.UserModel
 import com.squareup.picasso.Picasso
 
 class PostFragment : Fragment() {
@@ -39,6 +43,35 @@ class PostFragment : Fragment() {
         binding.tvDogAge.text = post?.age.toString()
         binding.tvDogDescription.text = post?.description.toString()
 
+        val currentUserUID = UserModel.instance.currentUser()?.uid
+        val isPostOfUser = (post?.ownerId == currentUserUID)
+
+        if (isPostOfUser) {
+
+            binding.ivDeletePost?.visibility = View.VISIBLE
+
+            binding.ivDeletePost.setOnClickListener {
+
+                post?.id?.let {
+
+                    Model.instance.deletePost(post!!.id) { isPostDeleted ->
+                        if (isPostDeleted) {
+
+                            //Todo make toast deleted successfully
+
+                        } else {
+
+                        }
+                    }
+
+                }
+
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_postFragment_to_myPostsFragment)
+            }
+        }
+
+
         Model.instance.getPostDogImageUri(post?.id) { uri ->
             uri?.let {
                 Log.i("TAG", "Setting image from uri: $uri")
@@ -56,6 +89,8 @@ class PostFragment : Fragment() {
         binding.tvDogInfoAge.text = post?.age.toString()
         binding.tvDogInfoWeight.text = post?.weight?.toString() ?: "-"
         binding.tvDogInfoHeight.text = post?.height?.toString() ?: "-"
+
+
     }
 
     override fun onDestroyView() {

@@ -71,9 +71,12 @@ class Model private constructor() {
 
     }
 
-    fun deletePost(postId: String, callback: () -> Unit) {
+    fun deletePost(postId: String, callback: (Boolean) -> Unit) {
 
-        firebaseModel.deletePost(postId, callback)
+        firebaseModel.deletePost(postId) { isPostDeleted ->
+
+            callback(isPostDeleted)
+        }
 
     }
 }

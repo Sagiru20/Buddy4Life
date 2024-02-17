@@ -82,16 +82,17 @@ class FirebaseModel {
         }
     }
 
-    fun deletePost(postId: String, callback: () -> Unit) {
+    fun deletePost(postId: String, callback: (Boolean) -> Unit) {
 
         db.collection(POSTS_COLLECTION_NAME).document(postId)
         .delete()
-            .addOnSuccessListener {
+            .addOnSuccessListener {it
                 Log.d("TAG", "DocumentSnapshot successfully deleted!")
-                callback()
+                callback(true)
             }
             .addOnFailureListener {
                 e -> Log.w("TAG", "Error deleting document", e)
+                callback(false)
             }
 
     }

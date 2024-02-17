@@ -40,36 +40,6 @@ class MyPostsFragment : Fragment() {
         adapter = PostsRecyclerAdapter(posts)
 
 
-//        val user = User ("another1", "photoUrl1", "hi7599@gmail.com")
-//        UserModel.instance.registerUser(user.email, "pass1234") {
-//            if (it?.uid != null) {
-//                user.uid = it.uid
-//
-//                UserModel.instance.addUser(user) {
-//                    Log.d("TAG", "added user")
-//
-////                    UserModel.instance.getCurrentUserInfo {
-////                        Log.d("TAG", "user return email: " + it?.email)
-////                        Log.d("TAG", "user retrurn photoUrl: " + it?.photoUrl)
-////                        Log.d("TAG", "user return uid is: " + it?.uid)
-////                        Log.d("TAG", "user return name is: " + it?.name)
-//                    }
-//                }
-//             else {
-//                Log.w("TAG", "Erro adding user to Firebase, no UID returned")
-//            }
-//
-//
-//        }
-
-//        UserModel.instance.signInUser("fulltest@gmail.com", "password") {
-//            UserModel.instance.updateUserProfile("jonny", "someuri"){
-//
-//            }
-//
-//        }
-
-
 
 //        UserModel.instance.getCurrentUserInfo() {
 //
