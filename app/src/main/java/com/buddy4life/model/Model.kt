@@ -1,6 +1,8 @@
 package com.buddy4life.model
 
+import android.net.Uri
 import android.os.Looper
+import android.util.Log
 import androidx.core.os.HandlerCompat
 import com.buddy4life.dao.AppLocalDatabase
 import java.util.concurrent.Executors
@@ -10,6 +12,7 @@ class Model private constructor() {
     private val database = AppLocalDatabase.db
     private var executor = Executors.newSingleThreadExecutor()
     private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
+    private val firebaseModel = FirebaseModel()
 
     companion object {
         val instance: Model = Model()
@@ -20,29 +23,57 @@ class Model private constructor() {
     }
 
     fun getAllPosts(callback: (List<Post>) -> Unit) {
-        executor.execute {
-            val posts = database.postDao().getAll()
-            mainHandler.post {
-                callback(posts)
-            }
-        }
+
+        firebaseModel.getAllPosts(callback)
+
     }
 
-    fun getPost(id: Long, callback: (Post) -> Unit) {
-        executor.execute {
-            val post: Post = database.postDao().getById(id)
-            mainHandler.post {
-                callback(post)
-            }
+    fun getPost(id: String, callback: (Post?) -> Unit) {
+
+        firebaseModel.getPost(id) { post ->
+            callback(post)
         }
+
     }
 
-    fun addPost(post: Post, callback: () -> Unit) {
-        executor.execute {
-            database.postDao().insert(post)
-            mainHandler.post {
-                callback()
+
+    fun addPost(post: Post, dogUri: String?, callback: () -> Unit) {
+
+        firebaseModel.addPost(post) {
+            val postId = it
+            firebaseModel.addPostDogImage(postId, dogUri) {
+
             }
+            callback()
+
         }
+
+    }
+
+    fun updatePost(post: Post, id: String, callback: () -> Unit) {
+
+        firebaseModel.updatePost(post, id, callback)
+
+    }
+
+    fun getUserPosts(callback: (List<Post>) -> Unit) {
+
+        firebaseModel.getUserPosts(callback)
+
+    }
+
+
+    fun getPostDogImageUri(postId: String?,  callback: (Uri?) -> Unit) {
+
+        firebaseModel.getPostDogImageUri(postId) { uri ->
+            callback(uri)
+        }
+
+    }
+
+    fun deletePost(postId: String, callback: () -> Unit) {
+
+        firebaseModel.deletePost(postId, callback)
+
     }
 }

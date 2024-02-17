@@ -16,10 +16,11 @@
 
         <!-- Media -->
         <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivDogImage"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:background="@color/white"
-            android:scaleType="centerInside"
+            android:scaleType="centerCrop"
             app:srcCompat="@drawable/dog_icon" />
 
         <LinearLayout

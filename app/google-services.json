@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804162828381",
+    "project_id": "buddy4life-9bf5a",
+    "storage_bucket": "buddy4life-9bf5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804162828381:android:1607c968ddb5fbb84035b4",
+        "android_client_info": {
+          "package_name": "com.buddy4life"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHw1H6BfYZasEXVFy_EOcmR1Cy7VTxjKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

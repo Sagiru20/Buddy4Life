@@ -20,9 +20,9 @@
         android:name="com.buddy4life.modules.add_post.AddPostFragment"
         android:label="fragment_add_post"
         tools:layout="@layout/fragment_add_post">
-        <action
-            android:id="@+id/action_addPostFragment_to_postsFragment"
-            app:destination="@id/postsFragment" />
+    <action
+        android:id="@+id/action_addPostFragment_to_postsFragment"
+        app:destination="@id/postsFragment" />
     </fragment>
 
     <fragment
@@ -30,8 +30,15 @@
         android:name="com.buddy4life.modules.post.PostFragment"
         android:label="fragment_post"
         tools:layout="@layout/fragment_post" >
+
         <argument
             android:name="postId"
-            app:argType="long" />
+            app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/myPostsFragment"
+        android:name="com.buddy4life.modules.myPosts.MyPostsFragment"
+        android:label="fragment_my_posts"
+        tools:layout="@layout/fragment_my_posts" />
 </navigation>

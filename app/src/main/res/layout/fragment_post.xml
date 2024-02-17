@@ -21,9 +21,11 @@
             android:paddingVertical="15dp">
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivDogImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 android:src="@drawable/dog_avatar" />
 
             <LinearLayout

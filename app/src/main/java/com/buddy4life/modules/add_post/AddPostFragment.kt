@@ -3,6 +3,7 @@ package com.buddy4life.modules.add_post
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -24,9 +25,12 @@ import com.buddy4life.databinding.FragmentAddPostBinding
 import com.buddy4life.dog_breed_api.DogBreedApi
 import com.buddy4life.dog_breed_api.RetrofitInstance
 import com.buddy4life.model.Breed
+import com.buddy4life.model.Category
 import com.buddy4life.model.Gender
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import retrofit2.Response
 
 private const val REQUIRED = "*required"
@@ -37,13 +41,18 @@ class AddPostFragment : Fragment() {
 
     private var breedsNames: List<String>? = null
 
+    private var imageUri: String? = null
+
+
     private var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
         ActivityResultContracts.PickVisualMedia()
-    ) { result ->
-        binding.ivDogAvatar.load(result) {
+    ) { uri ->
+        binding.ivDogAvatar.load(uri) {
             crossfade(true)
             placeholder(R.drawable.dog_icon)
         }
+//        binding.ivDogAvatar.setImageURI(uri)
+        imageUri = uri?.toString()
     }
 
     override fun onCreateView(
@@ -142,10 +151,11 @@ class AddPostFragment : Fragment() {
             val name: String? = binding.etDogName.text?.toString()
             val breed: String? = binding.actvDogBreed.text?.toString()
             val description: String? = binding.etDogDescription.text?.toString()
-            val age: Int? = binding.etDogAge.text?.toString()?.toInt()
-            val weight: Int? = binding.etDogWeight.text?.toString()?.toInt()
-            val height: Int? = binding.etDogHeight.text?.toString()?.toInt()
-
+            val ageText: String? = binding.etDogAge.text?.toString()
+            val weightText: String? = binding.etDogWeight.text?.toString()
+            val heightText: String? = binding.etDogHeight.text?.toString()
+            val category: Category = Category.ADOPTION_REQUEST
+            val dogUri: String? = imageUri
             val rbGenderCheckedId: Int = binding.rgGender.checkedRadioButtonId
             val gender: Gender?
             if (rbGenderCheckedId != -1) {
@@ -161,9 +171,28 @@ class AddPostFragment : Fragment() {
                 binding.tvGenderRadioGroupError.visibility = View.VISIBLE
             }
 
+            val weight = try {
+                weightText?.toInt()
+            } catch (e: NumberFormatException) {
+                null
+            }
+
+            val height = try {
+                heightText?.toInt()
+            } catch (e: NumberFormatException) {
+                null
+            }
+
+            val age = try {
+                ageText?.toInt()
+            } catch (e: NumberFormatException) {
+                null
+            }
+
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
-                val post = Post(name, breed, gender, age, description, weight, height)
-                Model.instance.addPost(post) {
+                val post = Post(name, breed, gender, age, description, dogUri, category, weight, height )
+                Model.instance.addPost(post, dogUri) {
+                    Log.i("TAG", "trying to call addPost")
                     Navigation.findNavController(it)
                         .navigate(R.id.action_addPostFragment_to_postsFragment)
                 }

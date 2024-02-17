@@ -1,6 +1,7 @@
 package com.buddy4life.modules.post
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.buddy4life.databinding.FragmentPostBinding
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
+import com.squareup.picasso.Picasso
 
 class PostFragment : Fragment() {
     private var _binding: FragmentPostBinding? = null
@@ -21,7 +23,7 @@ class PostFragment : Fragment() {
         _binding = FragmentPostBinding.inflate(inflater, container, false)
 
         // Get the post from DB by the given id
-        val postId = PostFragmentArgs.fromBundle(requireArguments()).postId
+        val postId: String = PostFragmentArgs.fromBundle(requireArguments()).postId
         Model.instance.getPost(postId) { post ->
             this.post = post
             setupUI()
@@ -36,6 +38,16 @@ class PostFragment : Fragment() {
         binding.tvDogGender.text = post?.gender.toString()
         binding.tvDogAge.text = post?.age.toString()
         binding.tvDogDescription.text = post?.description.toString()
+
+        Model.instance.getPostDogImageUri(post?.id) { uri ->
+            uri?.let {
+                Log.i("TAG", "Setting image from uri: $uri")
+                Picasso.get().load(uri).into(binding.ivDogImage)
+
+            }
+
+        }
+
 
         // Add text values to Dog Information card
         binding.tvDogInfoName.text = post?.name
