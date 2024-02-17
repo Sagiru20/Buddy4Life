@@ -4,6 +4,7 @@ package com.buddy4life.model
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
+import com.buddy4life.model.User.UserModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
@@ -62,10 +63,10 @@ class FirebaseModel {
         }
     }
 
-
+    //todo check that it works
     fun getUserPosts(callback: (List<Post>) -> Unit) {
         Log.d("TAG", "called: getUserPosts")
-        db.collection(POSTS_COLLECTION_NAME).whereGreaterThan("age", 2).get().addOnCompleteListener {
+        db.collection(POSTS_COLLECTION_NAME).whereEqualTo ("ownerId", UserModel.instance.currentUser()).get().addOnCompleteListener {
             when (it.isSuccessful) {
                 true -> {
                     val posts: MutableList<Post> = mutableListOf()
@@ -79,7 +80,6 @@ class FirebaseModel {
                 false -> callback(listOf())
             }
         }
-
     }
 
     fun deletePost(postId: String, callback: () -> Unit) {
@@ -134,9 +134,6 @@ class FirebaseModel {
                         callback(null)
                     }
                 }
-
-
-
 
             }
             .addOnFailureListener {

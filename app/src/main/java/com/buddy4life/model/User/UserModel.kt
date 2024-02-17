@@ -63,10 +63,8 @@ class UserModel {
         }
 
 
-
-
     }
-    
+
 
     fun updateUser(user: User, callback: () -> Unit) {
 
