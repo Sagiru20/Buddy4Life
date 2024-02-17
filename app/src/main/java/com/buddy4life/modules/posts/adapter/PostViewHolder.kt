@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.R
 import com.buddy4life.model.Model
 import com.buddy4life.model.Post
+import com.buddy4life.modules.myPosts.MyPostsFragmentDirections
 import com.squareup.picasso.Picasso
 import com.buddy4life.modules.posts.PostsFragmentDirections
 
@@ -42,7 +43,17 @@ class PostViewHolder(
         descriptionTextView?.text = post?.description.toString()
 
         val action = post?.let { PostsFragmentDirections.actionPostsFragmentToPostFragment(it.id) }
+
+        //Todo check why both of them are problematic
+        val myPostsToPostAction = post?.let {
+            MyPostsFragmentDirections.actionMyPostsFragmentToPostFragment(it.id)
+//            Navigation.findNavController(it)
+//                .navigate(R.id.action_addPostFragment_to_postsFragment)
+        }
+
         readMoreButton?.setOnClickListener(action?.let { Navigation.createNavigateOnClickListener(it) })
+//        readMoreButton?.setOnClickListener(myPostsToPostAction?.let { Navigation.createNavigateOnClickListener(it) })
+
 
         Model.instance.getPostDogImageUri(post?.id) { uri ->
             uri?.let {

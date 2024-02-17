@@ -64,7 +64,7 @@ class Post(
         const val HEIGHT_KEY = "height"
         const val CREATED_TIME_KEY = "createdTime"
         const val LAST_UPDATED_KEY = "lastUpdated"
-        const val OWNER_EMAIL_KEY = "ownerEmail"
+        const val OWNER_ID_KEY = "ownerId"
 
         fun fromJSON(postJson: Map<String, Any>, postId: String): Post {
 
@@ -83,7 +83,7 @@ class Post(
             val intHeight = height.toInt()
             val createdTime = postJson[CREATED_TIME_KEY] as? Long ?: 0
             val lastUpdated = postJson[LAST_UPDATED_KEY] as? Long ?: 0
-            val ownerEmail = postJson[OWNER_EMAIL_KEY] as? String ?: ""
+            val ownerEmail = postJson[OWNER_ID_KEY] as? String ?: ""
 
             val post = Post(id, name, breed, gender, intAge, description, dogImageUri, category, intWeight, intHeight, createdTime, lastUpdated, ownerEmail)
 
@@ -106,7 +106,7 @@ class Post(
                 HEIGHT_KEY to height,
                 CREATED_TIME_KEY to createdTime ,
                 LAST_UPDATED_KEY to lastUpdated,
-                OWNER_EMAIL_KEY to ownerId
+                OWNER_ID_KEY to ownerId
             )
         }
 }

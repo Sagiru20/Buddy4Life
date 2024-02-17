@@ -6,8 +6,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.widget.doOnTextChanged
 import com.buddy4life.databinding.ActivityRegisterBinding
+import com.buddy4life.model.FirebaseModel
+import com.buddy4life.model.User.FirebaseUserModel
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 private const val REQUIRED = "*required"
@@ -24,6 +30,14 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //TODO for testing only! delete this line:
+        if (UserModel.instance.currentUser() != null) {
+
+            val intent = Intent(this, MainActivity:: class.java)
+            startActivity(intent)
+//            Firebase.auth.signOut()
+        }
+//
 
         binding.etFullName.doOnTextChanged { text, _, _, _ ->
             if (text!!.isNotEmpty()) {
@@ -58,7 +72,7 @@ class RegisterActivity : AppCompatActivity() {
             if (!name.isNullOrEmpty() && !password.isNullOrEmpty() && password.length >= 6 && !email.isNullOrEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(binding.etEmail.text.toString()).matches()) {
 
                 registerUser(name, password, email)
-                val intent: Intent = Intent(this, MainActivity:: class.java)
+                val intent = Intent(this, LoginActivity:: class.java)
                 startActivity(intent)
 
             } else {

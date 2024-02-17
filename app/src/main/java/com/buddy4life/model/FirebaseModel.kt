@@ -22,12 +22,12 @@ class FirebaseModel {
         const val POSTS_DOG_PICTURE_FOLDER_NAME = "PostsDogsPictures"
     }
 
-    init {
-        val settings = com.google.firebase.firestore.firestoreSettings {
-            setLocalCacheSettings(memoryCacheSettings {  })
-        }
-        db.firestoreSettings = settings
-    }
+//    init {
+//        val settings = com.google.firebase.firestore.firestoreSettings {
+//            setLocalCacheSettings(memoryCacheSettings {  })
+//        }
+//        db.firestoreSettings = settings
+//    }
 
 
     fun getAllPosts(callback: (List<Post>) -> Unit) {
@@ -47,7 +47,7 @@ class FirebaseModel {
             }
         }
     }
-//
+
     fun addPost(post: Post, callback: (String) -> Unit) {
 
         // Add a new document with a generated ID
@@ -66,7 +66,7 @@ class FirebaseModel {
     //todo check that it works
     fun getUserPosts(callback: (List<Post>) -> Unit) {
         Log.d("TAG", "called: getUserPosts")
-        db.collection(POSTS_COLLECTION_NAME).whereEqualTo ("ownerId", UserModel.instance.currentUser()).get().addOnCompleteListener {
+        db.collection(POSTS_COLLECTION_NAME).whereEqualTo ("ownerId", UserModel.instance.currentUser()?.uid).get().addOnCompleteListener {
             when (it.isSuccessful) {
                 true -> {
                     val posts: MutableList<Post> = mutableListOf()
