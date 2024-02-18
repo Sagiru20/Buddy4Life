@@ -22,23 +22,22 @@ enum class Category(private val label: String) {
     }
 }
 
-    @Entity
+@Entity
 class Post(
-        @PrimaryKey() val id: String,
-        var name: String,
-        val breed: String,
-        val gender: Gender,
-        val age: Int,
-        var description: String,
-        val dogImageUri: String? = null,
-        val category: Category,
-        val weight: Int? = null,
-        val height: Int? = null,
-        var createdTime: Long,
-        var lastUpdated: Long,
-        var ownerId: String? = ""
-)
-{
+    @PrimaryKey() val id: String,
+    var name: String,
+    val breed: String,
+    val gender: Gender,
+    val age: Int,
+    var description: String,
+    val dogImageUri: String? = null,
+    val category: Category,
+    val weight: Int? = null,
+    val height: Int? = null,
+    var createdTime: Long,
+    var lastUpdated: Long,
+    var ownerId: String? = ""
+) {
 
     constructor(
         name: String,
@@ -49,7 +48,22 @@ class Post(
         dogImageUri: String? = null,
         category: Category,
         weight: Int? = null,
-        height: Int? = null) : this("", name, breed, gender, age, description, dogImageUri, category, weight, height, System.currentTimeMillis() , System.currentTimeMillis( ), UserModel.instance.currentUser()?.uid)
+        height: Int? = null
+    ) : this(
+        "",
+        name,
+        breed,
+        gender,
+        age,
+        description,
+        dogImageUri,
+        category,
+        weight,
+        height,
+        System.currentTimeMillis(),
+        System.currentTimeMillis(),
+        UserModel.instance.currentUser()?.uid
+    )
 
     companion object {
         const val ID_KEY = "id"
@@ -85,7 +99,21 @@ class Post(
             val lastUpdated = postJson[LAST_UPDATED_KEY] as? Long ?: 0
             val ownerEmail = postJson[OWNER_ID_KEY] as? String ?: ""
 
-            val post = Post(id, name, breed, gender, intAge, description, dogImageUri, category, intWeight, intHeight, createdTime, lastUpdated, ownerEmail)
+            val post = Post(
+                id,
+                name,
+                breed,
+                gender,
+                intAge,
+                description,
+                dogImageUri,
+                category,
+                intWeight,
+                intHeight,
+                createdTime,
+                lastUpdated,
+                ownerEmail
+            )
 
             return post
         }
@@ -104,7 +132,7 @@ class Post(
                 CATEGORY_KEY to category,
                 WEIGHT_KEY to weight,
                 HEIGHT_KEY to height,
-                CREATED_TIME_KEY to createdTime ,
+                CREATED_TIME_KEY to createdTime,
                 LAST_UPDATED_KEY to lastUpdated,
                 OWNER_ID_KEY to ownerId
             )

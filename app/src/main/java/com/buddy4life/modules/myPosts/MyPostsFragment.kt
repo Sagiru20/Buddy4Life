@@ -37,7 +37,7 @@ class MyPostsFragment : Fragment() {
         postsRecyclerView = binding.rvPosts
         postsRecyclerView?.setHasFixedSize(true)
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
-        adapter = PostsRecyclerAdapter(posts)
+        adapter = PostsRecyclerAdapter(posts, "MY_POSTS")
 
 
 
@@ -54,12 +54,6 @@ class MyPostsFragment : Fragment() {
 //
 //        }
 
-//        UserModel.instance.updateUserPassword("password1") {
-//
-//            Log.w("TAG", "Finished updating password")
-//
-//        }
-
 
 
         Model.instance.getUserPosts { posts ->
@@ -71,11 +65,7 @@ class MyPostsFragment : Fragment() {
         postsRecyclerView?.adapter = adapter
         return binding.root
     }
-
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-        fun onPostClicked(post: Post, callback: () -> Unit)
-    }
+    
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {

@@ -41,9 +41,13 @@ class Model private constructor() {
 
         firebaseModel.addPost(post) {
             val postId = it
-            firebaseModel.addPostDogImage(postId, dogUri) {
+            postId?.let {
 
+                firebaseModel.addPostDogImage(postId, dogUri) {
+
+                }
             }
+
             callback()
 
         }

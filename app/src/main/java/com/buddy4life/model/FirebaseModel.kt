@@ -52,69 +52,72 @@ class FirebaseModel {
 
         // Add a new document with a generated ID
         db.collection(POSTS_COLLECTION_NAME)
-        .add(post.json)
-        .addOnSuccessListener { documentReference ->
-            Log.w("TAG", "doc saved the id is: " +  documentReference.id)
-            callback(documentReference.id)
-        }
-        .addOnFailureListener { e ->
-            Log.w("TAG", "Error adding document", e)
-            callback("")
-        }
+            .add(post.json)
+            .addOnSuccessListener { documentReference ->
+                Log.w("TAG", "doc saved the id is: " + documentReference.id)
+                callback(documentReference.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w("TAG", "Error adding document", e)
+                callback("")
+            }
     }
 
     //todo check that it works
     fun getUserPosts(callback: (List<Post>) -> Unit) {
         Log.d("TAG", "called: getUserPosts")
-        db.collection(POSTS_COLLECTION_NAME).whereEqualTo ("ownerId", UserModel.instance.currentUser()?.uid).get().addOnCompleteListener {
-            when (it.isSuccessful) {
-                true -> {
-                    val posts: MutableList<Post> = mutableListOf()
-                    for (postJson in it.result) {
-                        val post = Post.fromJSON(postJson.data, postJson.id)
-                        posts.add(post)
+        db.collection(POSTS_COLLECTION_NAME)
+            .whereEqualTo("ownerId", UserModel.instance.currentUser()?.uid).get()
+            .addOnCompleteListener {
+                when (it.isSuccessful) {
+                    true -> {
+                        val posts: MutableList<Post> = mutableListOf()
+                        for (postJson in it.result) {
+                            val post = Post.fromJSON(postJson.data, postJson.id)
+                            posts.add(post)
+                        }
+                        callback(posts)
                     }
-                    callback(posts)
-                }
 
-                false -> callback(listOf())
+                    false -> callback(listOf())
+                }
             }
-        }
     }
 
     fun deletePost(postId: String, callback: (Boolean) -> Unit) {
 
         db.collection(POSTS_COLLECTION_NAME).document(postId)
-        .delete()
-            .addOnSuccessListener {it
+            .delete()
+            .addOnSuccessListener {
+                it
                 Log.d("TAG", "DocumentSnapshot successfully deleted!")
                 callback(true)
             }
-            .addOnFailureListener {
-                e -> Log.w("TAG", "Error deleting document", e)
+            .addOnFailureListener { e ->
+                Log.w("TAG", "Error deleting document", e)
                 callback(false)
             }
 
     }
 
 
-    fun updatePost(post: Post, id: String , callback: () -> Unit) {
+    fun updatePost(post: Post, id: String, callback: () -> Unit) {
         post.lastUpdated = System.currentTimeMillis()
-        post.description ="Im updated all good"
+
         db.collection(POSTS_COLLECTION_NAME).document(id)
             .set(post.json)
             .addOnSuccessListener {
                 Log.d("TAG", "DocumentSnapshot successfully updated!")
                 callback()
             }
-            .addOnFailureListener {
-                    e -> Log.w("TAG", "Error updating document", e)
+            .addOnFailureListener { e ->
+                Log.w("TAG", "Error updating document", e)
             }
 
     }
 
 
-    fun getPost(id: String , callback: (Post?) -> Unit) {
+    fun getPost(id: String, callback: (Post?) -> Unit) {
 
         db.collection(POSTS_COLLECTION_NAME).document(id)
             .get()
@@ -144,10 +147,7 @@ class FirebaseModel {
     }
 
 
-
-
-
-    fun addPostDogImage(postId: String?,stringUri: String?,  callback: () -> Unit) {
+    fun addPostDogImage(postId: String, stringUri: String?, callback: () -> Unit) {
 
         var ref = FirebaseStorage.getInstance().reference
         var imagesRef: StorageReference? = null
@@ -176,13 +176,12 @@ class FirebaseModel {
     }
 
 
-
-    fun getPostDogImageUri(postId: String?,  callback: (Uri?) -> Unit) {
+    fun getPostDogImageUri(postId: String?, callback: (Uri?) -> Unit) {
 
         postId?.let {
 
             var storageRef = storage.reference.child("${POSTS_DOG_PICTURE_FOLDER_NAME}/${postId}")
-            storageRef.downloadUrl.addOnSuccessListener {uri ->
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
 
                 Log.i("TAG", "successeded to get Uri")
                 callback(uri)
@@ -197,10 +196,6 @@ class FirebaseModel {
 
         callback(null)
     }
-
-
-
-
 
 
 }

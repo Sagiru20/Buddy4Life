@@ -2,7 +2,6 @@ package com.buddy4life.modules.posts
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,16 +21,18 @@ class PostsFragment : Fragment() {
 
     private var posts: List<Post>? = null
 
+
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentPostsBinding.inflate(inflater, container, false)
-
         postsRecyclerView = binding.rvPosts
         postsRecyclerView?.setHasFixedSize(true)
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
-        adapter = PostsRecyclerAdapter(posts)
+        adapter = PostsRecyclerAdapter(posts, "POSTS")
+
+
 
         Model.instance.getAllPosts { posts ->
             this.posts = posts
@@ -42,6 +43,7 @@ class PostsFragment : Fragment() {
         postsRecyclerView?.adapter = adapter
         return binding.root
     }
+
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)

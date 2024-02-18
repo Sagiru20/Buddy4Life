@@ -16,7 +16,8 @@ import com.squareup.picasso.Picasso
 import com.buddy4life.modules.posts.PostsFragmentDirections
 
 class PostViewHolder(
-    itemView: View
+    itemView: View,
+    fragmentName: String,
 ) : RecyclerView.ViewHolder(itemView) {
 
     private var nameTextView: TextView? = null
@@ -25,7 +26,9 @@ class PostViewHolder(
     private var descriptionTextView: TextView? = null
     private var readMoreButton: Button? = null
     private var dogImageImageView: ImageView? = null
-//    private var deleteImageView: ImageView? = null
+    private var fragmentName = fragmentName
+
+
     private var post: Post? = null
 
     init {
@@ -35,7 +38,6 @@ class PostViewHolder(
         descriptionTextView = itemView.findViewById(R.id.tvDogDescription)
         dogImageImageView = itemView.findViewById(R.id.ivDogImage)
         readMoreButton = itemView.findViewById(R.id.btnReadMore)
-//        deleteImageView = itemView.findViewById(R.id.ivDeletePost)
 
     }
 
@@ -46,22 +48,19 @@ class PostViewHolder(
         ageTextView?.text = post?.age.toString()
         descriptionTextView?.text = post?.description.toString()
 
-        val action = post?.let { PostsFragmentDirections.actionPostsFragmentToPostFragment(it.id) }
+        if (fragmentName == "POSTS") {
 
-        //Todo check why both of them are problematic
-        val myPostsToPostAction = post?.let {
-            MyPostsFragmentDirections.actionMyPostsFragmentToPostFragment(it.id)
-//            Navigation.findNavController(it)
-//                .navigate(R.id.action_addPostFragment_to_postsFragment)
+            val action = post?.let { PostsFragmentDirections.actionPostsFragmentToPostFragment(it.id) }
+            readMoreButton?.setOnClickListener(action?.let { Navigation.createNavigateOnClickListener(it) })
+
+        } else if (fragmentName == "MY_POSTS") {
+
+            val myPostsToPostAction = post?.let { MyPostsFragmentDirections.actionMyPostsFragmentToPostFragment(it.id) }
+            readMoreButton?.setOnClickListener(myPostsToPostAction?.let { Navigation.createNavigateOnClickListener(it) })
+
         }
 
-        readMoreButton?.setOnClickListener(action?.let { Navigation.createNavigateOnClickListener(it) })
-//        readMoreButton?.setOnClickListener(myPostsToPostAction?.let { Navigation.createNavigateOnClickListener(it) })
 
-//        val currentUserUID = UserModel.instance.currentUser()?.uid
-//        val isUserPost = (post?.ownerId == currentUserUID)
-//        Log.d("TAG", "value of isUserPost is: $isUserPost")
-//        deleteImageView?.visibility = if (isUserPost) View.VISIBLE else View.GONE
 
         Model.instance.getPostDogImageUri(post?.id) { uri ->
             uri?.let {
