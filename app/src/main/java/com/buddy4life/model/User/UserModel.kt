@@ -20,13 +20,34 @@ class UserModel {
     }
 
 
-    fun registerUser(email: String, password : String, callback: (FirebaseUser?) -> Unit) {
+    fun registerUser(user: User, password : String, callback: (FirebaseUser?) -> Unit) {
 
-        firebaseUserModel.registerUser(email, password) {firebaseUser ->
+        firebaseUserModel.registerUser(user.email, password) { firebaseUser ->
+            firebaseUser?.let {
+
+                if (it?.uid != null) {
+
+                    user.uid = it.uid
+
+                    user.photoUrl?.let {
+
+                        firebaseUserModel.addUserImage(user) {
+
+                            Log.d("TAG", "finished saving user image")
+
+                        }
+
+                    }
+
+                }
+
+            }
 
             callback(firebaseUser)
 
         }
+
+        callback(null)
 
     }
 

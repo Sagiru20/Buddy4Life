@@ -37,8 +37,8 @@
 <!--                android:id="@+id/tv_username"-->
 <!--                android:layout_width="wrap_content"-->
 <!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="4dp"-->
-<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginTop="12dp"-->
 <!--                android:text="Username:"-->
 <!--                app:layout_constraintStart_toStartOf="parent"-->
 <!--                app:layout_constraintTopToTopOf="parent"-->
@@ -48,7 +48,7 @@
 <!--                android:id="@+id/tv_user_name_value"-->
 <!--                android:layout_width="wrap_content"-->
 <!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginTop="40dp"-->
 <!--                android:layout_marginEnd="411dp"-->
 <!--                android:text="myuser"-->
 <!--                app:layout_constraintEnd_toEndOf="parent"-->

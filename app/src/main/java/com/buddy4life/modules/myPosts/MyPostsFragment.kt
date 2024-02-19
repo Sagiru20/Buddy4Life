@@ -65,7 +65,7 @@ class MyPostsFragment : Fragment() {
         postsRecyclerView?.adapter = adapter
         return binding.root
     }
-    
+
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {

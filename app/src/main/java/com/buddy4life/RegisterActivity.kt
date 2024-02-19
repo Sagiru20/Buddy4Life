@@ -1,10 +1,14 @@
 package com.buddy4life
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
+import coil.load
 import com.buddy4life.databinding.ActivityRegisterBinding
 import com.buddy4life.model.FirebaseModel
 import com.buddy4life.model.User.FirebaseUserModel
@@ -30,14 +34,32 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //TODO for testing only! delete this line:
-        if (UserModel.instance.currentUser() != null) {
-
-            val intent = Intent(this, MainActivity:: class.java)
-            startActivity(intent)
-//            Firebase.auth.signOut()
-        }
+        //TODO for testing only! delete this section is not in comment:
+//        if (UserModel.instance.currentUser() != null) {
 //
+//            val intent = Intent(this, MainActivity:: class.java)
+//            startActivity(intent)
+//        }
+
+        var imageUri: String? = null
+        var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
+            ActivityResultContracts.PickVisualMedia()
+        ) { uri ->
+            binding.ivUserAvatar.load(uri) {
+                crossfade(true)
+                placeholder(R.drawable.dog_icon)
+            }
+
+            imageUri = uri?.toString()
+        }
+
+
+        binding.ivUserAvatar.setOnClickListener {
+            launcher.launch(
+                PickVisualMediaRequest.Builder().setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly).build()
+            )
+        }
+
 
         binding.etFullName.doOnTextChanged { text, _, _, _ ->
             if (text!!.isNotEmpty()) {
@@ -71,7 +93,7 @@ class RegisterActivity : AppCompatActivity() {
 
             if (!name.isNullOrEmpty() && !password.isNullOrEmpty() && password.length >= 6 && !email.isNullOrEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(binding.etEmail.text.toString()).matches()) {
 
-                registerUser(name, password, email)
+                registerUser(name, password, email, imageUri)
                 val intent = Intent(this, LoginActivity:: class.java)
                 startActivity(intent)
 
@@ -99,12 +121,12 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun registerUser(name: String,
                      password: String,
-                     email: String) {
+                     email: String, imageUri: String?) {
 
-        val user = User(name, "photoUrl1", email)
-        UserModel.instance.registerUser(user.email, password) {
+        val user = User(name, imageUri, email)
+        UserModel.instance.registerUser(user, password) {
             if (it?.uid != null) {
-                user.uid = it.uid
+//                user.uid = it.uid
 
                 UserModel.instance.addUser(user) {
                     Log.d("TAG", "added user")
