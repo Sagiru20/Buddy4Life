@@ -64,7 +64,7 @@ class PostViewHolder(
 
         Model.instance.getPostDogImageUri(post?.id) { uri ->
             uri?.let {
-                Log.i("TAG", "Setting image from uri: $uri")
+
                 Picasso.get().load(uri).into(dogImageImageView)
 
             }

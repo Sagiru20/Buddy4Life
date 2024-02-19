@@ -1,5 +1,6 @@
 package com.buddy4life.model.User
 
+import android.net.Uri
 import android.util.Log
 import com.buddy4life.model.FirebaseModel
 import com.buddy4life.model.Model
@@ -16,24 +17,34 @@ class UserModel {
     }
 
     fun currentUser(): FirebaseUser? {
+
         return firebaseUserModel.currentUser()
     }
 
 
-    fun registerUser(user: User, password : String, callback: (FirebaseUser?) -> Unit) {
+    fun registerUser(user: User, password : String, callback: (User?) -> Unit) {
 
         firebaseUserModel.registerUser(user.email, password) { firebaseUser ->
             firebaseUser?.let {
 
                 if (it?.uid != null) {
 
+
                     user.uid = it.uid
 
                     user.photoUrl?.let {
 
-                        firebaseUserModel.addUserImage(user) {
+                        firebaseUserModel.addUserImage(user) {isImageSaved ->
 
-                            Log.d("TAG", "finished saving user image")
+                           if (isImageSaved) {
+                               Log.d("TAG", "trying to getUserImageUri")
+                               firebaseUserModel.getUserImageUri(user.uid) { uri ->
+
+                                   user.photoUrl = uri.toString()
+                                   Log.d("TAG", "user.photoUrl is: ${user.photoUrl}")
+
+                               }
+                           }
 
                         }
 
@@ -43,7 +54,7 @@ class UserModel {
 
             }
 
-            callback(firebaseUser)
+            callback(user)
 
         }
 
@@ -76,6 +87,7 @@ class UserModel {
         currentUser()?.email?.let { email ->
 
             firebaseUserModel.getUserInfoByEmail(email) { currentUserInfo ->
+                Log.d("TAG", "We have user Info")
 
                 callback(currentUserInfo)
 
@@ -83,6 +95,17 @@ class UserModel {
 
         }
 
+
+    }
+
+
+    fun getUserImageUri(uid: String?, callback: (Uri?) -> Unit) {
+
+        firebaseUserModel.getUserImageUri(uid) {uri ->
+
+            callback(uri)
+
+        }
 
     }
 

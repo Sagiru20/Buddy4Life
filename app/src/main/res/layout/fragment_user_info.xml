@@ -5,86 +5,229 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical">-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:background="@color/green_light"
+        tools:context=".MainActivity">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:padding="8dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+<!--                <RelativeLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent">-->
+<!--                    <ImageView-->
+<!--                        android:padding="5dp"-->
+<!--                        android:layout_alignParentStart="true"-->
+<!--                        android:src="@drawable/ic_arrow"-->
+<!--                        android:layout_width="40dp"-->
+<!--                        android:layout_height="40dp"/>-->
 
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="167dp">-->
+<!--                    <ImageView-->
+<!--                        android:layout_width="45dp"-->
+<!--                        android:layout_height="45dp"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:layout_marginStart="5dp"-->
+<!--                        android:layout_marginTop="5dp"-->
+<!--                        android:layout_marginEnd="41dp"-->
+<!--                        android:layout_marginBottom="5dp"-->
+<!--                        android:padding="1dp"-->
+<!--                        android:src="@drawable/ic_shopping" />-->
 
-<!--            <ImageView-->
-<!--                android:id="@+id/iv_profile_picture"-->
-<!--                android:layout_width="80dp"-->
-<!--                android:layout_height="80dp"-->
-<!--                android:layout_marginStart="152dp"-->
-<!--                android:layout_marginTop="43dp"-->
-<!--                android:src="@drawable/user_icon"-->
-<!--                app:layout_constraintBottomToBottomOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTopToTopOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+<!--                    <ImageView-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:padding="1dp"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        android:src="@drawable/ic_notification"-->
+<!--                        android:layout_width="45dp"-->
+<!--                        android:layout_height="45dp"/>-->
 
+<!--                </RelativeLayout>-->
 
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="99dp">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/tv_username"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:layout_marginTop="12dp"-->
-<!--                android:text="Username:"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTopToTopOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/tv_user_name_value"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="40dp"-->
-<!--                android:layout_marginEnd="411dp"-->
-<!--                android:text="myuser"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.0"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTopToTopOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="My"
+                    android:textStyle="normal"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:text="Profile"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="33sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
 
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+            </LinearLayout>
 
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="100dp"-->
-<!--            tools:layout_editor_absoluteY="266dp">-->
 
-<!--            <TextView-->
-<!--                android:id="@+id/tv_email"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Email:"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTopToTopOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+        </LinearLayout>
 
-<!--            <TextView-->
-<!--                android:id="@+id/tv_email_value"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="172dp"-->
-<!--                android:layout_marginTop="4dp"-->
-<!--                android:text="mymail"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTopToTopOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+<!--        <include-->
 
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--    </LinearLayout>-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+            <RelativeLayout
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="15dp"
+                    android:layout_marginTop="40dp"
+                    app:cardElevation="10dp"
+                    app:cardUseCompatPadding="true"
+                    tools:cardCornerRAdius="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_marginTop="23dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/tvUserDisplayName"
+                            android:layout_width="match_parent"
+                            android:layout_height="39dp"
+                            android:layout_marginTop="15dp"
+                            android:gravity="center"
+                            android:text="Display name"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                        <View
+                            android:background="#79D6D1D1"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"/>
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:weightSum="2"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:layout_weight="1"
+                                android:text="Info"
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"/>
+                            <View
+                                android:background="#79D6D1D1"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"/>
+                            <TextView
+                                android:layout_weight="1"
+                                android:text="Posts"
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:textColor="#636262"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"/>
+                            <View
+                                android:background="#79D6D1D1"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"/>
+
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+
+            </RelativeLayout>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivUserImage"
+                android:src="@drawable/user_icon"
+                android:elevation="15dp"
+                android:padding="5dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="98dp"
+                android:layout_height="98dp"/>
+        </RelativeLayout>
+
+                <androidx.cardview.widget.CardView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:card_view="http://schemas.android.com/tools"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="10dp"
+                    app:cardUseCompatPadding="true"
+                    card_view:cardCornerRAdius="5dp">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:padding="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:padding="2dp"
+                                android:src="@drawable/ic_email"
+                                android:layout_marginStart="5dp"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"/>
+                            <TextView
+                                android:text="Email"
+                                android:layout_marginStart="10dp"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_gravity="center"
+                                android:textColor="#605E5E"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/tvUserEmail"
+                            android:text="mymail@gmail.com"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginBottom="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

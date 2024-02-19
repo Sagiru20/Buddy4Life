@@ -65,9 +65,11 @@ class FirebaseModel {
 
     //todo check that it works
     fun getUserPosts(callback: (List<Post>) -> Unit) {
+
+
         Log.d("TAG", "called: getUserPosts")
         db.collection(POSTS_COLLECTION_NAME)
-            .whereEqualTo("ownerId", UserModel.instance.currentUser()?.uid).get()
+            .whereEqualTo("ownerId",UserModel.instance.currentUser()?.uid).get()
             .addOnCompleteListener {
                 when (it.isSuccessful) {
                     true -> {

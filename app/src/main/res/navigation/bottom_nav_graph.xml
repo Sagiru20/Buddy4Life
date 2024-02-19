@@ -49,4 +49,10 @@
             app:destination="@id/postFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
+    <fragment
+        android:id="@+id/userAccountFragment"
+        android:name="com.buddy4life.modules.profile.UserAccountFragment"
+        android:label="fragment_user_account"
+        tools:layout="@layout/fragment_user_info"></fragment>
 </navigation>

@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseUser
 class User(
     var uid: String,
     val name: String,
-    val photoUrl: String? = null,
+    var photoUrl: String? = null,
     var email: String,
 ) {
 

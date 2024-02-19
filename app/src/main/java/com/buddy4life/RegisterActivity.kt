@@ -34,12 +34,18 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //TODO for testing only! delete this section is not in comment:
-//        if (UserModel.instance.currentUser() != null) {
+        //TODO for testing only! this section must NOT be comment:
+
+
+            if (UserModel.instance.currentUser() != null) {
 //
-//            val intent = Intent(this, MainActivity:: class.java)
-//            startActivity(intent)
-//        }
+            val intent = Intent(this, MainActivity:: class.java)
+            startActivity(intent)
+//
+            }
+
+//        FirebaseAuth.getInstance().signOut()
+
 
         var imageUri: String? = null
         var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
@@ -123,12 +129,13 @@ class RegisterActivity : AppCompatActivity() {
                      password: String,
                      email: String, imageUri: String?) {
 
-        val user = User(name, imageUri, email)
-        UserModel.instance.registerUser(user, password) {
-            if (it?.uid != null) {
-//                user.uid = it.uid
+        var user = User(name, imageUri, email)
+        UserModel.instance.registerUser(user, password) { user ->
+            if (user?.uid != null) {
+                Log.d("TAG", "user photo url retured is: ${user.photoUrl}")
 
                 UserModel.instance.addUser(user) {
+
                     Log.d("TAG", "added user")
 
                 }

@@ -20,7 +20,7 @@
         android:icon="@drawable/ic_my_posts_24"
         android:title="@string/menu_item_my_posts" />
     <item
-        android:id="@+id/miAccount"
+        android:id="@+id/userAccountFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/ic_account_24"

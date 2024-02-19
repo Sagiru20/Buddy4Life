@@ -16,6 +16,11 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="helper_text_color">#808080</color>
+    <color name="yellow_orange_color">#FFD54F</color>
+    <color name="green_light">#AED581</color>
+
+
+
 
     <color name="posts">#9BB1E8</color>
 

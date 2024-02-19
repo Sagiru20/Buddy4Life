@@ -40,7 +40,9 @@ class FirebaseUserModel {
     }
 
     fun currentUser(): FirebaseUser? {
+
         return currentUser
+
     }
 
 
@@ -192,7 +194,7 @@ class FirebaseUserModel {
 
     }
 
-    fun addUserImage(user: User, callback: () -> Unit) {
+    fun addUserImage(user: User, callback: (Boolean) -> Unit) {
 
 
         var ref = FirebaseStorage.getInstance().reference
@@ -203,17 +205,40 @@ class FirebaseUserModel {
         uploadTask?.addOnFailureListener {
 
             Log.i("TAG", "failed to save user photoUri")
-            callback()
+            callback(false)
 
         }?.addOnSuccessListener { taskSnapshot ->
             Log.i("TAG", "succeeded to save user photo url!")
-            callback()
+            callback(true)
 
         }
 
-        callback()
+        callback(false)
 
     }
+
+
+    fun getUserImageUri(uid: String?, callback: (Uri?) -> Unit) {
+
+        uid?.let {
+
+            var storageRef = storage.reference.child("${USER_PROFILE_PICTURE_FOLDER_NAME}/${uid}")
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
+
+                Log.i("TAG", "successeded to get Uri")
+                callback(uri)
+
+            }.addOnFailureListener {
+
+                Log.i("TAG", "failed to get user image uri!")
+                callback(null)
+
+            }
+        }
+
+        callback(null)
+    }
+
 
 
     //TODO check that this function works
