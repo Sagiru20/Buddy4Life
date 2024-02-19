@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.buddy4life.base.MyApplication
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.Post
 
 @Database(entities = [Post::class], version = 6, exportSchema = false)
 abstract class AppLocalDbRepository : RoomDatabase() {

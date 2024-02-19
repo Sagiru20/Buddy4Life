@@ -3,17 +3,14 @@ package com.buddy4life.model.User
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
-import com.buddy4life.model.FirebaseModel
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.FirebasePostModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 
 class FirebaseUserModel {
@@ -141,7 +138,7 @@ class FirebaseUserModel {
 
             uid?.let {
 
-                db.collection(FirebaseModel.POSTS_COLLECTION_NAME).document(uid)
+                db.collection(FirebasePostModel.POSTS_COLLECTION_NAME).document(uid)
                     .set(user.json)
                     .addOnSuccessListener {
                         Log.d("TAG", "DocumentSnapshot successfully updated!")

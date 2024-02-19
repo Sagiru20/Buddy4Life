@@ -1,11 +1,10 @@
 package com.buddy4life.modules.posts.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.R
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.Post
 import com.buddy4life.modules.posts.PostsFragment
 
 class PostsRecyclerAdapter(var posts: List<Post>?, fragmentName: String) : RecyclerView.Adapter<PostViewHolder>() {

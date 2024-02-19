@@ -1,10 +1,5 @@
 package com.buddy4life.model.User
 
-import com.buddy4life.model.Category
-import com.buddy4life.model.Gender
-import com.buddy4life.model.Post
-import com.google.firebase.auth.FirebaseUser
-
 class User(
     var uid: String,
     val name: String,

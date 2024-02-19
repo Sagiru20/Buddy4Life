@@ -5,18 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.buddy4life.databinding.FragmentUserInfoBinding
-import com.buddy4life.dog_breed_api.DogBreedApi
-import com.buddy4life.dog_breed_api.RetrofitInstance
-import com.buddy4life.model.Breed
-import com.buddy4life.model.Model
 import com.buddy4life.model.User.UserModel
 import com.squareup.picasso.Picasso
-import retrofit2.Response
 
 class UserAccountFragment : Fragment() {
 

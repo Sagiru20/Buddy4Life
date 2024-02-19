@@ -1,6 +1,5 @@
 package com.buddy4life.modules.posts.adapter
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Button
@@ -8,9 +7,8 @@ import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.R
-import com.buddy4life.model.Model
-import com.buddy4life.model.Post
-import com.buddy4life.model.User.UserModel
+import com.buddy4life.model.Post.PostModel
+import com.buddy4life.model.Post.Post
 import com.buddy4life.modules.myPosts.MyPostsFragmentDirections
 import com.squareup.picasso.Picasso
 import com.buddy4life.modules.posts.PostsFragmentDirections
@@ -62,7 +60,7 @@ class PostViewHolder(
 
 
 
-        Model.instance.getPostDogImageUri(post?.id) { uri ->
+        PostModel.instance.getPostDogImageUri(post?.id) { uri ->
             uri?.let {
 
                 Picasso.get().load(uri).into(dogImageImageView)

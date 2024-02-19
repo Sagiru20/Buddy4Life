@@ -1,4 +1,4 @@
-package com.buddy4life.model
+package com.buddy4life.model.Post
 
 
 import android.net.Uri
@@ -6,13 +6,12 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.buddy4life.model.User.UserModel
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 
-class FirebaseModel {
+class FirebasePostModel {
 
     val db = Firebase.firestore
     val storage = Firebase.storage
@@ -75,7 +74,10 @@ class FirebaseModel {
                     true -> {
                         val posts: MutableList<Post> = mutableListOf()
                         for (postJson in it.result) {
-                            val post = Post.fromJSON(postJson.data, postJson.id)
+                            val post = Post.fromJSON(
+                                postJson.data,
+                                postJson.id
+                            )
                             posts.add(post)
                         }
                         callback(posts)
@@ -130,7 +132,12 @@ class FirebaseModel {
 
                         Log.d("TAG", "DocumentSnapshot successfully retrieved!")
                         val postJson = it.result
-                        val post = postJson.data?.let { data -> Post.fromJSON(data, postJson.id) }
+                        val post = postJson.data?.let { data ->
+                            Post.fromJSON(
+                                data,
+                                postJson.id
+                            )
+                        }
                         callback(post)
 
                     }
@@ -155,7 +162,7 @@ class FirebaseModel {
         var imagesRef: StorageReference? = null
 
         postId?.let {
-            imagesRef = ref.child("${POSTS_DOG_PICTURE_FOLDER_NAME}/${postId}")
+            imagesRef = ref.child("$POSTS_DOG_PICTURE_FOLDER_NAME/${postId}")
         }
 
         stringUri?.let {
@@ -182,7 +189,7 @@ class FirebaseModel {
 
         postId?.let {
 
-            var storageRef = storage.reference.child("${POSTS_DOG_PICTURE_FOLDER_NAME}/${postId}")
+            var storageRef = storage.reference.child("$POSTS_DOG_PICTURE_FOLDER_NAME/${postId}")
             storageRef.downloadUrl.addOnSuccessListener { uri ->
 
                 Log.i("TAG", "successeded to get Uri")

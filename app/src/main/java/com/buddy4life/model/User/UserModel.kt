@@ -2,11 +2,7 @@ package com.buddy4life.model.User
 
 import android.net.Uri
 import android.util.Log
-import com.buddy4life.model.FirebaseModel
-import com.buddy4life.model.Model
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class UserModel {
 

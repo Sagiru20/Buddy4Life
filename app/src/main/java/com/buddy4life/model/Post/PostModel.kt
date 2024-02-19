@@ -1,21 +1,20 @@
-package com.buddy4life.model
+package com.buddy4life.model.Post
 
 import android.net.Uri
 import android.os.Looper
-import android.util.Log
 import androidx.core.os.HandlerCompat
 import com.buddy4life.dao.AppLocalDatabase
 import java.util.concurrent.Executors
 
-class Model private constructor() {
+class PostModel private constructor() {
 
     private val database = AppLocalDatabase.db
     private var executor = Executors.newSingleThreadExecutor()
     private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
-    private val firebaseModel = FirebaseModel()
+    private val firebasePostModel = FirebasePostModel()
 
     companion object {
-        val instance: Model = Model()
+        val instance: PostModel = PostModel()
     }
 
     interface GetAllPostsListener {
@@ -24,14 +23,20 @@ class Model private constructor() {
 
     fun getAllPosts(callback: (List<Post>) -> Unit) {
 
-        firebaseModel.getAllPosts(callback)
+        firebasePostModel.getAllPosts() { posts ->
+
+            callback(posts)
+
+        }
 
     }
 
     fun getPost(id: String, callback: (Post?) -> Unit) {
 
-        firebaseModel.getPost(id) { post ->
+        firebasePostModel.getPost(id) { post ->
+
             callback(post)
+
         }
 
     }
@@ -39,16 +44,17 @@ class Model private constructor() {
 
     fun addPost(post: Post, dogUri: String?, callback: () -> Unit) {
 
-        firebaseModel.addPost(post) {
+        firebasePostModel.addPost(post) {
             val postId = it
             postId?.let {
 
-                firebaseModel.addPostDogImage(postId, dogUri) {
+                firebasePostModel.addPostDogImage(postId, dogUri) {
+
+                    callback()
 
                 }
-            }
 
-            callback()
+            }
 
         }
 
@@ -56,30 +62,39 @@ class Model private constructor() {
 
     fun updatePost(post: Post, id: String, callback: () -> Unit) {
 
-        firebaseModel.updatePost(post, id, callback)
+        firebasePostModel.updatePost(post, id) {
+
+        }
 
     }
 
     fun getUserPosts(callback: (List<Post>) -> Unit) {
 
-        firebaseModel.getUserPosts(callback)
+        firebasePostModel.getUserPosts() { posts ->
+
+            callback(posts)
+
+        }
 
     }
 
 
     fun getPostDogImageUri(postId: String?,  callback: (Uri?) -> Unit) {
 
-        firebaseModel.getPostDogImageUri(postId) { uri ->
+        firebasePostModel.getPostDogImageUri(postId) { uri ->
+
             callback(uri)
+
         }
 
     }
 
     fun deletePost(postId: String, callback: (Boolean) -> Unit) {
 
-        firebaseModel.deletePost(postId) { isPostDeleted ->
+        firebasePostModel.deletePost(postId) { isPostDeleted ->
 
             callback(isPostDeleted)
+
         }
 
     }

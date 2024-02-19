@@ -1,4 +1,4 @@
-package com.buddy4life.model
+package com.buddy4life.model.Post
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

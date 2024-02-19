@@ -2,7 +2,6 @@ package com.buddy4life.modules.myPosts
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.databinding.FragmentMyPostsBinding
-import com.buddy4life.databinding.FragmentPostsBinding
-import com.buddy4life.model.Gender
-import com.buddy4life.model.Model
-import com.buddy4life.model.Post
-import com.buddy4life.model.User.FirebaseUserModel
-import com.buddy4life.model.User.User
-import com.buddy4life.model.User.UserModel
+import com.buddy4life.model.Post.PostModel
+import com.buddy4life.model.Post.Post
 import com.buddy4life.modules.posts.adapter.PostsRecyclerAdapter
-import com.google.firebase.firestore.FieldValue
 
 class MyPostsFragment : Fragment() {
     private lateinit var binding: FragmentMyPostsBinding
@@ -56,7 +49,7 @@ class MyPostsFragment : Fragment() {
 
 
 
-        Model.instance.getUserPosts { posts ->
+        PostModel.instance.getUserPosts { posts ->
             this.posts = posts
             adapter?.posts = posts
             adapter?.notifyDataSetChanged()
@@ -70,7 +63,7 @@ class MyPostsFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        Model.instance.getUserPosts { posts ->
+        PostModel.instance.getUserPosts { posts ->
             this.posts = posts
             adapter?.posts = posts
             adapter?.notifyDataSetChanged()

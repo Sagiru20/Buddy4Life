@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.Post
 
 @Dao
 interface PostDao {

@@ -10,14 +10,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import coil.load
 import com.buddy4life.databinding.ActivityRegisterBinding
-import com.buddy4life.model.FirebaseModel
-import com.buddy4life.model.User.FirebaseUserModel
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 
 private const val REQUIRED = "*required"

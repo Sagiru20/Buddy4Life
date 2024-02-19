@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.databinding.FragmentPostsBinding
-import com.buddy4life.model.Model
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.PostModel
+import com.buddy4life.model.Post.Post
 import com.buddy4life.modules.posts.adapter.PostsRecyclerAdapter
 
 class PostsFragment : Fragment() {
@@ -34,7 +34,7 @@ class PostsFragment : Fragment() {
 
 
 
-        Model.instance.getAllPosts { posts ->
+        PostModel.instance.getAllPosts { posts ->
             this.posts = posts
             adapter?.posts = posts
             adapter?.notifyDataSetChanged()
@@ -53,7 +53,7 @@ class PostsFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        Model.instance.getAllPosts { posts ->
+        PostModel.instance.getAllPosts { posts ->
             this.posts = posts
             adapter?.posts = posts
             adapter?.notifyDataSetChanged()

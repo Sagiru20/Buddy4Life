@@ -5,13 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.buddy4life.R
 import com.buddy4life.databinding.FragmentPostBinding
-import com.buddy4life.model.Model
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.PostModel
+import com.buddy4life.model.Post.Post
 import com.buddy4life.model.User.UserModel
 import com.squareup.picasso.Picasso
 
@@ -28,7 +27,7 @@ class PostFragment : Fragment() {
 
         // Get the post from DB by the given id
         val postId: String = PostFragmentArgs.fromBundle(requireArguments()).postId
-        Model.instance.getPost(postId) { post ->
+        PostModel.instance.getPost(postId) { post ->
             this.post = post
             setupUI()
         }
@@ -54,7 +53,7 @@ class PostFragment : Fragment() {
 
                 post?.id?.let {
 
-                    Model.instance.deletePost(post!!.id) { isPostDeleted ->
+                    PostModel.instance.deletePost(post!!.id) { isPostDeleted ->
                         if (isPostDeleted) {
 
                             //Todo make toast deleted successfully
@@ -72,7 +71,7 @@ class PostFragment : Fragment() {
         }
 
 
-        Model.instance.getPostDogImageUri(post?.id) { uri ->
+        PostModel.instance.getPostDogImageUri(post?.id) { uri ->
             uri?.let {
                 Log.i("TAG", "Setting image from uri: $uri")
                 Picasso.get().load(uri).into(binding.ivDogImage)
