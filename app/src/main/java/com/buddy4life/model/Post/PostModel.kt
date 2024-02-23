@@ -2,6 +2,7 @@ package com.buddy4life.model.Post
 
 import android.net.Uri
 import android.os.Looper
+import android.util.Log
 import androidx.core.os.HandlerCompat
 import com.buddy4life.dao.AppLocalDatabase
 import java.util.concurrent.Executors
@@ -48,25 +49,49 @@ class PostModel private constructor() {
             val postId = it
             postId?.let {
 
-                firebasePostModel.addPostDogImage(postId, dogUri) {
+                //TODO decide if its string or null
+                if (!dogUri.isNullOrEmpty()) {
 
-                    callback()
+                    this.setPostDogImage(postId, dogUri) { isDogImageSaved ->
+
+                        if(!isDogImageSaved) {
+
+                            callback()
+
+                        }
+
+                    }
 
                 }
 
             }
 
-        }
-
-    }
-
-    fun updatePost(post: Post, id: String, callback: () -> Unit) {
-
-        firebasePostModel.updatePost(post, id) {
+            callback()
 
         }
 
     }
+
+    fun updatePost(post: Post, callback: (Boolean) -> Unit) {
+
+        firebasePostModel.updatePost(post) { isPostUpdated ->
+
+            callback(isPostUpdated)
+
+        }
+
+    }
+
+    fun setPostDogImage(postId: String, dogImageUri: String, callback: (Boolean) -> Unit) {
+
+        firebasePostModel.setPostDogImage(postId, dogImageUri) { isDogImageSaved ->
+
+            callback(isDogImageSaved)
+
+        }
+
+    }
+
 
     fun getUserPosts(callback: (List<Post>) -> Unit) {
 
@@ -79,7 +104,7 @@ class PostModel private constructor() {
     }
 
 
-    fun getPostDogImageUri(postId: String?,  callback: (Uri?) -> Unit) {
+    fun getPostDogImageUri(postId: String?, callback: (Uri?) -> Unit) {
 
         firebasePostModel.getPostDogImageUri(postId) { uri ->
 

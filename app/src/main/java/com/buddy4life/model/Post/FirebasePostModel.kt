@@ -68,7 +68,7 @@ class FirebasePostModel {
 
         Log.d("TAG", "called: getUserPosts")
         db.collection(POSTS_COLLECTION_NAME)
-            .whereEqualTo("ownerId",UserModel.instance.currentUser()?.uid).get()
+            .whereEqualTo("ownerId", UserModel.instance.currentUser()?.uid).get()
             .addOnCompleteListener {
                 when (it.isSuccessful) {
                     true -> {
@@ -102,21 +102,29 @@ class FirebasePostModel {
                 callback(false)
             }
 
+        callback(false)
+
     }
 
 
-    fun updatePost(post: Post, id: String, callback: () -> Unit) {
-        post.lastUpdated = System.currentTimeMillis()
+    fun updatePost(post: Post, callback: (Boolean) -> Unit) {
 
-        db.collection(POSTS_COLLECTION_NAME).document(id)
-            .set(post.json)
-            .addOnSuccessListener {
-                Log.d("TAG", "DocumentSnapshot successfully updated!")
-                callback()
-            }
-            .addOnFailureListener { e ->
-                Log.w("TAG", "Error updating document", e)
-            }
+        post.id?.let {
+
+            post.lastUpdated = System.currentTimeMillis()
+
+            db.collection(POSTS_COLLECTION_NAME).document(post.id)
+                .set(post.json)
+                .addOnSuccessListener {
+                    Log.d("TAG", "Post successfully updated!")
+                    callback(true)
+                }
+                .addOnFailureListener { e ->
+                    Log.w("TAG", "Error updating post", e)
+                    callback(false)
+                }
+
+        }
 
     }
 
@@ -156,7 +164,7 @@ class FirebasePostModel {
     }
 
 
-    fun addPostDogImage(postId: String, stringUri: String?, callback: () -> Unit) {
+    fun setPostDogImage(postId: String, stringUri: String?, callback: (Boolean) -> Unit) {
 
         var ref = FirebaseStorage.getInstance().reference
         var imagesRef: StorageReference? = null
@@ -172,16 +180,16 @@ class FirebasePostModel {
             uploadTask?.addOnFailureListener {
 
                 Log.i("TAG", "failed to save dog image")
-                callback()
+                callback(false)
 
             }?.addOnSuccessListener { taskSnapshot ->
                 Log.i("TAG", "succeeded to save dog image!")
-                callback()
+                callback(true)
 
             }
         }
 
-        callback()
+        callback(false)
     }
 
 

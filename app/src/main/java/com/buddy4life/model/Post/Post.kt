@@ -1,5 +1,6 @@
 package com.buddy4life.model.Post
 
+import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.buddy4life.model.User.UserModel
@@ -85,7 +86,7 @@ class Post(
             val id = postId as? String ?: ""
             val name = postJson[NAME_KEY] as? String ?: ""
             val breed = postJson[BREED_KEY] as? String ?: ""
-            val gender = postJson[GENDER_KEY] as? Gender ?: Gender.MALE
+            val gender = Gender.valueOf(postJson[GENDER_KEY].toString().uppercase()) as? Gender ?: Gender.MALE
             val age = postJson[AGE_KEY] as? Long ?: 0
             val intAge = age.toInt()
             val description = postJson[DESCRIPTION_KEY] as? String ?: ""

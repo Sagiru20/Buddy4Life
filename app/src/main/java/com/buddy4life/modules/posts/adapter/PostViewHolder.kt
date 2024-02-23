@@ -48,22 +48,40 @@ class PostViewHolder(
 
         if (fragmentName == "POSTS") {
 
-            val action = post?.let { PostsFragmentDirections.actionPostsFragmentToPostFragment(it.id) }
-            readMoreButton?.setOnClickListener(action?.let { Navigation.createNavigateOnClickListener(it) })
+            val action =
+                post?.let { PostsFragmentDirections.actionPostsFragmentToPostFragment(it.id) }
+            readMoreButton?.setOnClickListener(action?.let {
+                Navigation.createNavigateOnClickListener(
+                    it
+                )
+            })
 
         } else if (fragmentName == "MY_POSTS") {
 
-            val myPostsToPostAction = post?.let { MyPostsFragmentDirections.actionMyPostsFragmentToPostFragment(it.id) }
-            readMoreButton?.setOnClickListener(myPostsToPostAction?.let { Navigation.createNavigateOnClickListener(it) })
+            val myPostsToPostAction =
+                post?.let { MyPostsFragmentDirections.actionMyPostsFragmentToPostFragment(it.id) }
+            readMoreButton?.setOnClickListener(myPostsToPostAction?.let {
+                Navigation.createNavigateOnClickListener(
+                    it
+                )
+            })
 
         }
 
 
+        this.post?.dogImageUri?.let {
 
-        PostModel.instance.getPostDogImageUri(post?.id) { uri ->
-            uri?.let {
+            if (this.post!!.dogImageUri!!.isNotEmpty()) {
 
-                Picasso.get().load(uri).into(dogImageImageView)
+                PostModel.instance.getPostDogImageUri(post?.id) { uri ->
+
+                    uri?.let {
+
+                        Picasso.get().load(uri).into(dogImageImageView)
+
+                    }
+
+                }
 
             }
 

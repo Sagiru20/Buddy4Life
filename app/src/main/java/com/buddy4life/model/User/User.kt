@@ -2,7 +2,7 @@ package com.buddy4life.model.User
 
 class User(
     var uid: String,
-    val name: String,
+    var name: String,
     var photoUrl: String? = null,
     var email: String,
 ) {

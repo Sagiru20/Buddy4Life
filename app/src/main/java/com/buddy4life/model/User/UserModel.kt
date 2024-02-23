@@ -18,7 +18,7 @@ class UserModel {
     }
 
 
-    fun registerUser(user: User, password : String, callback: (User?) -> Unit) {
+    fun registerUser(user: User, password: String, callback: (User?) -> Unit) {
 
         firebaseUserModel.registerUser(user.email, password) { firebaseUser ->
             firebaseUser?.let {
@@ -30,17 +30,10 @@ class UserModel {
 
                     user.photoUrl?.let {
 
-                        firebaseUserModel.addUserImage(user) {isImageSaved ->
+                        this.updateUserProfileImage(user) {
 
-                           if (isImageSaved) {
-                               Log.d("TAG", "trying to getUserImageUri")
-                               firebaseUserModel.getUserImageUri(user.uid) { uri ->
-
-                                   user.photoUrl = uri.toString()
-                                   Log.d("TAG", "user.photoUrl is: ${user.photoUrl}")
-
-                               }
-                           }
+                            Log.d("TAG", "User Successfully created")
+                            callback(user)
 
                         }
 
@@ -49,7 +42,7 @@ class UserModel {
                 }
 
             }
-
+            Log.d("TAG", "Could not save user image but User created")
             callback(user)
 
         }
@@ -67,10 +60,9 @@ class UserModel {
     }
 
 
+    fun signInUser(email: String, password: String, callback: (FirebaseUser?) -> Unit) {
 
-    fun signInUser(email: String, password : String, callback: (FirebaseUser?) -> Unit) {
-
-        firebaseUserModel.signInUser(email, password) {firebaseUser ->
+        firebaseUserModel.signInUser(email, password) { firebaseUser ->
 
             callback(firebaseUser)
 
@@ -97,7 +89,7 @@ class UserModel {
 
     fun getUserImageUri(uid: String?, callback: (Uri?) -> Unit) {
 
-        firebaseUserModel.getUserImageUri(uid) {uri ->
+        firebaseUserModel.getUserImageUri(uid) { uri ->
 
             callback(uri)
 
@@ -106,12 +98,32 @@ class UserModel {
     }
 
 
-    fun updateUser(user: User, callback: () -> Unit) {
+    fun updateUser(user: User, callback: (Boolean) -> Unit) {
 
-        firebaseUserModel.updateUser(user) {
+        firebaseUserModel.updateUser(user) { isUserSaved ->
+
+            callback(isUserSaved)
 
         }
 
+    }
+
+    fun updateUserProfileImage(user: User, callback: () -> Unit) {
+
+        firebaseUserModel.setUserImageProfile(user) { isImageSaved ->
+
+            if (isImageSaved) {
+                Log.d("TAG", "trying to getUserImageUri")
+                firebaseUserModel.getUserImageUri(user.uid) { uri ->
+
+                    user.photoUrl = uri.toString()
+                    Log.d("TAG", "user.photoUrl is: ${user.photoUrl}")
+
+                }
+            }
+
+            callback()
+        }
 
     }
 
@@ -119,6 +131,16 @@ class UserModel {
     fun updateUserPassword(newPassword: String, callback: () -> Unit) {
 
         firebaseUserModel.updateUserPassword((newPassword)) {
+
+        }
+
+    }
+
+    fun logout(callback: () -> Unit) {
+
+        firebaseUserModel.logout() {
+
+            callback()
 
         }
 

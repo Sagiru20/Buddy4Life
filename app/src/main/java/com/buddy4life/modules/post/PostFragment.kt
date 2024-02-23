@@ -5,13 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.buddy4life.R
 import com.buddy4life.databinding.FragmentPostBinding
 import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.Post.Post
 import com.buddy4life.model.User.UserModel
+import com.buddy4life.modules.posts.PostsFragmentDirections
 import com.squareup.picasso.Picasso
 
 class PostFragment : Fragment() {
@@ -56,9 +59,19 @@ class PostFragment : Fragment() {
                     PostModel.instance.deletePost(post!!.id) { isPostDeleted ->
                         if (isPostDeleted) {
 
-                            //Todo make toast deleted successfully
+                            Toast.makeText(
+                                requireContext(),
+                                "Post deleted successfully",
+                                Toast.LENGTH_SHORT,
+                            ).show()
 
                         } else {
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Could not delete post",
+                                Toast.LENGTH_SHORT,
+                            ).show()
 
                         }
                     }
@@ -67,6 +80,31 @@ class PostFragment : Fragment() {
 
                 Navigation.findNavController(it)
                     .navigate(R.id.action_postFragment_to_myPostsFragment)
+            }
+
+            binding.ivEditPost?.visibility = View.VISIBLE
+
+            val action =
+                post?.let { PostFragmentDirections.actionPostFragmentToEditPostFragment(it.id) }
+
+
+            binding.ivEditPost.setOnClickListener {
+
+                if (action != null && post != null && !post?.id.isNullOrEmpty() ) {
+
+                    it.findNavController().navigate(action)
+
+                } else {
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Can't update post right now",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+
+
+                }
+
             }
         }
 
@@ -86,8 +124,8 @@ class PostFragment : Fragment() {
         binding.tvDogInfoBreed.text = post?.breed
         binding.tvDogInfoGender.text = post?.gender.toString()
         binding.tvDogInfoAge.text = post?.age.toString()
-        binding.tvDogInfoWeight.text = post?.weight?.toString() ?: "-"
-        binding.tvDogInfoHeight.text = post?.height?.toString() ?: "-"
+        binding.tvDogInfoWeight.text = if (post?.weight.toString() != null && post?.weight?.toString() != "0") post?.weight?.toString() else "-"
+        binding.tvDogInfoHeight.text = if (post?.height.toString() != null && post?.height?.toString() != "0") post?.height?.toString() else "-"
 
 
     }

@@ -20,23 +20,6 @@
             android:orientation="vertical"
             android:paddingVertical="15dp">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ivDogImage"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:src="@drawable/dog_avatar" />
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ivDeletePost"
-                android:layout_width="98dp"
-                android:layout_height="70dp"
-                android:layout_gravity="left"
-                android:scaleType="centerCrop"
-                android:visibility="invisible"
-                android:src="@drawable/delete_post" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,21 +79,8 @@
                             android:textColor="@color/black"
                             android:textSize="17sp"
                             tools:text="@string/female" />
+
                     </LinearLayout>
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/dividerGuideline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.5" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:id="@+id/ageAndGenderDivider"
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        app:dividerColor="@color/black_100"
-                        app:layout_constraintStart_toStartOf="@+id/dividerGuideline" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -139,18 +109,36 @@
                             tools:text="12" />
                     </LinearLayout>
 
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/dividerGuideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/ageAndGenderDivider"
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        app:dividerColor="@color/black_100"
+                        app:layout_constraintStart_toStartOf="@+id/dividerGuideline" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/ivEditPost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/ic_edit" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivDogImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/dog_avatar" />
 
         </LinearLayout>
+
+
+
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -165,16 +153,7 @@
                 android:orientation="vertical"
                 android:padding="15dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppinsmedium"
-                    android:text="@string/description"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
+                <EditText
                     android:id="@+id/tvDogDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -183,6 +162,15 @@
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     tools:text="@string/lorem_ipsum" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppinsmedium"
+                    android:text="@string/description"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -225,18 +213,7 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppinsmedium"
-                        android:text="@string/name"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
+                    <EditText
                         android:id="@+id/tvDogInfoName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -247,6 +224,17 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Macy" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppinsmedium"
+                        android:text="@string/name"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -255,6 +243,18 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/actvDogInfoBreed"
+                        android:layout_width="219dp"
+                        android:layout_height="39dp"
+                        android:fontFamily="@font/poppinsmedium"
+                        android:textColor="#6E6C6C"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="American Pugaball" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -266,18 +266,6 @@
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvDogInfoBreed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppinsmedium"
-                        android:textColor="#6E6C6C"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="American Pugaball" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -286,6 +274,19 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp">
+
+                    <Spinner
+                        android:id="@+id/spnrDogInfoGender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppinsmedium"
+                        android:inputType="textAutoComplete"
+                        android:textColor="#6E6C6C"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Female" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -297,18 +298,6 @@
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvDogInfoGender"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppinsmedium"
-                        android:textColor="#6E6C6C"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Female" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -317,6 +306,18 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp">
+
+                    <EditText
+                        android:id="@+id/tvDogInfoAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppinsmedium"
+                        android:textColor="#6E6C6C"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="12" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -328,18 +329,6 @@
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvDogInfoAge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppinsmedium"
-                        android:textColor="#6E6C6C"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="12" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -348,6 +337,18 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp">
+
+                    <EditText
+                        android:id="@+id/tvDogInfoWeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppinsmedium"
+                        android:textColor="#6E6C6C"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="50 kg" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -359,18 +360,6 @@
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvDogInfoWeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppinsmedium"
-                        android:textColor="#6E6C6C"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="50 kg" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -379,6 +368,18 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="10dp">
+
+                    <EditText
+                        android:id="@+id/tvDogInfoHeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppinsmedium"
+                        android:textColor="#6E6C6C"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="70 cm" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -390,23 +391,41 @@
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvDogInfoHeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppinsmedium"
-                        android:textColor="#6E6C6C"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="70 cm" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/btnSavePost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/red"
+                android:text="Cancel" />
+        </LinearLayout>
 
     </LinearLayout>
 

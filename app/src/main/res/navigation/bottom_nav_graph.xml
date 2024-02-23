@@ -37,6 +37,9 @@
         <argument
             android:name="postId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_postFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment" />
     </fragment>
 
     <fragment
@@ -54,5 +57,28 @@
         android:id="@+id/userAccountFragment"
         android:name="com.buddy4life.modules.profile.UserAccountFragment"
         android:label="fragment_user_account"
-        tools:layout="@layout/fragment_user_info"></fragment>
+        tools:layout="@layout/fragment_user_info">
+        <action
+            android:id="@+id/action_userAccountFragment_to_editAccountFragment"
+            app:destination="@id/editAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editAccountFragment"
+        android:name="com.buddy4life.modules.profile.EditAccountFragment"
+        android:label="EditAccountFragment" >
+        <action
+            android:id="@+id/action_editAccountFragment_to_userAccountFragment"
+            app:destination="@id/userAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.buddy4life.modules.edit_post.EditPostFragment"
+        android:label="EditPostFragment" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_editPostFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
 </navigation>

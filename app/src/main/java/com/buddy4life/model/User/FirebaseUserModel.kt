@@ -3,7 +3,6 @@ package com.buddy4life.model.User
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
-import com.buddy4life.model.Post.FirebasePostModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -23,7 +22,7 @@ class FirebaseUserModel {
 
     init {
         val settings = com.google.firebase.firestore.firestoreSettings {
-            setLocalCacheSettings(memoryCacheSettings {  })
+            setLocalCacheSettings(memoryCacheSettings { })
         }
         db.firestoreSettings = settings
     }
@@ -43,7 +42,7 @@ class FirebaseUserModel {
     }
 
 
-    fun registerUser(email: String, password : String, callback: (FirebaseUser?) -> Unit) {
+    fun registerUser(email: String, password: String, callback: (FirebaseUser?) -> Unit) {
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -73,13 +72,13 @@ class FirebaseUserModel {
 //                callback()
 //            }
 
-        }
+    }
 
-    fun signInUser(email: String, password : String, callback: (FirebaseUser?) -> Unit) {
+    fun signInUser(email: String, password: String, callback: (FirebaseUser?) -> Unit) {
 
 
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener {task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("TAG", "signInWithEmail:success")
@@ -129,26 +128,32 @@ class FirebaseUserModel {
     }
 
 
-
-    fun updateUser(user: User, callback: () -> Unit) {
-        Log.d("TAG", "User trying to update with name & photouri: " + user.name +"  " + user.photoUrl)
+    fun updateUser(user: User, callback: (Boolean) -> Unit) {
+        Log.d(
+            "TAG",
+            "User trying to update with name & photouri: " + user.name + "  " + user.photoUrl
+        )
         //TODO maybe the ID will be email
 
-            val uid = Firebase.auth.currentUser?.uid
+        val email = Firebase.auth.currentUser?.email
 
-            uid?.let {
+        email?.let {
 
-                db.collection(FirebasePostModel.POSTS_COLLECTION_NAME).document(uid)
-                    .set(user.json)
-                    .addOnSuccessListener {
-                        Log.d("TAG", "DocumentSnapshot successfully updated!")
-                        callback()
-                    }
-                    .addOnFailureListener {
-                            e -> Log.w("TAG", "Error updating document", e)
-                    }
+            db.collection(USERS_COLLECTION_NAME).document(email)
+                .set(user.json)
+                .addOnSuccessListener {
+                    Log.d("TAG", "DocumentSnapshot successfully updated!")
+                    callback(true)
+                }
+                .addOnFailureListener { e ->
+                    Log.w("TAG", "Error updating document", e)
 
-            }
+                    callback(false)
+                }
+
+        }
+
+
 
     }
 
@@ -179,7 +184,7 @@ class FirebaseUserModel {
                 .document(user.email)
                 .set(user.json)
                 .addOnSuccessListener { documentReference ->
-                    Log.w("TAG", "user saved to FB the id is: " +  documentReference)
+                    Log.w("TAG", "user saved to FB the id is: " + documentReference)
                     callback()
                 }
                 .addOnFailureListener { e ->
@@ -191,7 +196,7 @@ class FirebaseUserModel {
 
     }
 
-    fun addUserImage(user: User, callback: (Boolean) -> Unit) {
+    fun setUserImageProfile(user: User, callback: (Boolean) -> Unit) {
 
 
         var ref = FirebaseStorage.getInstance().reference
@@ -237,7 +242,6 @@ class FirebaseUserModel {
     }
 
 
-
     //TODO check that this function works
     fun restUserPassword(email: String, callback: () -> Unit) {
 
@@ -249,4 +253,13 @@ class FirebaseUserModel {
             }
 
     }
+
+    fun logout(callback: () -> Unit) {
+
+        Firebase.auth.signOut()
+
+        callback()
+
+    }
+
 }
