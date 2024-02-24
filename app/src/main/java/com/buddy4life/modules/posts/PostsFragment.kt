@@ -19,8 +19,6 @@ class PostsFragment : Fragment() {
 
     private var postsRecyclerView: RecyclerView? = null
     private var adapter: PostsRecyclerAdapter? = null
-
-//    private var posts: List<Post>? = null
     private lateinit var viewModel: PostsViewModel
 
 

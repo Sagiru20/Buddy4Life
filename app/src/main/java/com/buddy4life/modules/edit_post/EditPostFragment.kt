@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
@@ -27,9 +26,7 @@ import com.buddy4life.model.Post.Gender
 import com.buddy4life.model.Post.Post
 import com.buddy4life.model.Post.PostModel
 import com.buddy4life.modules.post.PostFragmentArgs
-import com.buddy4life.modules.post.PostFragmentDirections
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.NonDisposableHandle.parent
 import retrofit2.Response
 
 class EditPostFragment : Fragment() {
@@ -151,55 +148,75 @@ class EditPostFragment : Fragment() {
 
             binding.btnSavePost.setOnClickListener {
 
-                val newPost = Post(
-                    post!!.id,
-                    binding.tvDogInfoName.text.toString(),
-                    binding.actvDogInfoBreed.text.toString(),
-                    Gender.valueOf(binding.spnrDogInfoGender.selectedItem.toString().uppercase()),
-                    binding.tvDogInfoAge.text.toString().toInt(),
-                    binding.tvDogDescription.text.toString(),
-                    imageUri,
-                    Category.ADOPTION_REQUEST,
-                    binding.tvDogInfoWeight.text.toString().toInt(),
-                    binding.tvDogInfoHeight.text.toString().toInt(),
-                    post!!.createdTime,
-                    post!!.lastUpdated,
-                    post?.ownerId
-                )
+                if (!binding.tvDogInfoName.text.toString()
+                        .isEmpty() && !binding.actvDogInfoBreed.text.toString()
+                        .isEmpty() && !binding.tvDogInfoAge.text.toString()
+                        .isEmpty() && !binding.tvDogDescription.text.toString().isEmpty() &&
+                    breedsNames?.contains(binding.actvDogInfoBreed.text.toString()) == true
+                ) {
+
+                    val newPost = Post(
+                        post!!.id,
+                        binding.tvDogInfoName.text.toString(),
+                        binding.actvDogInfoBreed.text.toString(),
+                        Gender.valueOf(
+                            binding.spnrDogInfoGender.selectedItem.toString().uppercase()
+                        ),
+                        binding.tvDogInfoAge.text.toString().toInt(),
+                        binding.tvDogDescription.text.toString(),
+                        imageUri,
+                        Category.ADOPTION_REQUEST,
+                        binding.tvDogInfoWeight.text.toString().toInt(),
+                        binding.tvDogInfoHeight.text.toString().toInt(),
+                        post!!.createdTime,
+                        post!!.lastUpdated,
+                        post?.ownerId
+                    )
 
 
-                PostModel.instance.updatePost(newPost) { isPostUpdated ->
+                    PostModel.instance.updatePost(newPost) { isPostUpdated ->
 
-                    if (isPostUpdated) {
+                        if (isPostUpdated) {
 
-                        if (isPostImageChanged) {
+                            if (isPostImageChanged) {
 
-                            newPost.dogImageUri?.let {
+                                newPost.dogImageUri?.let {
 
-                                PostModel.instance.setPostDogImage(
-                                    newPost.id,
-                                    newPost.dogImageUri
-                                ) { isPostImageSaved ->
+                                    PostModel.instance.setPostDogImage(
+                                        newPost.id,
+                                        newPost.dogImageUri
+                                    ) { isPostImageSaved ->
 
-                                    if (isPostImageSaved) {
+                                        if (isPostImageSaved) {
 
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Post Updated Successfully",
-                                            Toast.LENGTH_SHORT,
-                                        ).show()
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Post Updated Successfully",
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
 
-                                    } else {
+                                        } else {
 
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Failed to update post's image",
-                                            Toast.LENGTH_SHORT,
-                                        ).show()
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Failed to update post's image",
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
+
+                                        }
 
                                     }
 
                                 }
+
+
+                            } else {
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Post Updated Successfully",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
 
                             }
 
@@ -208,28 +225,40 @@ class EditPostFragment : Fragment() {
 
                             Toast.makeText(
                                 requireContext(),
-                                "Post Updated Successfully",
+                                "Failed to update post",
                                 Toast.LENGTH_SHORT,
                             ).show()
 
                         }
 
 
+                    }
+
+                    Navigation.findNavController(it)
+                        .navigate(action)
+
+                } else {
+
+                    if (breedsNames?.contains(binding.actvDogInfoBreed.text.toString()) == false) {
+
+                        Toast.makeText(
+                            requireContext(),
+                            "breed must be in the list",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+
                     } else {
 
                         Toast.makeText(
                             requireContext(),
-                            "Failed to update post",
+                            "required parameter can't be empty",
                             Toast.LENGTH_SHORT,
                         ).show()
 
+
                     }
 
-
                 }
-
-                Navigation.findNavController(it)
-                    .navigate(action)
 
             }
 

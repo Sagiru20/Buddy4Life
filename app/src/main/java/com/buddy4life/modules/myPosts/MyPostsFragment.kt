@@ -33,22 +33,6 @@ class MyPostsFragment : Fragment() {
         adapter = PostsRecyclerAdapter(posts, "MY_POSTS")
 
 
-
-//        UserModel.instance.getCurrentUserInfo() {
-//
-//            Log.w("TAG", "Firebase UserInfo is: " +  it)
-//            Log.w("TAG", "email  is: " +  it?.email)
-//        }
-
-
-
-//        UserModel.instance.updateUserProfile("newOriEmail@gmail.com") {
-//            Log.w("TAG", "finished updating. user name is: " + UserModel.instance.currentUser()?.displayName)
-//
-//        }
-
-
-
         PostModel.instance.getUserPosts { posts ->
             this.posts = posts
             adapter?.posts = posts
