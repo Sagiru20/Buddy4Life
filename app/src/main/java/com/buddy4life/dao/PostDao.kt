@@ -1,16 +1,17 @@
 package com.buddy4life.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.Post
 
 @Dao
 interface PostDao {
     @Query("SELECT * FROM Post")
-    fun getAll(): List<Post>
+    fun getAll(): LiveData<MutableList<Post>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg post: Post)
@@ -19,5 +20,5 @@ interface PostDao {
     fun delete(post: Post)
 
     @Query("SELECT * FROM Post WHERE id LIKE :id LIMIT 1")
-    fun getById(id: Long): Post
+    fun getById(id: Long): LiveData<Post>
 }

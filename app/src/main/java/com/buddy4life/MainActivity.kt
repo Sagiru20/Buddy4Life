@@ -29,5 +29,26 @@ class MainActivity : AppCompatActivity() {
                 bottomNavigationView?.visibility = View.VISIBLE
             }
         }
+
+
+        bottomNavigationView?.setOnNavigationItemSelectedListener { menuItem ->
+
+            when (menuItem.itemId) {
+                R.id.myPostsFragment -> navigateToFragment(R.id.myPostsFragment)
+                R.id.postsFragment -> navigateToFragment(R.id.postsFragment)
+                R.id.addPostFragment -> navigateToFragment(R.id.addPostFragment)
+                R.id.userAccountFragment -> navigateToFragment(R.id.userAccountFragment)
+            }
+            true
+
+        }
+
+
     }
+
+    private fun navigateToFragment(fragmentId: Int) {
+        navController?.navigate(fragmentId)
+    }
+
+
 }

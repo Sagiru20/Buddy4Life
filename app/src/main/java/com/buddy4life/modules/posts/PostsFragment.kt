@@ -2,16 +2,16 @@ package com.buddy4life.modules.posts
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.databinding.FragmentPostsBinding
-import com.buddy4life.model.Model
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.PostModel
+import com.buddy4life.model.Post.Post
 import com.buddy4life.modules.posts.adapter.PostsRecyclerAdapter
 
 class PostsFragment : Fragment() {
@@ -19,29 +19,34 @@ class PostsFragment : Fragment() {
 
     private var postsRecyclerView: RecyclerView? = null
     private var adapter: PostsRecyclerAdapter? = null
+    private lateinit var viewModel: PostsViewModel
 
-    private var posts: List<Post>? = null
+
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentPostsBinding.inflate(inflater, container, false)
-
+        viewModel = ViewModelProvider(this)[PostsViewModel::class.java]
+        viewModel.posts = PostModel.instance.getAllPosts()
         postsRecyclerView = binding.rvPosts
         postsRecyclerView?.setHasFixedSize(true)
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
-        adapter = PostsRecyclerAdapter(posts)
 
-        Model.instance.getAllPosts { posts ->
-            this.posts = posts
-            adapter?.posts = posts
+        adapter = PostsRecyclerAdapter(viewModel.posts?.value, "POSTS")
+        postsRecyclerView?.adapter = adapter
+
+        viewModel.posts?.observe(viewLifecycleOwner) {
+            adapter?.posts = it
             adapter?.notifyDataSetChanged()
+
         }
 
-        postsRecyclerView?.adapter = adapter
+
         return binding.root
     }
+
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -51,10 +56,14 @@ class PostsFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        Model.instance.getAllPosts { posts ->
-            this.posts = posts
-            adapter?.posts = posts
-            adapter?.notifyDataSetChanged()
-        }
+        reloadPosts()
+
+
+    }
+
+    private fun reloadPosts() {
+
+        PostModel.instance.refreshAllPosts()
+
     }
 }

@@ -25,12 +25,10 @@ import com.buddy4life.databinding.FragmentAddPostBinding
 import com.buddy4life.dog_breed_api.DogBreedApi
 import com.buddy4life.dog_breed_api.RetrofitInstance
 import com.buddy4life.model.Breed
-import com.buddy4life.model.Category
-import com.buddy4life.model.Gender
-import com.buddy4life.model.Model
-import com.buddy4life.model.Post
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
+import com.buddy4life.model.Post.Category
+import com.buddy4life.model.Post.Gender
+import com.buddy4life.model.Post.PostModel
+import com.buddy4life.model.Post.Post
 import retrofit2.Response
 
 private const val REQUIRED = "*required"
@@ -191,8 +189,8 @@ class AddPostFragment : Fragment() {
 
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
                 val post = Post(name, breed, gender, age, description, dogUri, category, weight, height )
-                Model.instance.addPost(post, dogUri) {
-                    Log.i("TAG", "trying to call addPost")
+                PostModel.instance.addPost(post, dogUri) {
+
                     Navigation.findNavController(it)
                         .navigate(R.id.action_addPostFragment_to_postsFragment)
                 }

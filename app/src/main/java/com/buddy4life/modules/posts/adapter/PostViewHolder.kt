@@ -1,6 +1,5 @@
 package com.buddy4life.modules.posts.adapter
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Button
@@ -8,13 +7,15 @@ import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.R
-import com.buddy4life.model.Model
-import com.buddy4life.model.Post
+import com.buddy4life.model.Post.PostModel
+import com.buddy4life.model.Post.Post
+import com.buddy4life.modules.myPosts.MyPostsFragmentDirections
 import com.squareup.picasso.Picasso
 import com.buddy4life.modules.posts.PostsFragmentDirections
 
 class PostViewHolder(
-    itemView: View
+    itemView: View,
+    fragmentName: String,
 ) : RecyclerView.ViewHolder(itemView) {
 
     private var nameTextView: TextView? = null
@@ -23,6 +24,9 @@ class PostViewHolder(
     private var descriptionTextView: TextView? = null
     private var readMoreButton: Button? = null
     private var dogImageImageView: ImageView? = null
+    private var fragmentName = fragmentName
+
+
     private var post: Post? = null
 
     init {
@@ -32,6 +36,7 @@ class PostViewHolder(
         descriptionTextView = itemView.findViewById(R.id.tvDogDescription)
         dogImageImageView = itemView.findViewById(R.id.ivDogImage)
         readMoreButton = itemView.findViewById(R.id.btnReadMore)
+
     }
 
     fun bind(post: Post?) {
@@ -41,13 +46,42 @@ class PostViewHolder(
         ageTextView?.text = post?.age.toString()
         descriptionTextView?.text = post?.description.toString()
 
-        val action = post?.let { PostsFragmentDirections.actionPostsFragmentToPostFragment(it.id) }
-        readMoreButton?.setOnClickListener(action?.let { Navigation.createNavigateOnClickListener(it) })
+        if (fragmentName == "POSTS") {
 
-        Model.instance.getPostDogImageUri(post?.id) { uri ->
-            uri?.let {
-                Log.i("TAG", "Setting image from uri: $uri")
-                Picasso.get().load(uri).into(dogImageImageView)
+            val action =
+                post?.let { PostsFragmentDirections.actionPostsFragmentToPostFragment(it.id) }
+            readMoreButton?.setOnClickListener(action?.let {
+                Navigation.createNavigateOnClickListener(
+                    it
+                )
+            })
+
+        } else if (fragmentName == "MY_POSTS") {
+
+            val myPostsToPostAction =
+                post?.let { MyPostsFragmentDirections.actionMyPostsFragmentToPostFragment(it.id) }
+            readMoreButton?.setOnClickListener(myPostsToPostAction?.let {
+                Navigation.createNavigateOnClickListener(
+                    it
+                )
+            })
+
+        }
+
+
+        this.post?.dogImageUri?.let {
+
+            if (this.post!!.dogImageUri!!.isNotEmpty()) {
+
+                PostModel.instance.getPostDogImageUri(post?.id) { uri ->
+
+                    uri?.let {
+
+                        Picasso.get().load(uri).into(dogImageImageView)
+
+                    }
+
+                }
 
             }
 
