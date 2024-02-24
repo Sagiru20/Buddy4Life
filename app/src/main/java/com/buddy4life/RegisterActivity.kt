@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import coil.load
 import com.buddy4life.databinding.ActivityRegisterBinding
+import com.buddy4life.model.Post.Post
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
 
@@ -32,13 +33,12 @@ class RegisterActivity : AppCompatActivity() {
 
 
             if (UserModel.instance.currentUser() != null) {
-//
+
             val intent = Intent(this, MainActivity:: class.java)
             startActivity(intent)
-//
+
             }
 
-//        FirebaseAuth.getInstance().signOut()
 
 
         var imageUri: String? = null

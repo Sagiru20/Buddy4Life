@@ -1,7 +1,11 @@
 package com.buddy4life.model.User
 
-class User(
-    var uid: String,
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class User(
+    @PrimaryKey() var uid: String,
     var name: String,
     var photoUrl: String? = null,
     var email: String,

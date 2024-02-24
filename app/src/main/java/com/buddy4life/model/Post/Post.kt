@@ -1,9 +1,12 @@
 package com.buddy4life.model.Post
 
-import android.util.Log
+import android.content.Context
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.buddy4life.base.MyApplication
 import com.buddy4life.model.User.UserModel
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 
 enum class Gender(private val label: String) {
     MALE("Male"), FEMALE("Female");
@@ -15,8 +18,7 @@ enum class Gender(private val label: String) {
 
 enum class Category(private val label: String) {
     ADOPTION_PROPOSAL("Adoption Proposal"),
-    ADOPTION_REQUEST("Adoption Request"),
-    DOG_LOST("Dog Lost");
+    ADOPTION_REQUEST("Adoption Request");
 
     override fun toString(): String {
         return this.label
@@ -24,7 +26,7 @@ enum class Category(private val label: String) {
 }
 
 @Entity
-class Post(
+data class Post(
     @PrimaryKey() val id: String,
     var name: String,
     val breed: String,
@@ -36,8 +38,9 @@ class Post(
     val weight: Int? = null,
     val height: Int? = null,
     var createdTime: Long,
-    var lastUpdated: Long,
-    var ownerId: String? = ""
+    var lastUpdated: Long? = null,
+    var ownerId: String? = "",
+    var isExists: Boolean = true
 ) {
 
     constructor(
@@ -63,7 +66,8 @@ class Post(
         height,
         System.currentTimeMillis(),
         System.currentTimeMillis(),
-        UserModel.instance.currentUser()?.uid
+        UserModel.instance.currentUser()?.uid,
+        true
     )
 
     companion object {
@@ -80,13 +84,41 @@ class Post(
         const val CREATED_TIME_KEY = "createdTime"
         const val LAST_UPDATED_KEY = "lastUpdated"
         const val OWNER_ID_KEY = "ownerId"
+        const val IS_EXISTS_KEY = "isExists"
+        const val GET_LAST_UPDATED = "get_last_updated"
+
+
+
+
+        var lastUpdated: Long
+            get() {
+                return MyApplication.Globals
+                    .appContext?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                    ?.getLong(GET_LAST_UPDATED, 0) ?: 0
+            }
+            set(value) {
+                MyApplication.Globals
+                    ?.appContext
+                    ?.getSharedPreferences("TAG", Context.MODE_PRIVATE)?.edit()
+                    ?.putLong(GET_LAST_UPDATED, value)?.apply()
+            }
+
 
         fun fromJSON(postJson: Map<String, Any>, postId: String): Post {
 
             val id = postId as? String ?: ""
             val name = postJson[NAME_KEY] as? String ?: ""
             val breed = postJson[BREED_KEY] as? String ?: ""
-            val gender = Gender.valueOf(postJson[GENDER_KEY].toString().uppercase()) as? Gender ?: Gender.MALE
+            var gender: Gender
+
+            try {
+                gender = Gender.valueOf(postJson[GENDER_KEY].toString().uppercase())
+
+            } catch (e:IllegalArgumentException) {
+
+                gender = Gender.MALE
+            }
+
             val age = postJson[AGE_KEY] as? Long ?: 0
             val intAge = age.toInt()
             val description = postJson[DESCRIPTION_KEY] as? String ?: ""
@@ -97,8 +129,8 @@ class Post(
             val height = postJson[HEIGHT_KEY] as? Long ?: 0
             val intHeight = height.toInt()
             val createdTime = postJson[CREATED_TIME_KEY] as? Long ?: 0
-            val lastUpdated = postJson[LAST_UPDATED_KEY] as? Long ?: 0
             val ownerEmail = postJson[OWNER_ID_KEY] as? String ?: ""
+            val isExists = postJson[IS_EXISTS_KEY] as? Boolean ?: false
 
             val post = Post(
                 id,
@@ -112,9 +144,15 @@ class Post(
                 intWeight,
                 intHeight,
                 createdTime,
-                lastUpdated,
-                ownerEmail
+                0,
+                ownerEmail,
+                isExists
             )
+
+            val timestamp: Timestamp? = postJson[LAST_UPDATED_KEY] as? Timestamp
+            timestamp?.let {
+                post.lastUpdated = it.seconds
+            }
 
             return post
         }
@@ -134,8 +172,18 @@ class Post(
                 WEIGHT_KEY to weight,
                 HEIGHT_KEY to height,
                 CREATED_TIME_KEY to createdTime,
-                LAST_UPDATED_KEY to lastUpdated,
-                OWNER_ID_KEY to ownerId
+                LAST_UPDATED_KEY to FieldValue.serverTimestamp(),
+                OWNER_ID_KEY to ownerId,
+                IS_EXISTS_KEY to isExists
+            )
+        }
+
+    val markForDeletion: Map<String, Any?>
+        get() {
+            return hashMapOf(
+                ID_KEY to id,
+                LAST_UPDATED_KEY to FieldValue.serverTimestamp(),
+                IS_EXISTS_KEY to false
             )
         }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.databinding.FragmentPostsBinding
@@ -19,7 +20,9 @@ class PostsFragment : Fragment() {
     private var postsRecyclerView: RecyclerView? = null
     private var adapter: PostsRecyclerAdapter? = null
 
-    private var posts: List<Post>? = null
+//    private var posts: List<Post>? = null
+    private lateinit var viewModel: PostsViewModel
+
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -27,20 +30,22 @@ class PostsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentPostsBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this)[PostsViewModel::class.java]
+        viewModel.posts = PostModel.instance.getAllPosts()
         postsRecyclerView = binding.rvPosts
         postsRecyclerView?.setHasFixedSize(true)
         postsRecyclerView?.layoutManager = LinearLayoutManager(context)
-        adapter = PostsRecyclerAdapter(posts, "POSTS")
 
+        adapter = PostsRecyclerAdapter(viewModel.posts?.value, "POSTS")
+        postsRecyclerView?.adapter = adapter
 
-
-        PostModel.instance.getAllPosts { posts ->
-            this.posts = posts
-            adapter?.posts = posts
+        viewModel.posts?.observe(viewLifecycleOwner) {
+            adapter?.posts = it
             adapter?.notifyDataSetChanged()
+
         }
 
-        postsRecyclerView?.adapter = adapter
+
         return binding.root
     }
 
@@ -53,10 +58,14 @@ class PostsFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        PostModel.instance.getAllPosts { posts ->
-            this.posts = posts
-            adapter?.posts = posts
-            adapter?.notifyDataSetChanged()
-        }
+        reloadPosts()
+
+
+    }
+
+    private fun reloadPosts() {
+
+        PostModel.instance.refreshAllPosts()
+
     }
 }

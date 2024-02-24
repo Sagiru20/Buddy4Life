@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import com.buddy4life.model.User.UserModel
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -29,16 +30,21 @@ class FirebasePostModel {
 //    }
 
 
-    fun getAllPosts(callback: (List<Post>) -> Unit) {
-        Log.d("TAG", "called: getAllPosts")
-        db.collection(POSTS_COLLECTION_NAME).get().addOnCompleteListener {
+    fun getAllPosts(since: Long, callback: (List<Post>) -> Unit) {
+
+        db.collection(POSTS_COLLECTION_NAME)
+            .whereGreaterThanOrEqualTo(Post.LAST_UPDATED_KEY, Timestamp(since,0))
+            .get()
+            .addOnCompleteListener {
             when (it.isSuccessful) {
-                true -> {
+                true ->
+                    {Log.d("TAG", "posts retrieved by since: ${it.result.size()}")
                     val posts: MutableList<Post> = mutableListOf()
                     for (postJson in it.result) {
                         val post = Post.fromJSON(postJson.data, postJson.id)
                         posts.add(post)
                     }
+                    Log.d("TAG", "after post.json size is: ${posts.size}")
                     callback(posts)
                 }
 
@@ -88,12 +94,12 @@ class FirebasePostModel {
             }
     }
 
-    fun deletePost(postId: String, callback: (Boolean) -> Unit) {
+    fun deletePost(post: Post, callback: (Boolean) -> Unit) {
 
-        db.collection(POSTS_COLLECTION_NAME).document(postId)
-            .delete()
+        db.collection(POSTS_COLLECTION_NAME).document(post.id)
+            .set(post.markForDeletion)
             .addOnSuccessListener {
-                it
+
                 Log.d("TAG", "DocumentSnapshot successfully deleted!")
                 callback(true)
             }
@@ -102,16 +108,12 @@ class FirebasePostModel {
                 callback(false)
             }
 
-        callback(false)
-
     }
 
 
     fun updatePost(post: Post, callback: (Boolean) -> Unit) {
 
         post.id?.let {
-
-            post.lastUpdated = System.currentTimeMillis()
 
             db.collection(POSTS_COLLECTION_NAME).document(post.id)
                 .set(post.json)
@@ -189,7 +191,6 @@ class FirebasePostModel {
             }
         }
 
-        callback(false)
     }
 
 
@@ -211,7 +212,6 @@ class FirebasePostModel {
             }
         }
 
-        callback(null)
     }
 
 

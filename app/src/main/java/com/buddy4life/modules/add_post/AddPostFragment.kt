@@ -190,7 +190,7 @@ class AddPostFragment : Fragment() {
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
                 val post = Post(name, breed, gender, age, description, dogUri, category, weight, height )
                 PostModel.instance.addPost(post, dogUri) {
-                    Log.i("TAG", "trying to call addPost")
+
                     Navigation.findNavController(it)
                         .navigate(R.id.action_addPostFragment_to_postsFragment)
                 }

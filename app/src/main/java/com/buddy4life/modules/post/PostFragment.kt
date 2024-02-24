@@ -56,7 +56,7 @@ class PostFragment : Fragment() {
 
                 post?.id?.let {
 
-                    PostModel.instance.deletePost(post!!.id) { isPostDeleted ->
+                    PostModel.instance.deletePost(post!!) { isPostDeleted ->
                         if (isPostDeleted) {
 
                             Toast.makeText(

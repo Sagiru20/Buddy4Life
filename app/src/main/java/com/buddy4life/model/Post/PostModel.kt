@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Looper
 import android.util.Log
 import androidx.core.os.HandlerCompat
+import androidx.lifecycle.LiveData
 import com.buddy4life.dao.AppLocalDatabase
 import java.util.concurrent.Executors
 
@@ -11,7 +12,7 @@ class PostModel private constructor() {
 
     private val database = AppLocalDatabase.db
     private var executor = Executors.newSingleThreadExecutor()
-    private var mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())
+    private val posts: LiveData<MutableList<Post>>? = null
     private val firebasePostModel = FirebasePostModel()
 
     companion object {
@@ -22,15 +23,54 @@ class PostModel private constructor() {
         fun onComplete(posts: List<Post>)
     }
 
-    fun getAllPosts(callback: (List<Post>) -> Unit) {
+    fun getAllPosts(): LiveData<MutableList<Post>> {
 
-        firebasePostModel.getAllPosts() { posts ->
 
-            callback(posts)
+        refreshAllPosts()
+        return posts ?: database.postDao().getAll()
 
-        }
 
     }
+
+    fun refreshAllPosts() {
+
+        val lastUpdated: Long = Post.lastUpdated
+
+        firebasePostModel.getAllPosts(lastUpdated) { postsList ->
+            Log.i("TAG", "Firebase returned ${postsList.size}, lastUpdated: $lastUpdated")
+
+
+            executor.execute {
+                var time = lastUpdated
+                for (post in postsList) {
+
+                    if (!post.isExists) {
+
+                        executor.execute {
+                            database.postDao().delete(post)
+
+                        }
+
+                    } else {
+
+                        database.postDao().insert(post)
+
+                    }
+
+                    post.lastUpdated?.let {
+
+                        if (time < it)
+                            time = post.lastUpdated ?: System.currentTimeMillis()
+
+                    }
+                }
+
+                Post.lastUpdated = time
+
+            }
+        }
+    }
+
 
     fun getPost(id: String, callback: (Post?) -> Unit) {
 
@@ -49,12 +89,14 @@ class PostModel private constructor() {
             val postId = it
             postId?.let {
 
+                refreshAllPosts()
+
                 //TODO decide if its string or null
                 if (!dogUri.isNullOrEmpty()) {
 
                     this.setPostDogImage(postId, dogUri) { isDogImageSaved ->
 
-                        if(!isDogImageSaved) {
+                        if (!isDogImageSaved) {
 
                             callback()
 
@@ -72,10 +114,12 @@ class PostModel private constructor() {
 
     }
 
+
     fun updatePost(post: Post, callback: (Boolean) -> Unit) {
 
         firebasePostModel.updatePost(post) { isPostUpdated ->
 
+            refreshAllPosts()
             callback(isPostUpdated)
 
         }
@@ -96,7 +140,7 @@ class PostModel private constructor() {
     fun getUserPosts(callback: (List<Post>) -> Unit) {
 
         firebasePostModel.getUserPosts() { posts ->
-
+            refreshAllPosts()
             callback(posts)
 
         }
@@ -114,10 +158,11 @@ class PostModel private constructor() {
 
     }
 
-    fun deletePost(postId: String, callback: (Boolean) -> Unit) {
+    fun deletePost(post: Post, callback: (Boolean) -> Unit) {
 
-        firebasePostModel.deletePost(postId) { isPostDeleted ->
+        firebasePostModel.deletePost(post) { isPostDeleted ->
 
+            refreshAllPosts()
             callback(isPostDeleted)
 
         }
