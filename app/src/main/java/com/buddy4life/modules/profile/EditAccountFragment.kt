@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -66,12 +67,9 @@ class EditAccountFragment : Fragment() {
 
             binding.etUserDisplayName.setText(currentUser?.name)
 
-            UserModel.instance.getUserImageUri(currentUser?.uid) { uri ->
-                uri?.let {
+            currentUser?.photoUrl?.let {
 
-                    Picasso.get().load(uri).into(binding.ivUserImage)
-
-                }
+                Picasso.get().load(currentUser.photoUrl).into(binding.ivUserImage)
 
             }
 
@@ -102,29 +100,75 @@ class EditAccountFragment : Fragment() {
 
                 if (UserModel.instance.currentUser()?.uid != null && UserModel.instance.currentUser()?.email != null) {
 
-                    val newUser = User(
+                    var newUser = User(
                         UserModel.instance.currentUser()!!.uid,
                         binding.etUserDisplayName.text.toString(),
                         imageUri,
                         UserModel.instance.currentUser()!!.email!!
                     )
 
-                    Log.d("TAG", "user that is going to be saved is :  ${newUser?.name} ")
+                    Log.d("TAG", "imageUri when building user is :  ${newUser?.photoUrl} ")
 
                     if (binding.etUserDisplayName.text.isNotEmpty()) {
 
-                        UserModel.instance.updateUser(newUser) { isUserSaved ->
+                        if (isUserImageProfileChanged) {
 
-                            if (isUserSaved && isUserImageProfileChanged) {
+                            UserModel.instance.updateUserProfileImage(newUser) { isImageSaved ->
+                                if (isImageSaved) {
 
-                                UserModel.instance.updateUserProfileImage(newUser) {
+                                    UserModel.instance.updateUser(newUser) { isUserSaved ->
 
-                                    Log.d("TAG", "user save response is:  $isUserSaved")
+                                        if (isUserSaved) {
+
+                                            Log.i("TAG", "User: ${newUser.name} updated")
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Profile Updated Successfully!",
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
+
+                                            Navigation.findNavController(it)
+                                                .navigate(R.id.action_editAccountFragment_to_userAccountFragment)
+
+                                        }
+                                        else {
+
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Failed to update profile, try later",
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
+
+                                            Navigation.findNavController(it)
+                                                .navigate(R.id.action_editAccountFragment_to_userAccountFragment)
+
+                                        }
+
+                                    }
+
 
                                 }
 
                             }
 
+                        } else {
+
+                            UserModel.instance.updateUser(newUser) { isUserSaved ->
+                                if (isUserSaved) {
+
+                                    Log.i("TAG", "User: ${newUser.name} updated")
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Profile Updated Successfully!",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+
+                                    Navigation.findNavController(it)
+                                        .navigate(R.id.action_editAccountFragment_to_userAccountFragment)
+
+                                }
+
+                            }
 
                         }
 
@@ -137,10 +181,6 @@ class EditAccountFragment : Fragment() {
 
 
                 }
-
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_editAccountFragment_to_userAccountFragment)
-
 
             }
 

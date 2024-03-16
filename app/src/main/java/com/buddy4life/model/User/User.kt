@@ -25,19 +25,6 @@ data class User(
         const val EMAIL_KEY = "email"
         const val PHOTO_URL_KEY = "photoUrl"
 
-//        fun toUser(user: FirebaseUser ): User {
-//
-//            val uid = user.uid ?: ""
-//            val name = user.displayName ?: ""
-//            val photoUrl = user.photoUrl ?: ""
-//            val email = user.email ?: ""
-//            val photoUrlString :String? = photoUrl?.toString()
-//
-//            val user = User(uid, name , photoUrlString, email)
-//
-//            return user
-//        }
-
         fun fromJSON(userJson: Map<String, Any>): User {
 
             val id = userJson[UID_KEY] as? String ?: ""

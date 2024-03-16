@@ -9,29 +9,28 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.buddy4life.LoginActivity
-import com.buddy4life.MainActivity
 import com.buddy4life.R
 import com.buddy4life.databinding.FragmentUserInfoBinding
-import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.User.UserModel
 import com.squareup.picasso.Picasso
 
 class UserAccountFragment : Fragment() {
 
-    private lateinit var binding: FragmentUserInfoBinding
+    private var _binding: FragmentUserInfoBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentUserInfoBinding.inflate(inflater, container, false)
-        loadUserInfo(binding.root)
+        _binding = FragmentUserInfoBinding.inflate(inflater, container, false)
+        loadUserInfo()
         return binding.root
 
 
     }
 
-    private fun loadUserInfo(view: View) {
+    private fun loadUserInfo() {
 
 
         UserModel.instance.getCurrentUserInfo { currentUser ->
@@ -39,15 +38,15 @@ class UserAccountFragment : Fragment() {
             binding.tvUserDisplayName.text = currentUser?.name
             binding.tvUserEmail.text = currentUser?.email
 
-            UserModel.instance.getUserImageUri(currentUser?.uid) { uri ->
-                uri?.let {
+//            UserModel.instance.getUserImageUri(currentUser?.photoUrl) { uri ->
+            currentUser?.photoUrl?.let {
 
-                    Picasso.get().load(uri).into(binding.ivUserImage)
-
-                }
-
+                    Picasso.get().load(currentUser.photoUrl).into(binding.ivUserImage)
 
             }
+
+
+        }
 
 
             binding.ivLogout.setOnClickListener {
@@ -69,15 +68,15 @@ class UserAccountFragment : Fragment() {
                 )
             )
 
-        }
-
+    }
+    
+    override fun onResume() {
+        super.onResume()
     }
 
-
-    override fun onResume() {
-
-        super.onResume()
-
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

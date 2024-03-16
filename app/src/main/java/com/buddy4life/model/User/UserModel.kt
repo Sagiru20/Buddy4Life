@@ -87,9 +87,9 @@ class UserModel {
     }
 
 
-    fun getUserImageUri(uid: String?, callback: (Uri?) -> Unit) {
+    fun getUserImageUri(imageId: String?, callback: (Uri?) -> Unit) {
 
-        firebaseUserModel.getUserImageUri(uid) { uri ->
+        firebaseUserModel.getUserImageUri(imageId) { uri ->
 
             callback(uri)
 
@@ -108,21 +108,19 @@ class UserModel {
 
     }
 
-    fun updateUserProfileImage(user: User, callback: () -> Unit) {
+    fun updateUserProfileImage(user: User, callback: (Boolean) -> Unit) {
 
-        firebaseUserModel.setUserImageProfile(user) { isImageSaved ->
+        firebaseUserModel.setUserImageProfile(user) { imageId ->
 
-            if (isImageSaved) {
-                Log.d("TAG", "trying to getUserImageUri")
-                firebaseUserModel.getUserImageUri(user.uid) { uri ->
+            imageId?.let {
 
-                    user.photoUrl = uri.toString()
-                    Log.d("TAG", "user.photoUrl is: ${user.photoUrl}")
+                user.photoUrl = imageId
 
-                }
+                callback(true)
             }
 
-            callback()
+            callback(false)
+
         }
 
     }

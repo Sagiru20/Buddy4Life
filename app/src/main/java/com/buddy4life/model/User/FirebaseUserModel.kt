@@ -47,30 +47,16 @@ class FirebaseUserModel {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d("TAG", "createUserWithEmail:success")
                     val user = auth.currentUser
                     callback(user)
 
-//                    updateUI(user)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w("TAG", "createUserWithEmail:failure", task.exception)
-//                    Toast.makeText(
-//                        baseContext,
-//                        "Authentication failed.",
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                    updateUI(null)
                     callback(null)
                 }
+
             }
-
-
-//        db.collection(USERS_COLLECTION_NAME).document(user.id).set(user.json)
-//            .addOnSuccessListener {
-//                callback()
-//            }
 
     }
 
@@ -80,20 +66,11 @@ class FirebaseUserModel {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d("TAG", "signInWithEmail:success")
                     val user = auth.currentUser
-//                    updateUI(user)
                     callback(user)
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w("TAG", "signInWithEmail:failure", task.exception)
-//                    Toast.makeText(
-//                        baseContext,
-//                        "Authentication failed.",
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                    updateUI(null)
                     callback(null)
                 }
             }
@@ -142,11 +119,11 @@ class FirebaseUserModel {
             db.collection(USERS_COLLECTION_NAME).document(email)
                 .set(user.json)
                 .addOnSuccessListener {
-                    Log.d("TAG", "DocumentSnapshot successfully updated!")
+                    Log.d("TAG", "User document updated!")
                     callback(true)
                 }
                 .addOnFailureListener { e ->
-                    Log.w("TAG", "Error updating document", e)
+                    Log.w("TAG", "Error updating user document", e)
 
                     callback(false)
                 }
@@ -196,35 +173,38 @@ class FirebaseUserModel {
 
     }
 
-    fun setUserImageProfile(user: User, callback: (Boolean) -> Unit) {
+    fun setUserImageProfile(user: User, callback: (String?) -> Unit) {
 
 
         var ref = FirebaseStorage.getInstance().reference
-        var imagesRef = ref.child("${USER_PROFILE_PICTURE_FOLDER_NAME}/${user.uid}")
+        var imageRef = ref.child("${USER_PROFILE_PICTURE_FOLDER_NAME}/${System.currentTimeMillis()}.jpg")
 
-        var uploadTask = imagesRef?.putFile(user.photoUrl!!.toUri())
+        var uploadTask = imageRef?.putFile(user.photoUrl!!.toUri())
 
         uploadTask?.addOnFailureListener {
 
             Log.i("TAG", "failed to save user photoUri")
-            callback(false)
+            callback(null)
 
         }?.addOnSuccessListener { taskSnapshot ->
             Log.i("TAG", "succeeded to save user photo url!")
-            callback(true)
+
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                // Convert Uri to String
+                callback(uri.toString())
+            }
 
         }
 
-        callback(false)
-
+        callback(null)
     }
 
 
-    fun getUserImageUri(uid: String?, callback: (Uri?) -> Unit) {
+    fun getUserImageUri(imageId: String?, callback: (Uri?) -> Unit) {
 
-        uid?.let {
+        imageId?.let {
 
-            var storageRef = storage.reference.child("${USER_PROFILE_PICTURE_FOLDER_NAME}/${uid}")
+            var storageRef = storage.reference.child("${USER_PROFILE_PICTURE_FOLDER_NAME}/${imageId}.jpg")
             storageRef.downloadUrl.addOnSuccessListener { uri ->
 
                 Log.i("TAG", "successeded to get Uri")

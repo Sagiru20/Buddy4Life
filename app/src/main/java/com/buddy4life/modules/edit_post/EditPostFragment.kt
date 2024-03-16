@@ -83,10 +83,10 @@ class EditPostFragment : Fragment() {
             // Get all the dog breeds names from an external API using an HTTP request
             responseLiveData.observe(viewLifecycleOwner, Observer { response ->
                 breedsNames = response.body()?.map { it.breedName } ?: emptyList()
-                val bredsAdapter = ArrayAdapter(
+                val breedsAdapter = ArrayAdapter(
                     view.context, R.layout.simple_dropdown_item_1line, breedsNames!!
                 )
-                binding.actvDogInfoBreed.setAdapter(bredsAdapter)
+                binding.actvDogInfoBreed.setAdapter(breedsAdapter)
             })
 
 
