@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.buddy4life.LoginActivity
+import com.buddy4life.MainActivity
 import com.buddy4life.R
 import com.buddy4life.databinding.FragmentUserInfoBinding
+import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.User.UserModel
 import com.squareup.picasso.Picasso
 
@@ -32,44 +34,32 @@ class UserAccountFragment : Fragment() {
 
     private fun loadUserInfo() {
 
-
         UserModel.instance.getCurrentUserInfo { currentUser ->
 
             binding.tvUserDisplayName.text = currentUser?.name
             binding.tvUserEmail.text = currentUser?.email
 
-//            UserModel.instance.getUserImageUri(currentUser?.photoUrl) { uri ->
-            currentUser?.photoUrl?.let {
-
-                    Picasso.get().load(currentUser.photoUrl).into(binding.ivUserImage)
-
+            UserModel.instance.getUserImageUri(currentUser?.uid) { uri ->
+                uri?.let {
+                    Picasso.get().load(uri).into(binding.ivUserImage)
+                }
             }
-
-
-        }
-
 
             binding.ivLogout.setOnClickListener {
-
                 UserModel.instance.logout() {
-
                     val intent = Intent(activity, LoginActivity::class.java)
                     startActivity(intent)
-
                 }
-
             }
-
-
 
             binding.btnEditProfile.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     R.id.action_userAccountFragment_to_editAccountFragment
                 )
             )
-
+        }
     }
-    
+
     override fun onResume() {
         super.onResume()
     }
@@ -78,5 +68,4 @@ class UserAccountFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
 }

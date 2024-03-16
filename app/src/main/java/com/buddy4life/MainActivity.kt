@@ -30,9 +30,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         bottomNavigationView?.setOnNavigationItemSelectedListener { menuItem ->
-
             when (menuItem.itemId) {
                 R.id.myPostsFragment -> navigateToFragment(R.id.myPostsFragment)
                 R.id.postsFragment -> navigateToFragment(R.id.postsFragment)
@@ -40,15 +38,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.userAccountFragment -> navigateToFragment(R.id.userAccountFragment)
             }
             true
-
         }
-
-
     }
 
     private fun navigateToFragment(fragmentId: Int) {
         navController?.navigate(fragmentId)
     }
-
-
 }
