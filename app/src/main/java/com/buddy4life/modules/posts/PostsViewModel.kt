@@ -5,7 +5,5 @@ import androidx.lifecycle.ViewModel
 import com.buddy4life.model.Post.Post
 
 class PostsViewModel : ViewModel() {
-
     var posts: LiveData<MutableList<Post>>? = null
-
 }

@@ -7,7 +7,8 @@ import com.buddy4life.R
 import com.buddy4life.model.Post.Post
 import com.buddy4life.modules.posts.PostsFragment
 
-class PostsRecyclerAdapter(var posts: List<Post>?, fragmentName: String) : RecyclerView.Adapter<PostViewHolder>() {
+class PostsRecyclerAdapter(var posts: List<Post>?, fragmentName: String) :
+    RecyclerView.Adapter<PostViewHolder>() {
 
     var listener: PostsFragment.OnItemClickListener? = null
     var fragmentName = fragmentName

@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         bottomNavigationView?.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.myPostsFragment -> navigateToFragment(R.id.myPostsFragment)

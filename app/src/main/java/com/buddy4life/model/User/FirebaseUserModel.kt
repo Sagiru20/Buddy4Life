@@ -19,7 +19,6 @@ class FirebaseUserModel {
     val db = Firebase.firestore
     val storage = Firebase.storage
 
-
     init {
         val settings = com.google.firebase.firestore.firestoreSettings {
             setLocalCacheSettings(memoryCacheSettings { })
@@ -27,89 +26,69 @@ class FirebaseUserModel {
         db.firestoreSettings = settings
     }
 
-
     companion object {
-
         const val USERS_COLLECTION_NAME = "users"
         const val USER_PROFILE_PICTURE_FOLDER_NAME = "UsersProfilePictures"
-
     }
 
     fun currentUser(): FirebaseUser? {
-
         return currentUser
-
     }
 
-
     fun registerUser(email: String, password: String, callback: (FirebaseUser?) -> Unit) {
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("TAG", "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    callback(user)
-
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d("TAG", "createUserWithEmail:success")
+                val user = auth.currentUser
+                callback(user)
 //                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("TAG", "createUserWithEmail:failure", task.exception)
+            } else {
+                // If sign in fails, display a message to the user.
+                Log.w("TAG", "createUserWithEmail:failure", task.exception)
 //                    Toast.makeText(
 //                        baseContext,
 //                        "Authentication failed.",
 //                        Toast.LENGTH_SHORT,
 //                    ).show()
 //                    updateUI(null)
-                    callback(null)
-                }
+                callback(null)
             }
-
+        }
 
 //        db.collection(USERS_COLLECTION_NAME).document(user.id).set(user.json)
 //            .addOnSuccessListener {
 //                callback()
 //            }
-
     }
 
     fun signInUser(email: String, password: String, callback: (FirebaseUser?) -> Unit) {
-
-
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("TAG", "signInWithEmail:success")
-                    val user = auth.currentUser
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d("TAG", "signInWithEmail:success")
+                val user = auth.currentUser
 //                    updateUI(user)
-                    callback(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("TAG", "signInWithEmail:failure", task.exception)
+                callback(user)
+            } else {
+                // If sign in fails, display a message to the user.
+                Log.w("TAG", "signInWithEmail:failure", task.exception)
 //                    Toast.makeText(
 //                        baseContext,
 //                        "Authentication failed.",
 //                        Toast.LENGTH_SHORT,
 //                    ).show()
 //                    updateUI(null)
-                    callback(null)
-                }
+                callback(null)
             }
-
+        }
     }
 
-
     fun getUserInfoByEmail(email: String, callback: (User?) -> Unit) {
-
-        db.collection(FirebaseUserModel.USERS_COLLECTION_NAME).document(email)
-            .get()
+        db.collection(FirebaseUserModel.USERS_COLLECTION_NAME).document(email).get()
             .addOnCompleteListener {
-
                 when (it.isSuccessful) {
                     true -> {
-
                         Log.d("TAG", "User by email successfully retrieved!")
                         val userJson = it.result
                         val user = userJson.data?.let { data -> User.fromJSON(data) }
@@ -118,148 +97,101 @@ class FirebaseUserModel {
                     }
 
                     false -> {
-
                         Log.w("TAG", "Error getting user's document")
                         callback(null)
-
                     }
                 }
             }
     }
 
-
     fun updateUser(user: User, callback: (Boolean) -> Unit) {
         Log.d(
-            "TAG",
-            "User trying to update with name & photouri: " + user.name + "  " + user.photoUrl
+            "TAG", "User trying to update with name & photouri: " + user.name + "  " + user.photoUrl
         )
         //TODO maybe the ID will be email
 
         val email = Firebase.auth.currentUser?.email
 
         email?.let {
-
-            db.collection(USERS_COLLECTION_NAME).document(email)
-                .set(user.json)
+            db.collection(USERS_COLLECTION_NAME).document(email).set(user.json)
                 .addOnSuccessListener {
                     Log.d("TAG", "DocumentSnapshot successfully updated!")
                     callback(true)
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     Log.w("TAG", "Error updating document", e)
-
                     callback(false)
                 }
-
         }
-
-
-
     }
 
-
     fun updateUserPassword(newPassword: String, callback: () -> Unit) {
-
         val user = Firebase.auth.currentUser
 
-        user!!.updatePassword(newPassword)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("TAG", "User password updated.")
-                } else {
-
-                    Log.d("TAG", "Failed to update User Password")
-
-                }
+        user!!.updatePassword(newPassword).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("TAG", "User password updated.")
+            } else {
+                Log.d("TAG", "Failed to update User Password")
             }
-
+        }
     }
 
     fun addUser(user: User, callback: () -> Unit) {
-
         // Add a new document with a generated ID
-        user.uid?.let {
-
-            db.collection(USERS_COLLECTION_NAME)
-                .document(user.email)
-                .set(user.json)
+        user.uid.let {
+            db.collection(USERS_COLLECTION_NAME).document(user.email).set(user.json)
                 .addOnSuccessListener { documentReference ->
                     Log.w("TAG", "user saved to FB the id is: " + documentReference)
                     callback()
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     Log.w("TAG", "Error adding document", e)
                     callback()
                 }
-
         }
-
     }
 
     fun setUserImageProfile(user: User, callback: (Boolean) -> Unit) {
-
-
         var ref = FirebaseStorage.getInstance().reference
         var imagesRef = ref.child("${USER_PROFILE_PICTURE_FOLDER_NAME}/${user.uid}")
-
-        var uploadTask = imagesRef?.putFile(user.photoUrl!!.toUri())
+        var uploadTask = imagesRef.putFile(user.photoUrl!!.toUri())
 
         uploadTask?.addOnFailureListener {
-
             Log.i("TAG", "failed to save user photoUri")
             callback(false)
-
         }?.addOnSuccessListener { taskSnapshot ->
             Log.i("TAG", "succeeded to save user photo url!")
             callback(true)
-
         }
 
         callback(false)
-
     }
 
-
     fun getUserImageUri(uid: String?, callback: (Uri?) -> Unit) {
-
         uid?.let {
-
             var storageRef = storage.reference.child("${USER_PROFILE_PICTURE_FOLDER_NAME}/${uid}")
             storageRef.downloadUrl.addOnSuccessListener { uri ->
-
                 Log.i("TAG", "successeded to get Uri")
                 callback(uri)
-
             }.addOnFailureListener {
-
                 Log.i("TAG", "failed to get user image uri!")
                 callback(null)
-
             }
         }
 
         callback(null)
     }
 
-
     //TODO check that this function works
     fun restUserPassword(email: String, callback: () -> Unit) {
-
-        Firebase.auth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("TAG", "Email sent.")
-                }
+        Firebase.auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("TAG", "Email sent.")
             }
-
+        }
     }
 
     fun logout(callback: () -> Unit) {
-
         Firebase.auth.signOut()
-
         callback()
-
     }
-
 }

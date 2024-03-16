@@ -21,7 +21,6 @@ import com.buddy4life.databinding.FragmentEditPostBinding
 import com.buddy4life.dog_breed_api.DogBreedApi
 import com.buddy4life.dog_breed_api.RetrofitInstance
 import com.buddy4life.model.Breed
-import com.buddy4life.model.Post.Category
 import com.buddy4life.model.Post.Gender
 import com.buddy4life.model.Post.Post
 import com.buddy4life.model.Post.PostModel
@@ -43,12 +42,10 @@ class EditPostFragment : Fragment() {
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
-
             binding.ivDogImage.load(uri) {
                 crossfade(true)
             }
-
-            imageUri = uri?.toString()
+            imageUri = uri.toString()
             isPostImageChanged = true
         }
     }
@@ -69,10 +66,7 @@ class EditPostFragment : Fragment() {
     }
 
     private fun setupUI(view: View) {
-
-
         post?.let {
-
             val action = EditPostFragmentDirections.actionEditPostFragmentToPostFragment(post!!.id)
             val apiService = RetrofitInstance.getRetrofitInstance().create(DogBreedApi::class.java)
             val responseLiveData: LiveData<Response<List<Breed>>> = liveData {
@@ -89,9 +83,7 @@ class EditPostFragment : Fragment() {
                 binding.actvDogInfoBreed.setAdapter(bredsAdapter)
             })
 
-
             val genders = listOf("Male", "Female")
-
             val gendersAdapter = ArrayAdapter(
                 view.context, R.layout.simple_dropdown_item_1line, genders
             )
@@ -99,32 +91,21 @@ class EditPostFragment : Fragment() {
             val currentGenderIndex = genders.indexOf(post?.gender?.toString())
             binding.spnrDogInfoGender.setSelection(currentGenderIndex)
 
-
-
             binding.tvDogName.text = post?.name
             binding.tvDogBreed.text = post?.breed
             binding.tvDogGender.text = post?.gender?.toString()
             binding.tvDogAge.text = post?.age.toString()
 
-
             PostModel.instance.getPostDogImageUri(post?.id) { uri ->
                 uri?.let {
                     Log.i("TAG", "Setting image from uri: $uri")
                     Picasso.get().load(uri).into(binding.ivDogImage)
-
                 }
-
             }
-
 
             binding.btnCancel.setOnClickListener {
-
-                Navigation.findNavController(it)
-                    .navigate(action)
-
+                Navigation.findNavController(it).navigate(action)
             }
-
-
 
             binding.ivDogImage.setOnClickListener {
                 launcher.launch(
@@ -141,20 +122,16 @@ class EditPostFragment : Fragment() {
             binding.tvDogInfoHeight.setText((if (post?.height?.toString() != null) post?.height?.toString() else "0"))
 
             if (imageUri == null) {
-
                 imageUri = post!!.dogImageUri
-
             }
 
             binding.btnSavePost.setOnClickListener {
-
-                if (!binding.tvDogInfoName.text.toString()
-                        .isEmpty() && !binding.actvDogInfoBreed.text.toString()
-                        .isEmpty() && !binding.tvDogInfoAge.text.toString()
-                        .isEmpty() && !binding.tvDogDescription.text.toString().isEmpty() &&
-                    breedsNames?.contains(binding.actvDogInfoBreed.text.toString()) == true
+                if (binding.tvDogInfoName.text.toString()
+                        .isNotEmpty() && binding.actvDogInfoBreed.text.toString()
+                        .isNotEmpty() && binding.tvDogInfoAge.text.toString()
+                        .isNotEmpty() && binding.tvDogDescription.text.toString()
+                        .isNotEmpty() && breedsNames?.contains(binding.actvDogInfoBreed.text.toString()) == true
                 ) {
-
                     val newPost = Post(
                         post!!.id,
                         binding.tvDogInfoName.text.toString(),
@@ -165,7 +142,6 @@ class EditPostFragment : Fragment() {
                         binding.tvDogInfoAge.text.toString().toInt(),
                         binding.tvDogDescription.text.toString(),
                         imageUri,
-                        Category.ADOPTION_REQUEST,
                         binding.tvDogInfoWeight.text.toString().toInt(),
                         binding.tvDogInfoHeight.text.toString().toInt(),
                         post!!.createdTime,
@@ -173,99 +149,60 @@ class EditPostFragment : Fragment() {
                         post?.ownerId
                     )
 
-
                     PostModel.instance.updatePost(newPost) { isPostUpdated ->
-
                         if (isPostUpdated) {
-
                             if (isPostImageChanged) {
-
                                 newPost.dogImageUri?.let {
-
                                     PostModel.instance.setPostDogImage(
-                                        newPost.id,
-                                        newPost.dogImageUri
+                                        newPost.id, newPost.dogImageUri
                                     ) { isPostImageSaved ->
-
                                         if (isPostImageSaved) {
-
                                             Toast.makeText(
                                                 requireContext(),
                                                 "Post Updated Successfully",
                                                 Toast.LENGTH_SHORT,
                                             ).show()
-
                                         } else {
-
                                             Toast.makeText(
                                                 requireContext(),
                                                 "Failed to update post's image",
                                                 Toast.LENGTH_SHORT,
                                             ).show()
-
                                         }
-
                                     }
-
                                 }
-
-
                             } else {
-
                                 Toast.makeText(
                                     requireContext(),
                                     "Post Updated Successfully",
                                     Toast.LENGTH_SHORT,
                                 ).show()
-
                             }
-
-
                         } else {
-
                             Toast.makeText(
                                 requireContext(),
                                 "Failed to update post",
                                 Toast.LENGTH_SHORT,
                             ).show()
-
                         }
-
-
                     }
-
-                    Navigation.findNavController(it)
-                        .navigate(action)
-
+                    Navigation.findNavController(it).navigate(action)
                 } else {
-
                     if (breedsNames?.contains(binding.actvDogInfoBreed.text.toString()) == false) {
-
                         Toast.makeText(
                             requireContext(),
                             "breed must be in the list",
                             Toast.LENGTH_SHORT,
                         ).show()
-
                     } else {
-
                         Toast.makeText(
                             requireContext(),
                             "required parameter can't be empty",
                             Toast.LENGTH_SHORT,
                         ).show()
-
-
                     }
-
                 }
-
             }
-
-
         }
-
-
     }
-
 }

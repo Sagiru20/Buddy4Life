@@ -16,15 +16,6 @@ enum class Gender(private val label: String) {
     }
 }
 
-enum class Category(private val label: String) {
-    ADOPTION_PROPOSAL("Adoption Proposal"),
-    ADOPTION_REQUEST("Adoption Request");
-
-    override fun toString(): String {
-        return this.label
-    }
-}
-
 @Entity
 data class Post(
     @PrimaryKey() val id: String,
@@ -34,7 +25,6 @@ data class Post(
     val age: Int,
     var description: String,
     val dogImageUri: String? = null,
-    val category: Category,
     val weight: Int? = null,
     val height: Int? = null,
     var createdTime: Long,
@@ -50,7 +40,6 @@ data class Post(
         age: Int,
         description: String,
         dogImageUri: String? = null,
-        category: Category,
         weight: Int? = null,
         height: Int? = null
     ) : this(
@@ -61,7 +50,6 @@ data class Post(
         age,
         description,
         dogImageUri,
-        category,
         weight,
         height,
         System.currentTimeMillis(),
@@ -78,7 +66,6 @@ data class Post(
         const val AGE_KEY = "age"
         const val DESCRIPTION_KEY = "description"
         const val DOG_IMAGE_URL_KEY = "dogImageUri"
-        const val CATEGORY_KEY = "category"
         const val WEIGHT_KEY = "weight"
         const val HEIGHT_KEY = "height"
         const val CREATED_TIME_KEY = "createdTime"
@@ -88,24 +75,19 @@ data class Post(
         const val GET_LAST_UPDATED = "get_last_updated"
 
 
-
-
         var lastUpdated: Long
             get() {
-                return MyApplication.Globals
-                    .appContext?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                    ?.getLong(GET_LAST_UPDATED, 0) ?: 0
+                return MyApplication.Globals.appContext?.getSharedPreferences(
+                    "TAG", Context.MODE_PRIVATE
+                )?.getLong(GET_LAST_UPDATED, 0) ?: 0
             }
             set(value) {
-                MyApplication.Globals
-                    ?.appContext
-                    ?.getSharedPreferences("TAG", Context.MODE_PRIVATE)?.edit()
-                    ?.putLong(GET_LAST_UPDATED, value)?.apply()
+                MyApplication.Globals?.appContext?.getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                    ?.edit()?.putLong(GET_LAST_UPDATED, value)?.apply()
             }
 
 
         fun fromJSON(postJson: Map<String, Any>, postId: String): Post {
-
             val id = postId as? String ?: ""
             val name = postJson[NAME_KEY] as? String ?: ""
             val breed = postJson[BREED_KEY] as? String ?: ""
@@ -113,9 +95,7 @@ data class Post(
 
             try {
                 gender = Gender.valueOf(postJson[GENDER_KEY].toString().uppercase())
-
-            } catch (e:IllegalArgumentException) {
-
+            } catch (e: IllegalArgumentException) {
                 gender = Gender.MALE
             }
 
@@ -123,7 +103,6 @@ data class Post(
             val intAge = age.toInt()
             val description = postJson[DESCRIPTION_KEY] as? String ?: ""
             val dogImageUri = postJson[DOG_IMAGE_URL_KEY] as? String ?: ""
-            val category = postJson[CATEGORY_KEY] as? Category ?: Category.ADOPTION_REQUEST
             val weight = postJson[WEIGHT_KEY] as? Long ?: 0
             val intWeight = weight.toInt()
             val height = postJson[HEIGHT_KEY] as? Long ?: 0
@@ -140,7 +119,6 @@ data class Post(
                 intAge,
                 description,
                 dogImageUri,
-                category,
                 intWeight,
                 intHeight,
                 createdTime,
@@ -168,7 +146,6 @@ data class Post(
                 AGE_KEY to age,
                 DESCRIPTION_KEY to description,
                 DOG_IMAGE_URL_KEY to dogImageUri,
-                CATEGORY_KEY to category,
                 WEIGHT_KEY to weight,
                 HEIGHT_KEY to height,
                 CREATED_TIME_KEY to createdTime,

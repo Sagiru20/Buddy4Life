@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.databinding.FragmentMyPostsBinding
-import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.Post.Post
+import com.buddy4life.model.Post.PostModel
 import com.buddy4life.modules.posts.adapter.PostsRecyclerAdapter
 
 class MyPostsFragment : Fragment() {
