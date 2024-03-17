@@ -16,6 +16,8 @@ import com.buddy4life.R
 import com.buddy4life.databinding.FragmentEditProfileBinding
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
 class EditAccountFragment : Fragment() {
@@ -54,8 +56,8 @@ class EditAccountFragment : Fragment() {
 
             binding.etUserDisplayName.setText(currentUser?.name)
 
-            currentUser?.photoUrl?.let {
-                Picasso.get().load(currentUser.photoUrl).into(binding.ivUserImage)
+            if (!currentUser?.photoUrl.isNullOrEmpty()) {
+                Picasso.get().load(currentUser!!.photoUrl).into(binding.ivUserImage)
             }
 
             binding.btnCancel.setOnClickListener(
@@ -77,13 +79,13 @@ class EditAccountFragment : Fragment() {
                     imageUri = user?.photoUrl
                 }
 
-                if (UserModel.instance.currentUser()?.uid != null && UserModel.instance.currentUser()?.email != null) {
+                if (Firebase.auth.currentUser?.uid != null && Firebase.auth.currentUser?.email != null) {
 
                     var newUser = User(
-                        UserModel.instance.currentUser()!!.uid,
+                        Firebase.auth.currentUser!!.uid,
                         binding.etUserDisplayName.text.toString(),
                         imageUri,
-                        UserModel.instance.currentUser()!!.email!!
+                        Firebase.auth.currentUser!!.email!!
                     )
 
                     Log.d("TAG", "user that is going to be saved is :  ${newUser?.name} ")
@@ -92,39 +94,34 @@ class EditAccountFragment : Fragment() {
 
                         if (isUserImageProfileChanged) {
 
-                            UserModel.instance.updateUserProfileImage(newUser) { isImageSaved ->
-                                if (isImageSaved) {
+                            UserModel.instance.updateUserProfileImage(newUser) {
 
-                                    UserModel.instance.updateUser(newUser) { isUserSaved ->
+                                UserModel.instance.updateUser(newUser) { isUserSaved ->
 
-                                        if (isUserSaved) {
+                                    if (isUserSaved) {
 
-                                            Log.i("TAG", "User: ${newUser.name} updated")
-                                            Toast.makeText(
-                                                requireContext(),
-                                                "Profile Updated Successfully!",
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
+                                        Log.i("TAG", "User: ${newUser.name} updated")
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Profile Updated Successfully!",
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
 
-                                            Navigation.findNavController(it)
-                                                .navigate(R.id.action_editAccountFragment_to_userAccountFragment)
+                                        Navigation.findNavController(it)
+                                            .navigate(R.id.action_editAccountFragment_to_userAccountFragment)
 
-                                        }
-                                        else {
+                                    } else {
 
-                                            Toast.makeText(
-                                                requireContext(),
-                                                "Failed to update profile, try later",
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Failed to update profile, try later",
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
 
-                                            Navigation.findNavController(it)
-                                                .navigate(R.id.action_editAccountFragment_to_userAccountFragment)
-
-                                        }
+                                        Navigation.findNavController(it)
+                                            .navigate(R.id.action_editAccountFragment_to_userAccountFragment)
 
                                     }
-
 
                                 }
 

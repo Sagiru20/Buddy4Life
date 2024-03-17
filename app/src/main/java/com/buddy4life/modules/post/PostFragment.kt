@@ -14,6 +14,8 @@ import com.buddy4life.databinding.FragmentPostBinding
 import com.buddy4life.model.Post.Post
 import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.User.UserModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
 class PostFragment : Fragment() {
@@ -38,20 +40,21 @@ class PostFragment : Fragment() {
     }
 
     private fun setupUI() {
+        Log.d("TAG", "Posts user model instance is ${UserModel.instance}")
         binding.tvDogName.text = post?.name
         binding.tvDogBreed.text = post?.breed
         binding.tvDogGender.text = post?.gender.toString()
         binding.tvDogAge.text = post?.age.toString()
         binding.tvDogDescription.text = post?.description.toString()
 
-        val currentUserUID = UserModel.instance.currentUser()?.uid
+        val currentUserUID = Firebase.auth.currentUser?.uid
         val isPostOfUser = (post?.ownerId == currentUserUID)
 
         if (isPostOfUser) {
 
             binding.ivDeletePost?.visibility = View.VISIBLE
 
-            binding.ivDeletePost.setOnClickListener {
+            binding.ivDeletePost.setOnClickListener { view ->
 
                 post?.id?.let {
 
@@ -73,12 +76,14 @@ class PostFragment : Fragment() {
                             ).show()
 
                         }
+
+                        Navigation.findNavController(view)
+                            .navigate(R.id.action_postFragment_to_myPostsFragment)
                     }
 
                 }
 
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_postFragment_to_myPostsFragment)
+
             }
 
             binding.ivEditPost?.visibility = View.VISIBLE
@@ -108,15 +113,10 @@ class PostFragment : Fragment() {
         }
 
 
-        PostModel.instance.getPostDogImageUri(post?.id) { uri ->
-            uri?.let {
-                Log.i("TAG", "Setting image from uri: $uri")
-                Picasso.get().load(uri).into(binding.ivDogImage)
-
-            }
-
+        if (!post?.dogImageUri.isNullOrEmpty()){
+            Log.i("TAG", "Setting image from uri: ${post?.dogImageUri}")
+            Picasso.get().load(post?.dogImageUri).into(binding.ivDogImage)
         }
-
 
         // Add text values to Dog Information card
         binding.tvDogInfoName.text = post?.name

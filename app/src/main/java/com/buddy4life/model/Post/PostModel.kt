@@ -56,40 +56,40 @@ class PostModel private constructor() {
     }
 
 
-    fun addPost(post: Post, dogUri: String?, callback: () -> Unit) {
-        firebasePostModel.addPost(post) {
-            val postId = it
+    fun addPost(post: Post, callback: () -> Unit) {
+
+
+        firebasePostModel.addPost(post) { postId ->
+            Log.i("TAG", "FB.addPost finished")
             postId.let {
                 refreshAllPosts()
 
-                //TODO decide if its string or null
-                if (!dogUri.isNullOrEmpty()) {
-                    this.setPostDogImage(postId, dogUri) { isDogImageSaved ->
-                        if (!isDogImageSaved) {
-                            callback()
-                        }
+                if (!post?.dogImageUri.isNullOrEmpty()) {
+                    Log.d("TAG", "Starting to save dog image")
+                    firebasePostModel.setPostDogImage(postId, post.dogImageUri) {
+                        callback()
                     }
                 }
+
             }
 
-            callback()
         }
     }
 
 
-    fun updatePost(post: Post, callback: (Boolean) -> Unit) {
-        firebasePostModel.updatePost(post) { isPostUpdated ->
+    fun updatePost(post: Post, isPostImageChanged: Boolean, callback: () -> Unit) {
+        firebasePostModel.updatePost(post) {
             refreshAllPosts()
-            callback(isPostUpdated)
+
+            if (isPostImageChanged && !post?.dogImageUri.isNullOrEmpty()) {
+                firebasePostModel.setPostDogImage(post.id, post.dogImageUri) {
+                    callback()
+                }
+            } else {
+                callback()
+            }
         }
     }
-
-    fun setPostDogImage(postId: String, dogImageUri: String, callback: (Boolean) -> Unit) {
-        firebasePostModel.setPostDogImage(postId, dogImageUri) { isDogImageSaved ->
-            callback(isDogImageSaved)
-        }
-    }
-
 
     fun getUserPosts(callback: (List<Post>) -> Unit) {
         firebasePostModel.getUserPosts() { posts ->

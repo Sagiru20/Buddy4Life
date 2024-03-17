@@ -15,11 +15,12 @@ import com.google.firebase.storage.ktx.storage
 class FirebaseUserModel {
 
     private val auth: FirebaseAuth = Firebase.auth
-    private val currentUser = auth.currentUser
+    private var currentUser = auth.currentUser
     val db = Firebase.firestore
     val storage = Firebase.storage
 
     init {
+        Log.d("TAG", "FBUM inittttttttttt")
         val settings = com.google.firebase.firestore.firestoreSettings {
             setLocalCacheSettings(memoryCacheSettings { })
         }
@@ -29,10 +30,6 @@ class FirebaseUserModel {
     companion object {
         const val USERS_COLLECTION_NAME = "users"
         const val USER_PROFILE_PICTURE_FOLDER_NAME = "UsersProfilePictures"
-    }
-
-    fun currentUser(): FirebaseUser? {
-        return currentUser
     }
 
     fun registerUser(email: String, password: String, callback: (FirebaseUser?) -> Unit) {
@@ -71,6 +68,7 @@ class FirebaseUserModel {
     }
 
     fun getUserInfoByEmail(email: String, callback: (User?) -> Unit) {
+        Log.d("TAG", "Starting getUserInfoByEmail!!!!!")
         db.collection(FirebaseUserModel.USERS_COLLECTION_NAME).document(email).get()
             .addOnCompleteListener {
                 when (it.isSuccessful) {
@@ -145,7 +143,7 @@ class FirebaseUserModel {
 
         uploadTask?.addOnFailureListener {
             Log.i("TAG", "failed to save user photoUri")
-            callback(null)
+
         }?.addOnSuccessListener { taskSnapshot ->
             Log.i("TAG", "succeeded to save user photo url!")
             imageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -155,7 +153,6 @@ class FirebaseUserModel {
 
         }
 
-        callback(null)
     }
 
 
@@ -186,6 +183,7 @@ class FirebaseUserModel {
     }
 
     fun logout(callback: () -> Unit) {
+//        currentUser = null
         Firebase.auth.signOut()
         callback()
     }

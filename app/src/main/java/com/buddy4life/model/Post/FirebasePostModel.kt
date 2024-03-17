@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.buddy4life.model.User.UserModel
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -21,14 +22,6 @@ class FirebasePostModel {
         const val POSTS_COLLECTION_NAME = "posts"
         const val POSTS_DOG_PICTURE_FOLDER_NAME = "PostsDogsPictures"
     }
-
-//    init {
-//        val settings = com.google.firebase.firestore.firestoreSettings {
-//            setLocalCacheSettings(memoryCacheSettings {  })
-//        }
-//        db.firestoreSettings = settings
-//    }
-
 
     fun getAllPosts(since: Long, callback: (List<Post>) -> Unit) {
         db.collection(POSTS_COLLECTION_NAME)
@@ -51,7 +44,7 @@ class FirebasePostModel {
             }
     }
 
-    fun addPost(post: Post, callback: (String) -> Unit) {
+    fun addPost(post: Post, callback: (String?) -> Unit) {
         // Add a new document with a generated ID
         db.collection(POSTS_COLLECTION_NAME).add(post.json)
             .addOnSuccessListener { documentReference ->
@@ -59,7 +52,7 @@ class FirebasePostModel {
                 callback(documentReference.id)
             }.addOnFailureListener { e ->
                 Log.w("TAG", "Error adding document", e)
-                callback("")
+                callback(null)
             }
     }
 
@@ -69,7 +62,7 @@ class FirebasePostModel {
 
         Log.d("TAG", "called: getUserPosts")
         db.collection(POSTS_COLLECTION_NAME)
-            .whereEqualTo("ownerId", UserModel.instance.currentUser()?.uid).get()
+            .whereEqualTo("ownerId", Firebase.auth.currentUser?.uid).get()
             .addOnCompleteListener {
                 when (it.isSuccessful) {
                     true -> {
@@ -100,15 +93,14 @@ class FirebasePostModel {
     }
 
 
-    fun updatePost(post: Post, callback: (Boolean) -> Unit) {
+    fun updatePost(post: Post, callback: () -> Unit) {
         post.id.let {
             db.collection(POSTS_COLLECTION_NAME).document(post.id).set(post.json)
                 .addOnSuccessListener {
                     Log.d("TAG", "Post successfully updated!")
-                    callback(true)
+                    callback()
                 }.addOnFailureListener { e ->
                     Log.w("TAG", "Error updating post", e)
-                    callback(false)
                 }
         }
     }
@@ -133,27 +125,35 @@ class FirebasePostModel {
     }
 
 
-    fun setPostDogImage(postId: String, stringUri: String?, callback: (Boolean) -> Unit) {
+    fun setPostDogImage(postId: String?, postImageUri: String?, callback: () -> Unit) {
 
         var ref = FirebaseStorage.getInstance().reference
-        var imagesRef: StorageReference? = null
+        var imageRef: StorageReference? = null
 
         postId?.let {
-            imagesRef = ref.child("$POSTS_DOG_PICTURE_FOLDER_NAME/${postId}")
+            imageRef = ref.child("$POSTS_DOG_PICTURE_FOLDER_NAME/${postId}")
         }
-
-        stringUri?.let {
-            var uploadTask = imagesRef?.putFile(stringUri.toUri())
+        Log.d("TAG", "Before postImageUri")
+        postImageUri?.let {
+            var uploadTask = imageRef?.putFile(postImageUri.toUri())
             uploadTask?.addOnFailureListener {
                 Log.i("TAG", "failed to save dog image")
-                callback(false)
             }?.addOnSuccessListener { taskSnapshot ->
                 Log.i("TAG", "succeeded to save dog image!")
-                callback(true)
+                imageRef?.downloadUrl?.addOnSuccessListener { uri ->
+
+                    db.collection(POSTS_COLLECTION_NAME).document(postId!!).update(Post.DOG_IMAGE_URL_KEY, uri.toString())
+                        .addOnSuccessListener {
+                            Log.d("TAG", "Post's image uri successfully updated!")
+                            callback()
+                        }.addOnFailureListener { e ->
+                            Log.w("TAG", "Error updating post image uri", e)
+                        }
+                }
+
             }
         }
     }
-
 
     fun getPostDogImageUri(postId: String?, callback: (Uri?) -> Unit) {
         postId?.let {

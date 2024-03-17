@@ -47,7 +47,7 @@ class AddPostFragment : Fragment() {
             crossfade(true)
             placeholder(R.drawable.dog_icon)
         }
-//        binding.ivDogAvatar.setImageURI(uri)
+
         imageUri = uri?.toString()
     }
 
@@ -186,8 +186,7 @@ class AddPostFragment : Fragment() {
 
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
                 val post = Post(name, breed, gender, age, description, dogUri, weight, height)
-                PostModel.instance.addPost(post, dogUri) {
-
+                PostModel.instance.addPost(post) {
                     Navigation.findNavController(it)
                         .navigate(R.id.action_addPostFragment_to_postsFragment)
                 }

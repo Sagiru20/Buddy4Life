@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey
 import com.buddy4life.base.MyApplication
 import com.buddy4life.model.User.UserModel
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.ktx.Firebase
 
 enum class Gender(private val label: String) {
     MALE("Male"), FEMALE("Female");
@@ -54,7 +56,7 @@ data class Post(
         height,
         System.currentTimeMillis(),
         System.currentTimeMillis(),
-        UserModel.instance.currentUser()?.uid,
+        Firebase.auth.currentUser?.uid,
         true
     )
 

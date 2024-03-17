@@ -9,10 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.buddy4life.LoginActivity
-import com.buddy4life.MainActivity
 import com.buddy4life.R
 import com.buddy4life.databinding.FragmentUserInfoBinding
-import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.User.UserModel
 import com.squareup.picasso.Picasso
 
@@ -34,15 +32,15 @@ class UserAccountFragment : Fragment() {
 
     private fun loadUserInfo() {
 
+        Log.d("TAG", "loadUserInfo user model instance is ${UserModel.instance}")
+
         UserModel.instance.getCurrentUserInfo { currentUser ->
 
             binding.tvUserDisplayName.text = currentUser?.name
             binding.tvUserEmail.text = currentUser?.email
 
-            UserModel.instance.getUserImageUri(currentUser?.uid) { uri ->
-                uri?.let {
-                    Picasso.get().load(uri).into(binding.ivUserImage)
-                }
+            if (!currentUser?.photoUrl.isNullOrEmpty()){
+                Picasso.get().load(currentUser!!.photoUrl).into(binding.ivUserImage)
             }
 
             binding.ivLogout.setOnClickListener {
@@ -64,8 +62,8 @@ class UserAccountFragment : Fragment() {
         super.onResume()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        _binding = null
+//    }
 }
