@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.buddy4life.LoginActivity
 import com.buddy4life.databinding.FragmentUserInfoBinding
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -22,10 +24,9 @@ import com.squareup.picasso.Picasso
 class UserAccountFragment : Fragment() {
     private lateinit var binding: FragmentUserInfoBinding
 
-    private lateinit var user: User
+    private var user: User? = null
     private var imageUri: String? = null
-    private var isUserImageProfileChanged = false
-    private var isEditing: Boolean = false
+    private var isUserImageChanged: Boolean = false
 
     private val launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
         ActivityResultContracts.PickVisualMedia()
@@ -36,7 +37,7 @@ class UserAccountFragment : Fragment() {
             }
 
             imageUri = uri.toString()
-            isUserImageProfileChanged = true
+            isUserImageChanged = true
         }
     }
 
@@ -49,8 +50,8 @@ class UserAccountFragment : Fragment() {
     }
 
     private fun setupUI() {
-        updateEditingState()
         loadUserInfo()
+        updateEditingState(false)
 
         binding.layoutLogout.setOnClickListener {
             UserModel.instance.logout {
@@ -60,49 +61,56 @@ class UserAccountFragment : Fragment() {
         }
 
         binding.btnEditProfile.setOnClickListener {
-            isEditing = true
-            updateEditingState()
+            updateEditingState(true)
         }
 
         binding.btnCancelProfile.setOnClickListener {
-            isEditing = false
-            updateEditingState()
+            updateEditingState(false)
             binding.etUserName.setText(binding.tvUserName.text)
         }
 
         binding.btnSaveProfile.setOnClickListener {
-            if (imageUri == null) {
-                imageUri = user.photoUrl
-            }
+            val currentUser: FirebaseUser? = Firebase.auth.currentUser
+            if (imageUri == null) imageUri = user?.photoUrl
 
-            if (Firebase.auth.currentUser?.uid != null && Firebase.auth.currentUser?.email != null) {
+            if (currentUser != null && currentUser.email != null) {
                 val editedUser = User(
-                    Firebase.auth.currentUser!!.uid,
+                    currentUser.uid,
                     binding.etUserName.text.toString(),
                     imageUri,
-                    Firebase.auth.currentUser!!.email!!
+                    currentUser.email!!
                 )
-                Log.d("TAG", "User that is going to be saved is: $editedUser")
+                Log.d("TAG", "User that is going to be saved is: ${editedUser.name}")
 
                 if (binding.etUserName.text.isNotEmpty()) {
-                    UserModel.instance.updateUser(editedUser) { isUserSaved ->
-                        if (isUserSaved && isUserImageProfileChanged) {
-                            UserModel.instance.updateUserProfileImage(editedUser) {}
+                    if (isUserImageChanged) {
+                        UserModel.instance.updateUserProfileImage(editedUser) {
+                            updateUser(editedUser)
                         }
+                    } else {
+                        updateUser(editedUser)
                     }
                 } else {
                     Log.d("TAG", "User name cannot be empty")
                 }
             }
 
-            isEditing = false
-            updateEditingState()
+            updateEditingState(false)
         }
     }
 
-    private fun updateEditingState() {
+    private fun updateUser(user: User) {
+        UserModel.instance.updateUser(user) { isUserSaved ->
+            val message = if (isUserSaved) "Profile Updated Successfully!"
+            else "Failed to update user profile."
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            if (isUserSaved) binding.tvUserName.text = user.name
+        }
+    }
+
+    private fun updateEditingState(editingState: Boolean) {
         with(binding) {
-            if (isEditing) {
+            if (editingState) {
                 binding.ivUserImage.setOnClickListener {
                     launcher.launch(
                         PickVisualMediaRequest.Builder()
@@ -112,24 +120,27 @@ class UserAccountFragment : Fragment() {
             } else {
                 ivUserImage.setOnClickListener(null)
             }
-            btnEditProfile.visibility = if (isEditing) View.GONE else View.VISIBLE
-            tvUserName.visibility = if (isEditing) View.GONE else View.VISIBLE
+            btnEditProfile.visibility = if (editingState) View.GONE else View.VISIBLE
+            tvUserName.visibility = if (editingState) View.GONE else View.VISIBLE
 
-            btnCancelProfile.visibility = if (isEditing) View.VISIBLE else View.GONE
-            btnSaveProfile.visibility = if (isEditing) View.VISIBLE else View.GONE
-            cancelAndSaveProfileDivider.visibility = if (isEditing) View.VISIBLE else View.GONE
-            etUserName.visibility = if (isEditing) View.VISIBLE else View.GONE
+            btnCancelProfile.visibility = if (editingState) View.VISIBLE else View.GONE
+            btnSaveProfile.visibility = if (editingState) View.VISIBLE else View.GONE
+            cancelAndSaveProfileDivider.visibility = if (editingState) View.VISIBLE else View.GONE
+            etUserName.visibility = if (editingState) View.VISIBLE else View.GONE
+
+            isUserImageChanged = false
         }
     }
 
     private fun loadUserInfo() {
-        UserModel.instance.getCurrentUserInfo { currentUser ->
-            binding.tvUserEmail.text = currentUser?.email
-            binding.tvUserName.text = currentUser?.name
-            binding.etUserName.setText(currentUser?.name)
+        UserModel.instance.getCurrentUserInfo { currentUserInfo ->
+            user = currentUserInfo
+            binding.tvUserEmail.text = currentUserInfo?.email
+            binding.tvUserName.text = currentUserInfo?.name
+            binding.etUserName.setText(currentUserInfo?.name)
 
-            if (!currentUser?.photoUrl.isNullOrEmpty()){
-                Picasso.get().load(currentUser!!.photoUrl).into(binding.ivUserImage)
+            if (!currentUserInfo?.photoUrl.isNullOrEmpty()) {
+                Picasso.get().load(currentUserInfo!!.photoUrl).into(binding.ivUserImage)
             }
         }
     }
