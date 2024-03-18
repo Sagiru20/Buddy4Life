@@ -19,13 +19,13 @@ class FirebasePostModel {
     val db = Firebase.firestore
     val storage = Firebase.storage
 
-
     init {
         val settings = com.google.firebase.firestore.firestoreSettings {
             setLocalCacheSettings(memoryCacheSettings { })
         }
         db.firestoreSettings = settings
     }
+
     companion object {
         const val POSTS_COLLECTION_NAME = "posts"
         const val POSTS_DOG_PICTURE_FOLDER_NAME = "PostsDogsPictures"
