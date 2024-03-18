@@ -15,6 +15,7 @@
         tools:context=".MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutLogout"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:orientation="horizontal"
@@ -93,7 +94,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tvUserDisplayName"
+                            android:id="@+id/tvUserName"
                             android:layout_width="match_parent"
                             android:layout_height="45dp"
                             android:layout_marginTop="25dp"
@@ -102,11 +103,28 @@
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold"
+                            android:visibility="visible"
+                            tools:text="User Name" />
+
+                        <EditText
+                            android:id="@+id/etUserName"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="25dp"
+                            android:layout_marginBottom="15dp"
+                            android:gravity="center"
+                            android:hint="@string/enter_your_name"
+                            android:importantForAutofill="no"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
                             tools:text="User Name" />
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
+                            android:layout_height="2dp"
                             android:background="#79D6D1D1" />
 
                         <LinearLayout
@@ -126,7 +144,41 @@
                                 android:text="@string/edit_profile"
                                 android:textColor="@color/black"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:visibility="visible" />
+
+                            <Button
+                                android:id="@+id/btnCancelProfile"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@android:color/transparent"
+                                android:backgroundTint="#79D6D1D1"
+                                android:text="@string/cancel"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+
+                            <View
+                                android:id="@+id/cancelAndSaveProfileDivider"
+                                android:layout_width="2dp"
+                                android:layout_height="match_parent"
+                                android:background="#79D6D1D1"
+                                android:visibility="gone" />
+
+                            <Button
+                                android:id="@+id/btnSaveProfile"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@android:color/transparent"
+                                android:backgroundTint="#79D6D1D1"
+                                android:text="@string/save"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -134,12 +186,10 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivUserImage"
-                android:layout_width="98dp"
-                android:layout_height="98dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
-                android:elevation="15dp"
-                android:padding="5dp"
-                android:src="@drawable/user_icon" />
+                android:src="@drawable/ic_account_24" />
         </RelativeLayout>
 
         <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/tools"
