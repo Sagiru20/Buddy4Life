@@ -55,13 +55,4 @@ class UserAccountFragment : Fragment() {
             )
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 }

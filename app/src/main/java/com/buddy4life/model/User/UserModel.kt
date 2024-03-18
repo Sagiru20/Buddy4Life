@@ -55,15 +55,6 @@ class UserModel {
         callback(null)
     }
 
-    fun getUserImageUri(imageId: String?, callback: (Uri?) -> Unit) {
-        firebaseUserModel.getUserImageUri(imageId) { uri ->
-            callback(uri)
-
-        }
-
-    }
-
-
     fun updateUser(user: User, callback: (Boolean) -> Unit) {
 
         firebaseUserModel.updateUser(user) { isUserSaved ->
