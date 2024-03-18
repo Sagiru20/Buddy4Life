@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buddy4life.databinding.FragmentPostsBinding
-import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.Post.Post
+import com.buddy4life.model.Post.PostModel
 import com.buddy4life.modules.posts.adapter.PostsRecyclerAdapter
 
 class PostsFragment : Fragment() {
@@ -20,8 +20,6 @@ class PostsFragment : Fragment() {
     private var postsRecyclerView: RecyclerView? = null
     private var adapter: PostsRecyclerAdapter? = null
     private lateinit var viewModel: PostsViewModel
-
-
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
@@ -43,10 +41,8 @@ class PostsFragment : Fragment() {
 
         }
 
-
         return binding.root
     }
-
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -57,13 +53,9 @@ class PostsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         reloadPosts()
-
-
     }
 
     private fun reloadPosts() {
-
         PostModel.instance.refreshAllPosts()
-
     }
 }

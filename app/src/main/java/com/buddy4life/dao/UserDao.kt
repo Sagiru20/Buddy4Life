@@ -6,9 +6,6 @@ import com.buddy4life.model.Post.Post
 
 @Dao
 interface UserDao {
-
-        @Query("SELECT * FROM Post WHERE id LIKE :id LIMIT 1")
-        fun getById(id: Long): Post
-
-
+    @Query("SELECT * FROM Post WHERE id LIKE :id LIMIT 1")
+    fun getById(id: Long): Post
 }

@@ -128,10 +128,8 @@ class UserAccountFragment : Fragment() {
             binding.tvUserName.text = currentUser?.name
             binding.etUserName.setText(currentUser?.name)
 
-            UserModel.instance.getUserImageUri(currentUser?.uid) { uri ->
-                uri?.let {
-                    Picasso.get().load(uri).into(binding.ivUserImage)
-                }
+            if (!currentUser?.photoUrl.isNullOrEmpty()){
+                Picasso.get().load(currentUser!!.photoUrl).into(binding.ivUserImage)
             }
         }
     }

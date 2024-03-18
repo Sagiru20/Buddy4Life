@@ -11,10 +11,11 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.buddy4life.R
 import com.buddy4life.databinding.FragmentPostBinding
-import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.Post.Post
+import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.User.UserModel
-import com.buddy4life.modules.posts.PostsFragmentDirections
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
 class PostFragment : Fragment() {
@@ -39,20 +40,21 @@ class PostFragment : Fragment() {
     }
 
     private fun setupUI() {
+        Log.d("TAG", "Posts user model instance is ${UserModel.instance}")
         binding.tvDogName.text = post?.name
         binding.tvDogBreed.text = post?.breed
         binding.tvDogGender.text = post?.gender.toString()
         binding.tvDogAge.text = post?.age.toString()
         binding.tvDogDescription.text = post?.description.toString()
 
-        val currentUserUID = UserModel.instance.currentUser()?.uid
+        val currentUserUID = Firebase.auth.currentUser?.uid
         val isPostOfUser = (post?.ownerId == currentUserUID)
 
         if (isPostOfUser) {
 
             binding.ivDeletePost?.visibility = View.VISIBLE
 
-            binding.ivDeletePost.setOnClickListener {
+            binding.ivDeletePost.setOnClickListener { view ->
 
                 post?.id?.let {
 
@@ -74,12 +76,14 @@ class PostFragment : Fragment() {
                             ).show()
 
                         }
+
+                        Navigation.findNavController(view)
+                            .navigate(R.id.action_postFragment_to_myPostsFragment)
                     }
 
                 }
 
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_postFragment_to_myPostsFragment)
+
             }
 
             binding.ivEditPost?.visibility = View.VISIBLE
@@ -90,7 +94,7 @@ class PostFragment : Fragment() {
 
             binding.ivEditPost.setOnClickListener {
 
-                if (action != null && post != null && !post?.id.isNullOrEmpty() ) {
+                if (action != null && post != null && !post?.id.isNullOrEmpty()) {
 
                     it.findNavController().navigate(action)
 
@@ -109,23 +113,20 @@ class PostFragment : Fragment() {
         }
 
 
-        PostModel.instance.getPostDogImageUri(post?.id) { uri ->
-            uri?.let {
-                Log.i("TAG", "Setting image from uri: $uri")
-                Picasso.get().load(uri).into(binding.ivDogImage)
-
-            }
-
+        if (!post?.dogImageUri.isNullOrEmpty()){
+            Log.i("TAG", "Setting image from uri: ${post?.dogImageUri}")
+            Picasso.get().load(post?.dogImageUri).into(binding.ivDogImage)
         }
-
 
         // Add text values to Dog Information card
         binding.tvDogInfoName.text = post?.name
         binding.tvDogInfoBreed.text = post?.breed
         binding.tvDogInfoGender.text = post?.gender.toString()
         binding.tvDogInfoAge.text = post?.age.toString()
-        binding.tvDogInfoWeight.text = if (post?.weight.toString() != null && post?.weight?.toString() != "0") post?.weight?.toString() else "-"
-        binding.tvDogInfoHeight.text = if (post?.height.toString() != null && post?.height?.toString() != "0") post?.height?.toString() else "-"
+        binding.tvDogInfoWeight.text =
+            if (post?.weight.toString() != null && post?.weight?.toString() != "0") post?.weight?.toString() else "-"
+        binding.tvDogInfoHeight.text =
+            if (post?.height.toString() != null && post?.height?.toString() != "0") post?.height?.toString() else "-"
 
 
     }
