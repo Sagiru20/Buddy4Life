@@ -14,7 +14,7 @@ import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
 
 
-private const val REQUIRED = "*required"
+private const val REQUIRED = "required*"
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -32,7 +32,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         var imageUri: String? = null
-        var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
+        val launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
             ActivityResultContracts.PickVisualMedia()
         ) { uri ->
             binding.ivUserAvatar.load(uri) {
@@ -95,7 +95,6 @@ class RegisterActivity : AppCompatActivity() {
                 if (binding.etPassword.text.toString().length < 6) {
                     binding.textInputLayoutPassword.error = "Password must be at least 6 characters"
                 }
-
                 if (binding.etEmail.text.toString()
                         .isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(binding.etEmail.text.toString())
                         .matches()
@@ -106,15 +105,14 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun registerUser(
-        name: String, password: String, email: String, imageUri: String?
-    ) {
-        var user = User(name, imageUri, email)
-        UserModel.instance.registerUser(user, password) { user ->
-            if (user?.uid != null) {
-                Log.d("TAG", "user photo url retured is: ${user.photoUrl}")
+    private fun registerUser(name: String, password: String, email: String, imageUri: String?) {
+        val user = User(name, imageUri, email)
 
-                UserModel.instance.addUser(user) {
+        UserModel.instance.registerUser(user, password) { user1 ->
+            if (user1?.uid != null) {
+                Log.d("TAG", "user photo url returned is: ${user1.photoUrl}")
+
+                UserModel.instance.addUser(user1) {
                     Log.d("TAG", "added user")
                 }
             } else {

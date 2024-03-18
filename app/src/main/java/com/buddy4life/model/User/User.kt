@@ -5,12 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class User(
-    @PrimaryKey() var uid: String,
-    var name: String,
-    var photoUrl: String? = null,
-    var email: String,
+    @PrimaryKey() var uid: String, var name: String, var photoUrl: String?, var email: String
 ) {
-
     constructor(
         name: String,
         photoUrl: String? = null,

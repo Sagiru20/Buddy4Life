@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 
 class MyApplication : Application() {
-
     object Globals {
         var appContext: Context? = null
     }

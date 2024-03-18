@@ -8,7 +8,6 @@ import com.buddy4life.databinding.ActivityLoginBinding
 import com.buddy4life.model.User.UserModel
 import com.google.firebase.auth.FirebaseUser
 
-
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +20,7 @@ class LoginActivity : AppCompatActivity() {
             val email: String? = binding.etEmail.text?.toString()
             val password: String? = binding.etPassword.text?.toString()
 
-            if (!email.isNullOrEmpty() && !password.isNullOrEmpty() && password.length >= 6 && !email.isNullOrEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(
+            if (!email.isNullOrEmpty() && !password.isNullOrEmpty() && password.length >= 6 && email.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(
                     binding.etEmail.text.toString()
                 ).matches()
             ) {
