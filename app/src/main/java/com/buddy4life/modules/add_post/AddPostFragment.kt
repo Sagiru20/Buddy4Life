@@ -3,7 +3,6 @@ package com.buddy4life.modules.add_post
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -25,10 +24,9 @@ import com.buddy4life.databinding.FragmentAddPostBinding
 import com.buddy4life.dog_breed_api.DogBreedApi
 import com.buddy4life.dog_breed_api.RetrofitInstance
 import com.buddy4life.model.Breed
-import com.buddy4life.model.Post.Category
 import com.buddy4life.model.Post.Gender
-import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.Post.Post
+import com.buddy4life.model.Post.PostModel
 import retrofit2.Response
 
 private const val REQUIRED = "*required"
@@ -49,7 +47,7 @@ class AddPostFragment : Fragment() {
             crossfade(true)
             placeholder(R.drawable.dog_icon)
         }
-//        binding.ivDogAvatar.setImageURI(uri)
+
         imageUri = uri?.toString()
     }
 
@@ -152,7 +150,6 @@ class AddPostFragment : Fragment() {
             val ageText: String? = binding.etDogAge.text?.toString()
             val weightText: String? = binding.etDogWeight.text?.toString()
             val heightText: String? = binding.etDogHeight.text?.toString()
-            val category: Category = Category.ADOPTION_REQUEST
             val dogUri: String? = imageUri
             val rbGenderCheckedId: Int = binding.rgGender.checkedRadioButtonId
             val gender: Gender?
@@ -188,9 +185,8 @@ class AddPostFragment : Fragment() {
             }
 
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
-                val post = Post(name, breed, gender, age, description, dogUri, category, weight, height )
-                PostModel.instance.addPost(post, dogUri) {
-
+                val post = Post(name, breed, gender, age, description, dogUri, weight, height)
+                PostModel.instance.addPost(post) {
                     Navigation.findNavController(it)
                         .navigate(R.id.action_addPostFragment_to_postsFragment)
                 }
