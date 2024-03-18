@@ -67,6 +67,11 @@ class UserAccountFragment : Fragment() {
         binding.btnCancelProfile.setOnClickListener {
             updateEditingState(false)
             binding.etUserName.setText(binding.tvUserName.text)
+            user?.photoUrl.let {
+                binding.ivUserImage.load(it) {
+                    crossfade(true)
+                }
+            }
         }
 
         binding.btnSaveProfile.setOnClickListener {
