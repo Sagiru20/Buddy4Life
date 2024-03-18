@@ -20,14 +20,6 @@ class FirebaseUserModel {
     val storage = Firebase.storage
 
 
-    init {
-        val settings = com.google.firebase.firestore.firestoreSettings {
-            setLocalCacheSettings(memoryCacheSettings { })
-        }
-        db.firestoreSettings = settings
-    }
-
-
     companion object {
 
         const val USERS_COLLECTION_NAME = "users"
