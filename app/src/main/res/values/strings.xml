@@ -28,4 +28,9 @@
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="my">My</string>
+    <string name="account">Account</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="email_icon_content_description">Email icon for email card</string>
+    <string name="logout">Logout</string>
 </resources>
