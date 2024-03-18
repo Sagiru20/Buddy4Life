@@ -8,6 +8,7 @@ import com.buddy4life.model.User.UserModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -18,6 +19,13 @@ class FirebasePostModel {
     val db = Firebase.firestore
     val storage = Firebase.storage
 
+
+    init {
+        val settings = com.google.firebase.firestore.firestoreSettings {
+            setLocalCacheSettings(memoryCacheSettings { })
+        }
+        db.firestoreSettings = settings
+    }
     companion object {
         const val POSTS_COLLECTION_NAME = "posts"
         const val POSTS_DOG_PICTURE_FOLDER_NAME = "PostsDogsPictures"

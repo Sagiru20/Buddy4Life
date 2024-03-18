@@ -12,6 +12,8 @@ import coil.load
 import com.buddy4life.databinding.ActivityRegisterBinding
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 private const val REQUIRED = "*required"
@@ -26,7 +28,8 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //TODO for testing only! this section must NOT be comment:
-        if (UserModel.instance.currentUser() != null) {
+
+        if (Firebase.auth.currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }

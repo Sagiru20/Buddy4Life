@@ -19,14 +19,6 @@ class FirebaseUserModel {
     val db = Firebase.firestore
     val storage = Firebase.storage
 
-    init {
-        Log.d("TAG", "FBUM inittttttttttt")
-        val settings = com.google.firebase.firestore.firestoreSettings {
-            setLocalCacheSettings(memoryCacheSettings { })
-        }
-        db.firestoreSettings = settings
-    }
-
     companion object {
         const val USERS_COLLECTION_NAME = "users"
         const val USER_PROFILE_PICTURE_FOLDER_NAME = "UsersProfilePictures"
@@ -183,7 +175,6 @@ class FirebaseUserModel {
     }
 
     fun logout(callback: () -> Unit) {
-//        currentUser = null
         Firebase.auth.signOut()
         callback()
     }

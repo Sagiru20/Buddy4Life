@@ -2,6 +2,7 @@ package com.buddy4life
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.buddy4life.databinding.ActivityLoginBinding
@@ -71,8 +72,6 @@ class LoginActivity : AppCompatActivity() {
                     "Email or Password are incorrect! try again",
                     Toast.LENGTH_SHORT,
                 ).show()
-
-                callback(null)
             }
         }
     }

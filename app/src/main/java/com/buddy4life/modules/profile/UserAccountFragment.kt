@@ -32,8 +32,6 @@ class UserAccountFragment : Fragment() {
 
     private fun loadUserInfo() {
 
-        Log.d("TAG", "loadUserInfo user model instance is ${UserModel.instance}")
-
         UserModel.instance.getCurrentUserInfo { currentUser ->
 
             binding.tvUserDisplayName.text = currentUser?.name
@@ -62,8 +60,8 @@ class UserAccountFragment : Fragment() {
         super.onResume()
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        _binding = null
-//    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

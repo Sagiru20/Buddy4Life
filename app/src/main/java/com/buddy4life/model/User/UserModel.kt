@@ -52,6 +52,7 @@ class UserModel {
                 callback(currentUserInfo)
             }
         }
+        callback(null)
     }
 
     fun getUserImageUri(imageId: String?, callback: (Uri?) -> Unit) {
