@@ -1,7 +1,6 @@
 package com.buddy4life.modules.post
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +16,9 @@ import com.buddy4life.model.User.UserModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class PostFragment : Fragment() {
     private var _binding: FragmentPostBinding? = null
@@ -40,82 +42,24 @@ class PostFragment : Fragment() {
     }
 
     private fun setupUI() {
-        Log.d("TAG", "Posts user model instance is ${UserModel.instance}")
+        if (!post?.dogImageUri.isNullOrEmpty()) {
+            Picasso.get().load(post?.dogImageUri).into(binding.ivDogImage)
+        }
+
         binding.tvDogName.text = post?.name
         binding.tvDogBreed.text = post?.breed
         binding.tvDogGender.text = post?.gender.toString()
         binding.tvDogAge.text = post?.age.toString()
-        binding.tvDogDescription.text = post?.description.toString()
+        binding.tvDogDescription.text = post?.description
 
-        val currentUserUID = Firebase.auth.currentUser?.uid
-        val isPostOfUser = (post?.ownerId == currentUserUID)
+        UserModel.instance.getUserInfo(post?.ownerId) { userInfo ->
+            val date = Date(post?.createdTime!!)
+            val creationTime =
+                SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(date)
 
-        if (isPostOfUser) {
-
-            binding.ivDeletePost?.visibility = View.VISIBLE
-
-            binding.ivDeletePost.setOnClickListener { view ->
-
-                post?.id?.let {
-
-                    PostModel.instance.deletePost(post!!) { isPostDeleted ->
-                        if (isPostDeleted) {
-
-                            Toast.makeText(
-                                requireContext(),
-                                "Post deleted successfully",
-                                Toast.LENGTH_SHORT,
-                            ).show()
-
-                        } else {
-
-                            Toast.makeText(
-                                requireContext(),
-                                "Could not delete post",
-                                Toast.LENGTH_SHORT,
-                            ).show()
-
-                        }
-
-                        Navigation.findNavController(view)
-                            .navigate(R.id.action_postFragment_to_myPostsFragment)
-                    }
-
-                }
-
-
+            "Created by ${userInfo?.name} at: $creationTime".also {
+                binding.tvPostOwnerAndCreationTime.text = it
             }
-
-            binding.ivEditPost?.visibility = View.VISIBLE
-
-            val action =
-                post?.let { PostFragmentDirections.actionPostFragmentToEditPostFragment(it.id) }
-
-
-            binding.ivEditPost.setOnClickListener {
-
-                if (action != null && post != null && !post?.id.isNullOrEmpty()) {
-
-                    it.findNavController().navigate(action)
-
-                } else {
-
-                    Toast.makeText(
-                        requireContext(),
-                        "Can't update post right now",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-
-
-                }
-
-            }
-        }
-
-
-        if (!post?.dogImageUri.isNullOrEmpty()){
-            Log.i("TAG", "Setting image from uri: ${post?.dogImageUri}")
-            Picasso.get().load(post?.dogImageUri).into(binding.ivDogImage)
         }
 
         // Add text values to Dog Information card
@@ -124,11 +68,43 @@ class PostFragment : Fragment() {
         binding.tvDogInfoGender.text = post?.gender.toString()
         binding.tvDogInfoAge.text = post?.age.toString()
         binding.tvDogInfoWeight.text =
-            if (post?.weight.toString() != null && post?.weight?.toString() != "0") post?.weight?.toString() else "-"
+            if (post?.weight?.toString() != "0") post?.weight?.toString() else "-"
         binding.tvDogInfoHeight.text =
-            if (post?.height.toString() != null && post?.height?.toString() != "0") post?.height?.toString() else "-"
+            if (post?.height?.toString() != "0") post?.height?.toString() else "-"
 
+        // Check if the current user is the owner of the post
+        if (post?.ownerId == Firebase.auth.currentUser?.uid) {
+            binding.btnDeletePost.visibility = View.VISIBLE
+            binding.btnEditPost.visibility = View.VISIBLE
 
+            binding.btnDeletePost.setOnClickListener { view ->
+                post?.id?.let {
+                    PostModel.instance.deletePost(post!!) { isPostDeleted ->
+                        val message = if (isPostDeleted) "Post deleted successfully"
+                        else "Failed to delete post"
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+
+                        Navigation.findNavController(view)
+                            .navigate(R.id.action_postFragment_to_myPostsFragment)
+                    }
+                }
+            }
+
+            val action =
+                post?.let { PostFragmentDirections.actionPostFragmentToEditPostFragment(it.id) }
+
+            binding.btnEditPost.setOnClickListener {
+                if (action != null && post != null && !post?.id.isNullOrEmpty()) {
+                    it.findNavController().navigate(action)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Can't update post right now",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
