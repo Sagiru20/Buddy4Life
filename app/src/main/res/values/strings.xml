@@ -28,6 +28,13 @@
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="sign_in_to_buddy4life">Sign in to Buddy4Life</string>
+    <string name="register">Register</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="register_to_buddy4life">Register to Buddy4Life</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="resigter_me">Resigter me!</string>
+    <string name="full_name">Full Name</string>
     <string name="my">My</string>
     <string name="account">Account</string>
     <string name="edit_profile">Edit Profile</string>

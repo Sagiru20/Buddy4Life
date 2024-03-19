@@ -69,6 +69,8 @@ class PostModel private constructor() {
                     firebasePostModel.setPostDogImage(postId, post.dogImageUri) {
                         callback()
                     }
+                } else {
+                    callback()
                 }
 
             }

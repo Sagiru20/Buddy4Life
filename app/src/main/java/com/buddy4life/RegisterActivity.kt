@@ -1,55 +1,34 @@
 package com.buddy4life
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import coil.load
 import com.buddy4life.databinding.ActivityRegisterBinding
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-
-private const val REQUIRED = "*required"
+private const val REQUIRED = "required*"
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        //TODO for testing only! this section must NOT be comment:
 
         if (Firebase.auth.currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
-        var imageUri: String? = null
-        var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
-            ActivityResultContracts.PickVisualMedia()
-        ) { uri ->
-            binding.ivUserAvatar.load(uri) {
-                crossfade(true)
-                placeholder(R.drawable.dog_icon)
-            }
-            imageUri = uri?.toString()
-        }
-
-        binding.ivUserAvatar.setOnClickListener {
-            launcher.launch(
-                PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly).build()
-            )
+        binding.tvToLogin.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
 
         binding.etFullName.doOnTextChanged { text, _, _, _ ->
@@ -85,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
                     binding.etEmail.text.toString()
                 ).matches()
             ) {
-                registerUser(name, password, email, imageUri)
+                registerUser(name, password, email)
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             } else {
@@ -109,15 +88,13 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun registerUser(
-        name: String, password: String, email: String, imageUri: String?
-    ) {
-        var user = User(name, imageUri, email)
-        UserModel.instance.registerUser(user, password) { user ->
-            if (user?.uid != null) {
-                Log.d("TAG", "user photo url retured is: ${user.photoUrl}")
+    private fun registerUser(name: String, password: String, email: String) {
+        var user = User(name, null, email)
+        UserModel.instance.registerUser(user, password) { registeredUser ->
+            if (registeredUser?.uid != null) {
+                Log.d("TAG", "user photo url retured is: ${registeredUser.photoUrl}")
 
-                UserModel.instance.addUser(user) {
+                UserModel.instance.addUser(registeredUser) {
                     Log.d("TAG", "added user")
                 }
             } else {
