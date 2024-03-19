@@ -1,6 +1,5 @@
 package com.buddy4life.model.User
 
-import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -44,12 +43,22 @@ class UserModel {
     }
 
     fun getCurrentUserInfo(callback: (User?) -> Unit) {
-        val email = Firebase.auth.currentUser?.email
+        val uid = Firebase.auth.currentUser?.uid
 
-        email?.let {
-            firebaseUserModel.getUserInfoByEmail(email) { currentUserInfo ->
+        uid?.let {
+            firebaseUserModel.getUserInfoByUid(it) { currentUserInfo ->
                 Log.d("TAG", "User Info retrieved")
                 callback(currentUserInfo)
+            }
+        }
+        callback(null)
+    }
+
+    fun getUserInfo(uid: String?, callback: (User?) -> Unit) {
+        uid?.let {
+            firebaseUserModel.getUserInfoByUid(uid) { userInfo ->
+                Log.d("TAG", "User Info retrieved")
+                callback(userInfo)
             }
         }
         callback(null)

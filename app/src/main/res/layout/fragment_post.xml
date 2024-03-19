@@ -152,6 +152,16 @@
                         </LinearLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPostOwnerAndCreationTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:textColor="@color/black_200"
+                    android:textSize="16sp"
+                    tools:text="Created by James at: 14/3/2024" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView

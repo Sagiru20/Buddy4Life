@@ -12,9 +12,13 @@ import com.buddy4life.R
 import com.buddy4life.databinding.FragmentPostBinding
 import com.buddy4life.model.Post.Post
 import com.buddy4life.model.Post.PostModel
+import com.buddy4life.model.User.UserModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class PostFragment : Fragment() {
     private var _binding: FragmentPostBinding? = null
@@ -47,6 +51,16 @@ class PostFragment : Fragment() {
         binding.tvDogGender.text = post?.gender.toString()
         binding.tvDogAge.text = post?.age.toString()
         binding.tvDogDescription.text = post?.description
+
+        UserModel.instance.getUserInfo(post?.ownerId) { userInfo ->
+            val date = Date(post?.createdTime!!)
+            val creationTime =
+                SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(date)
+
+            "Created by ${userInfo?.name} at: $creationTime".also {
+                binding.tvPostOwnerAndCreationTime.text = it
+            }
+        }
 
         // Add text values to Dog Information card
         binding.tvDogInfoName.text = post?.name

@@ -24,12 +24,10 @@ data class User(
         const val PHOTO_URL_KEY = "photoUrl"
 
         fun fromJSON(userJson: Map<String, Any>): User {
-
             val id = userJson[UID_KEY] as? String ?: ""
             val name = userJson[NAME_KEY] as? String ?: ""
             val email = userJson[EMAIL_KEY] as? String ?: ""
             val photoUrl = userJson[PHOTO_URL_KEY] as? String ?: ""
-//            val photoUrlString :String? = photoUrl?.toString()
 
             return User(id, name, photoUrl, email)
         }
