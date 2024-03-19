@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import coil.load
 import com.buddy4life.LoginActivity
+import com.buddy4life.R
 import com.buddy4life.databinding.FragmentUserInfoBinding
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
@@ -67,10 +68,11 @@ class UserAccountFragment : Fragment() {
         binding.btnCancelProfile.setOnClickListener {
             updateEditingState(false)
             binding.etUserName.setText(binding.tvUserName.text)
-            user?.photoUrl.let {
-                binding.ivUserImage.load(it) {
-                    crossfade(true)
-                }
+
+            user?.photoUrl?.let {
+                val imageToLoad = if (it.isNotEmpty()) it else R.drawable.ic_account_24.toString()
+                Picasso.get().load(imageToLoad).placeholder(R.drawable.ic_account_24)
+                    .into(binding.ivUserImage)
             }
         }
 
@@ -109,7 +111,7 @@ class UserAccountFragment : Fragment() {
             val message = if (isUserSaved) "Profile Updated Successfully!"
             else "Failed to update user profile."
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            if (isUserSaved) binding.tvUserName.text = user.name
+            if (isUserSaved) loadUserInfo()
         }
     }
 
@@ -144,8 +146,11 @@ class UserAccountFragment : Fragment() {
             binding.tvUserName.text = currentUserInfo?.name
             binding.etUserName.setText(currentUserInfo?.name)
 
-            if (!currentUserInfo?.photoUrl.isNullOrEmpty()) {
-                Picasso.get().load(currentUserInfo!!.photoUrl).into(binding.ivUserImage)
+            currentUserInfo?.photoUrl?.let {
+                if (it.isNotEmpty()) {
+                    Picasso.get().load(it).placeholder(R.drawable.ic_account_24)
+                        .into(binding.ivUserImage)
+                }
             }
         }
     }
