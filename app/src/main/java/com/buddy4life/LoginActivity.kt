@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.buddy4life.databinding.ActivityLoginBinding
 import com.buddy4life.model.User.UserModel
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class LoginActivity : AppCompatActivity() {
@@ -17,6 +19,11 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.btnToRegister.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.btnLogin.setOnClickListener {
             val email: String? = binding.etEmail.text?.toString()

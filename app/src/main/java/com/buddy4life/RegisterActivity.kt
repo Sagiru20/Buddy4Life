@@ -45,6 +45,11 @@ class RegisterActivity : AppCompatActivity() {
             imageUri = uri?.toString()
         }
 
+        binding.btnToLogin.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.ivUserAvatar.setOnClickListener {
             launcher.launch(
                 PickVisualMediaRequest.Builder()
