@@ -58,14 +58,13 @@ class PostViewHolder(
             })
         }
 
-        this.post?.dogImageUri?.let {
-            if (this.post!!.dogImageUri!!.isNotEmpty()) {
-                PostModel.instance.getPostDogImageUri(post?.id) { uri ->
-                    uri?.let {
-                        Picasso.get().load(uri).into(dogImageImageView)
-                    }
-                }
+        try {
+            PostModel.instance.getPostDogImageUri(post?.id) { uri ->
+                Picasso.get().load(uri).placeholder(R.drawable.dog_icon).into(dogImageImageView)
             }
+        } catch (e: Exception) {
+
         }
+
     }
 }
