@@ -58,18 +58,8 @@
         android:name="com.buddy4life.modules.profile.UserAccountFragment"
         android:label="fragment_user_account"
         tools:layout="@layout/fragment_user_info">
-        <action
-            android:id="@+id/action_userAccountFragment_to_editAccountFragment"
-            app:destination="@id/editAccountFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/editAccountFragment"
-        android:name="com.buddy4life.modules.profile.EditAccountFragment"
-        android:label="EditAccountFragment" >
-        <action
-            android:id="@+id/action_editAccountFragment_to_userAccountFragment"
-            app:destination="@id/userAccountFragment" />
-    </fragment>
+
     <fragment
         android:id="@+id/editPostFragment"
         android:name="com.buddy4life.modules.edit_post.EditPostFragment"

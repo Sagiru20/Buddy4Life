@@ -11,8 +11,8 @@
     <string name="menu_item_my_posts">My Posts</string>
     <string name="menu_item_account">Account</string>
     <string name="menu_item_add_post">Add Post</string>
-    <string name="add_post_cancel_button">Cancel</string>
-    <string name="add_post_save_button">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
     <string name="required">*required</string>
     <string name="name">Name</string>
     <string name="breed">Breed</string>
@@ -28,4 +28,10 @@
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="my">My</string>
+    <string name="account">Account</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="email_icon_content_description">Email icon for email card</string>
+    <string name="logout">Logout</string>
+    <string name="enter_your_name">Enter your name</string>
 </resources>
