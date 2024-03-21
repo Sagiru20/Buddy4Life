@@ -88,10 +88,10 @@
                             android:id="@+id/ivBreedInfo"
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            android:visibility="visible"
                             android:layout_gravity="center"
                             android:layout_marginStart="5dp"
-                            android:src="@drawable/ic_info_outline_24" />
+                            android:src="@drawable/ic_info_outline_24"
+                            android:visibility="visible" />
                     </LinearLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -175,9 +175,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="15dp"
+                    android:gravity="center_horizontal"
                     android:textColor="@color/black_200"
-                    android:textSize="16sp"
-                    tools:text="Created by James at: 14/3/2024" />
+                    android:textSize="15sp"
+                    tools:text="Created by Greg House at: 14/3/2024 09:10:54" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
