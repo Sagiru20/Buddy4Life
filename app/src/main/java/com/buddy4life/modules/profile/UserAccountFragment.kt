@@ -181,36 +181,4 @@ class UserAccountFragment : Fragment() {
             progressBar?.visibility = View.GONE
         }
     }
-
-
-
-//    private fun loadUserInfo() {
-//        UserModel.instance.getCurrentUserInfo { currentUserInfo ->
-//            user = currentUserInfo
-//            binding.tvUserEmail.text = currentUserInfo?.email
-//            binding.tvUserName.text = currentUserInfo?.name
-//            binding.etUserName.setText(currentUserInfo?.name)
-//
-//            currentUserInfo?.photoUrl?.let {
-//                if (it.isNotEmpty()) {
-//                    Picasso.get().load(it).placeholder(R.drawable.ic_account_24)
-//                        .into(
-//                            binding.ivUserImage,
-//                            object : Callback {
-//                                override fun onSuccess() {
-//                                    progressBar?.visibility = View.GONE
-//                                }
-//
-//                                override fun onError(e: java.lang.Exception?) {
-//                                    progressBar?.visibility = View.GONE
-//                                }
-//                            })
-//                }
-//            }
-//
-//            if (currentUserInfo?.photoUrl == null) {
-//                progressBar?.visibility = View.GONE
-//            }
-//        }
-//    }
 }
