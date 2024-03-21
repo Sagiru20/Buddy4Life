@@ -75,7 +75,6 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:maxLength="20" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -98,7 +97,6 @@
                         android:layout_height="wrap_content"
                         android:inputType="textAutoComplete"
                         android:textColor="@color/colorPrimary" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -177,9 +175,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number" />
-
                     </com.google.android.material.textfield.TextInputLayout>
-
                 </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -210,7 +206,6 @@
                         android:scrollbarStyle="insideInset"
                         android:scrollbars="vertical"
                         android:scrollHorizontally="false" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -242,7 +237,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number" />
-
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -262,10 +256,20 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number" />
-
                     </com.google.android.material.textfield.TextInputLayout>
-
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnAddPostCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:text="@string/cancel"
+                    android:textColor="@color/white"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/btnAddPostSave"
+                    app:layout_constraintEnd_toStartOf="@+id/btnAddPostSave"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <Button
                     android:id="@+id/btnAddPostSave"
@@ -276,28 +280,12 @@
                     android:text="@string/save"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btnAddPostCancel"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/weightAndHeightLayout"
-                    app:layout_constraintVertical_bias="1" />
-
-                <Button
-                    android:id="@+id/btnAddPostCancel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:text="@string/cancel"
-                    android:textColor="@color/white"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/btnAddPostSave"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/btnAddPostSave" />
+                    app:layout_constraintStart_toEndOf="@+id/btnAddPostCancel"
+                    app:layout_constraintTop_toBottomOf="@+id/weightAndHeightLayout"
+                    app:layout_constraintVertical_bias="1" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </ScrollView>
-
     </LinearLayout>
-
-
 </layout>

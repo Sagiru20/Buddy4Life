@@ -20,6 +20,14 @@
             android:orientation="vertical"
             android:paddingVertical="15dp">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivDogImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/dog_avatar" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +87,6 @@
                             android:textColor="@color/black"
                             android:textSize="17sp"
                             tools:text="@string/female" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -124,21 +131,8 @@
                         app:layout_constraintStart_toStartOf="@+id/dividerGuideline" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </LinearLayout>
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ivDogImage"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:src="@drawable/dog_avatar" />
-
         </LinearLayout>
-
-
-
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -153,16 +147,6 @@
                 android:orientation="vertical"
                 android:padding="15dp">
 
-                <EditText
-                    android:id="@+id/tvDogDescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:fontFamily="@font/poppinsregular"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    tools:text="@string/lorem_ipsum" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -172,8 +156,16 @@
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
+                <EditText
+                    android:id="@+id/tvDogDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/poppinsregular"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    tools:text="@string/lorem_ipsum" />
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -392,41 +384,35 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnSavePost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Save" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            android:padding="5dp">
-
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancel"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/red"
-                android:text="Cancel" />
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/grey_secondary"
+                app:cornerRadius="10dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSavePost"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/save_green"
+                app:cornerRadius="10dp" />
         </LinearLayout>
-
     </LinearLayout>
-
 </ScrollView>
