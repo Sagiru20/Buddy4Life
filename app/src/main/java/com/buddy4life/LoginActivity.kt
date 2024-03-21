@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.buddy4life.databinding.ActivityLoginBinding
 import com.buddy4life.model.User.UserModel
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -18,6 +20,11 @@ class LoginActivity : AppCompatActivity() {
 
         binding.tvToRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
+        if (Firebase.auth.currentUser != null) {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
