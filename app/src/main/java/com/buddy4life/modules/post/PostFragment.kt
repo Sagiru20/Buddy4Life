@@ -13,6 +13,7 @@ import com.buddy4life.databinding.FragmentPostBinding
 import com.buddy4life.model.Post.Post
 import com.buddy4life.model.Post.PostModel
 import com.buddy4life.model.User.UserModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -60,6 +61,16 @@ class PostFragment : Fragment() {
             "Created by ${userInfo?.name} at: $creationTime".also {
                 binding.tvPostOwnerAndCreationTime.text = it
             }
+        }
+
+        // Breed description preparations
+        binding.ivBreedInfo.visibility =
+            if (post?.breedDescription.isNullOrEmpty()) View.GONE else View.VISIBLE
+        binding.ivBreedInfo.setOnClickListener {
+            MaterialAlertDialogBuilder(it.context).setTitle(post?.breed)
+                .setMessage(post?.breedDescription).setPositiveButton("Close") { dialog, which ->
+                    dialog.cancel()
+                }.show()
         }
 
         // Add text values to Dog Information card
