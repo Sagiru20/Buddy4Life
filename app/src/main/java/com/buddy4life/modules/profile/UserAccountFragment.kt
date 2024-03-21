@@ -7,27 +7,33 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.buddy4life.LoginActivity
 import com.buddy4life.R
 import com.buddy4life.databinding.FragmentUserInfoBinding
 import com.buddy4life.model.User.User
 import com.buddy4life.model.User.UserModel
+import com.buddy4life.modules.posts.PostsViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 class UserAccountFragment : Fragment() {
     private lateinit var binding: FragmentUserInfoBinding
 
-    private var user: User? = null
     private var imageUri: String? = null
     private var isUserImageChanged: Boolean = false
+    private var progressBar: ProgressBar? = null
+    private lateinit var viewModel: UserAccountViewModel
 
     private val launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
         ActivityResultContracts.PickVisualMedia()
@@ -46,11 +52,20 @@ class UserAccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentUserInfoBinding.inflate(inflater, container, false)
+        progressBar = binding.progressBar
+        viewModel = ViewModelProvider(this)[UserAccountViewModel::class.java]
+        viewModel.user = UserModel.instance.getCurrentUserInfo()
+
+        viewModel.user?.observe(viewLifecycleOwner) {
+            setupUI()
+        }
+
         setupUI()
         return binding.root
     }
 
     private fun setupUI() {
+        progressBar?.visibility = View.VISIBLE
         loadUserInfo()
         updateEditingState(false)
 
@@ -69,7 +84,7 @@ class UserAccountFragment : Fragment() {
             updateEditingState(false)
             binding.etUserName.setText(binding.tvUserName.text)
 
-            user?.photoUrl?.let {
+            viewModel.user?.value?.photoUrl?.let {
                 val imageToLoad = if (it.isNotEmpty()) it else R.drawable.ic_account_24.toString()
                 Picasso.get().load(imageToLoad).placeholder(R.drawable.ic_account_24)
                     .into(binding.ivUserImage)
@@ -78,7 +93,7 @@ class UserAccountFragment : Fragment() {
 
         binding.btnSaveProfile.setOnClickListener {
             val currentUser: FirebaseUser? = Firebase.auth.currentUser
-            if (imageUri == null) imageUri = user?.photoUrl
+            if (imageUri == null) imageUri = viewModel.user?.value?.photoUrl
 
             if (currentUser != null && currentUser.email != null) {
                 val editedUser = User(
@@ -87,7 +102,7 @@ class UserAccountFragment : Fragment() {
                     imageUri,
                     currentUser.email!!
                 )
-                Log.d("TAG", "User that is going to be saved is: ${editedUser.name}")
+                Log.d("TAG", "User photo that is going to be saved is: ${editedUser.photoUrl}")
 
                 if (binding.etUserName.text.isNotEmpty()) {
                     if (isUserImageChanged) {
@@ -140,18 +155,30 @@ class UserAccountFragment : Fragment() {
     }
 
     private fun loadUserInfo() {
-        UserModel.instance.getCurrentUserInfo { currentUserInfo ->
-            user = currentUserInfo
-            binding.tvUserEmail.text = currentUserInfo?.email
-            binding.tvUserName.text = currentUserInfo?.name
-            binding.etUserName.setText(currentUserInfo?.name)
 
-            currentUserInfo?.photoUrl?.let {
-                if (it.isNotEmpty()) {
-                    Picasso.get().load(it).placeholder(R.drawable.ic_account_24)
-                        .into(binding.ivUserImage)
-                }
+        binding.tvUserEmail.text = viewModel.user?.value?.email
+        binding.tvUserName.text = viewModel.user?.value?.name
+        binding.etUserName.setText(viewModel.user?.value?.name)
+
+        viewModel.user?.value?.photoUrl?.let {
+            if (it.isNotEmpty()) {
+                Picasso.get().load(it).placeholder(R.drawable.ic_account_24)
+                    .into(
+                        binding.ivUserImage,
+                        object : Callback {
+                            override fun onSuccess() {
+                                progressBar?.visibility = View.GONE
+                            }
+
+                            override fun onError(e: java.lang.Exception?) {
+                                progressBar?.visibility = View.GONE
+                            }
+                        })
             }
+        }
+
+        if (viewModel.user?.value?.photoUrl.isNullOrEmpty()) {
+            progressBar?.visibility = View.GONE
         }
     }
 }

@@ -32,7 +32,8 @@ data class Post(
     var createdTime: Long,
     var lastUpdated: Long? = null,
     var ownerId: String? = "",
-    var isExists: Boolean = true
+    var isExists: Boolean = true,
+    var breedDescription: String? = ""
 ) {
 
     constructor(
@@ -43,7 +44,8 @@ data class Post(
         description: String,
         dogImageUri: String? = null,
         weight: Int? = null,
-        height: Int? = null
+        height: Int? = null,
+        breedDescription: String? = ""
     ) : this(
         "",
         name,
@@ -57,7 +59,8 @@ data class Post(
         System.currentTimeMillis(),
         System.currentTimeMillis(),
         Firebase.auth.currentUser?.uid,
-        true
+        true,
+        breedDescription
     )
 
     companion object {
@@ -74,6 +77,7 @@ data class Post(
         const val LAST_UPDATED_KEY = "lastUpdated"
         const val OWNER_ID_KEY = "ownerId"
         const val IS_EXISTS_KEY = "isExists"
+        const val BREED_DESCRIPTION_KEY="breedDescription"
         const val GET_LAST_UPDATED = "get_last_updated"
 
 
@@ -112,6 +116,7 @@ data class Post(
             val createdTime = postJson[CREATED_TIME_KEY] as? Long ?: 0
             val ownerEmail = postJson[OWNER_ID_KEY] as? String ?: ""
             val isExists = postJson[IS_EXISTS_KEY] as? Boolean ?: false
+            val breedDescription = postJson[BREED_DESCRIPTION_KEY] as? String ?: ""
 
             val post = Post(
                 id,
@@ -126,7 +131,8 @@ data class Post(
                 createdTime,
                 0,
                 ownerEmail,
-                isExists
+                isExists,
+                breedDescription
             )
 
             val timestamp: Timestamp? = postJson[LAST_UPDATED_KEY] as? Timestamp
@@ -153,7 +159,8 @@ data class Post(
                 CREATED_TIME_KEY to createdTime,
                 LAST_UPDATED_KEY to FieldValue.serverTimestamp(),
                 OWNER_ID_KEY to ownerId,
-                IS_EXISTS_KEY to isExists
+                IS_EXISTS_KEY to isExists,
+                BREED_DESCRIPTION_KEY to breedDescription
             )
         }
 

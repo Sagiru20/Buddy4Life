@@ -1,13 +1,19 @@
 package com.buddy4life.model.User
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import com.buddy4life.dao.AppLocalDatabase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import java.util.concurrent.Executors
 
 class UserModel {
 
     private val firebaseUserModel = FirebaseUserModel()
+    private val database = AppLocalDatabase.db
+    private var executor = Executors.newSingleThreadExecutor()
+    private val user: LiveData<User>? = null
 
     companion object {
         val instance: UserModel = UserModel()
@@ -42,16 +48,26 @@ class UserModel {
         }
     }
 
-    fun getCurrentUserInfo(callback: (User?) -> Unit) {
+    fun getCurrentUserInfo(): LiveData<User>? {
+        val uid = Firebase.auth.currentUser?.uid
+        refreshUser()
+        return user ?: uid?.let { database.userDao().getById(it) }
+    }
+
+    fun refreshUser() {
         val uid = Firebase.auth.currentUser?.uid
 
         uid?.let {
             firebaseUserModel.getUserInfoByUid(it) { currentUserInfo ->
-                Log.d("TAG", "User Info retrieved")
-                callback(currentUserInfo)
+
+                executor.execute {
+                    if (currentUserInfo != null) {
+                        database.userDao().insert(currentUserInfo)
+                    }
+
+                }
             }
         }
-        callback(null)
     }
 
     fun getUserInfo(uid: String?, callback: (User?) -> Unit) {
@@ -67,7 +83,7 @@ class UserModel {
     fun updateUser(user: User, callback: (Boolean) -> Unit) {
 
         firebaseUserModel.updateUser(user) { isUserSaved ->
-
+            refreshUser()
             callback(isUserSaved)
 
         }

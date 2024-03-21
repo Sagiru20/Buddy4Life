@@ -34,11 +34,9 @@ private const val REQUIRED = "*required"
 class AddPostFragment : Fragment() {
     private var _binding: FragmentAddPostBinding? = null
     private val binding get() = _binding!!
-
     private var breedsNames: List<String>? = null
-
+    private var breedsDescription: List<String>? = null
     private var imageUri: String? = null
-
 
     private var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
         ActivityResultContracts.PickVisualMedia()
@@ -70,6 +68,7 @@ class AddPostFragment : Fragment() {
         // Get all the dog breeds names from an external API using an HTTP request
         responseLiveData.observe(viewLifecycleOwner, Observer { response ->
             breedsNames = response.body()?.map { it.breedName } ?: emptyList()
+            breedsDescription = response.body()?.map { it.breedDescription } ?: emptyList()
             val adapter = ArrayAdapter(
                 view.context, android.R.layout.simple_dropdown_item_1line, breedsNames!!
             )
@@ -152,6 +151,7 @@ class AddPostFragment : Fragment() {
             val heightText: String? = binding.etDogHeight.text?.toString()
             val dogUri: String? = imageUri
             val rbGenderCheckedId: Int = binding.rgGender.checkedRadioButtonId
+            var breedDescription: String? = ""
             val gender: Gender?
             if (rbGenderCheckedId != -1) {
                 gender = try {
@@ -185,7 +185,12 @@ class AddPostFragment : Fragment() {
             }
 
             if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
-                val post = Post(name, breed, gender, age, description, dogUri, weight, height)
+
+                // add the breed description from the list
+                breedDescription = breedsNames?.indexOf(breed)
+                    ?.let { breedsDescription?.get(it) }
+
+                val post = Post(name, breed, gender, age, description, dogUri, weight, height, breedDescription)
                 PostModel.instance.addPost(post) {
                     Navigation.findNavController(it)
                         .navigate(R.id.action_addPostFragment_to_postsFragment)
