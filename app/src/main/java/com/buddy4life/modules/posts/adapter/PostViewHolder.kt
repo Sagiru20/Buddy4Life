@@ -3,6 +3,7 @@ package com.buddy4life.modules.posts.adapter
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,7 @@ import com.buddy4life.model.Post.Post
 import com.buddy4life.model.Post.PostModel
 import com.buddy4life.modules.myPosts.MyPostsFragmentDirections
 import com.buddy4life.modules.posts.PostsFragmentDirections
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 class PostViewHolder(
@@ -25,6 +27,7 @@ class PostViewHolder(
     private var readMoreButton: Button? = null
     private var dogImageImageView: ImageView? = null
     private var fragmentName = fragmentName
+    private var progressBar: ProgressBar? = null
 
     private var post: Post? = null
 
@@ -35,6 +38,8 @@ class PostViewHolder(
         descriptionTextView = itemView.findViewById(R.id.tvDogDescription)
         dogImageImageView = itemView.findViewById(R.id.ivDogImage)
         readMoreButton = itemView.findViewById(R.id.btnReadMore)
+        progressBar = itemView.findViewById(R.id.progressBar)
+        progressBar?.visibility = View.VISIBLE
     }
 
     fun bind(post: Post?) {
@@ -60,10 +65,21 @@ class PostViewHolder(
 
         try {
             PostModel.instance.getPostDogImageUri(post?.id) { uri ->
-                Picasso.get().load(uri).placeholder(R.drawable.dog_icon).into(dogImageImageView)
+                Picasso.get().load(uri).placeholder(R.drawable.dog_icon).into(dogImageImageView, object :
+                    Callback {
+                    override fun onSuccess() {
+                        progressBar?.visibility = View.GONE
+                    }
+
+                    override fun onError(e: java.lang.Exception?) {
+                        progressBar?.visibility = View.GONE
+                    }
+                })
             }
         } catch (e: Exception) {
 
+        } finally {
+            progressBar?.visibility = View.GONE
         }
 
     }

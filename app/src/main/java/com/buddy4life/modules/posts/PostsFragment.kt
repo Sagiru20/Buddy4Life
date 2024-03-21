@@ -2,9 +2,11 @@ package com.buddy4life.modules.posts
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,7 @@ class PostsFragment : Fragment() {
 
     private var postsRecyclerView: RecyclerView? = null
     private var adapter: PostsRecyclerAdapter? = null
+    private var progressBar: ProgressBar? = null
     private lateinit var viewModel: PostsViewModel
 
     @SuppressLint("NotifyDataSetChanged")
@@ -26,6 +29,8 @@ class PostsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentPostsBinding.inflate(inflater, container, false)
+        progressBar = binding.progressBar
+        progressBar?.visibility = View.VISIBLE
         viewModel = ViewModelProvider(this)[PostsViewModel::class.java]
         viewModel.posts = PostModel.instance.getAllPosts()
         postsRecyclerView = binding.rvPosts
@@ -38,7 +43,7 @@ class PostsFragment : Fragment() {
         viewModel.posts?.observe(viewLifecycleOwner) {
             adapter?.posts = it
             adapter?.notifyDataSetChanged()
-
+            progressBar?.visibility = View.GONE
         }
 
         return binding.root
@@ -56,6 +61,8 @@ class PostsFragment : Fragment() {
     }
 
     private fun reloadPosts() {
+        progressBar?.visibility = View.VISIBLE
         PostModel.instance.refreshAllPosts()
+        progressBar?.visibility = View.GONE
     }
 }

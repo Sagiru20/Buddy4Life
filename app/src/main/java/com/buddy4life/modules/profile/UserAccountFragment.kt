@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +21,7 @@ import com.buddy4life.model.User.UserModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 class UserAccountFragment : Fragment() {
@@ -28,6 +30,7 @@ class UserAccountFragment : Fragment() {
     private var user: User? = null
     private var imageUri: String? = null
     private var isUserImageChanged: Boolean = false
+    private var progressBar: ProgressBar? = null
 
     private val launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
         ActivityResultContracts.PickVisualMedia()
@@ -46,6 +49,9 @@ class UserAccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentUserInfoBinding.inflate(inflater, container, false)
+        progressBar = binding.progressBar
+        Log.w("TAG", "ProgressBar should be visible")
+        progressBar?.visibility = View.VISIBLE
         setupUI()
         return binding.root
     }
@@ -149,8 +155,22 @@ class UserAccountFragment : Fragment() {
             currentUserInfo?.photoUrl?.let {
                 if (it.isNotEmpty()) {
                     Picasso.get().load(it).placeholder(R.drawable.ic_account_24)
-                        .into(binding.ivUserImage)
+                        .into(
+                            binding.ivUserImage,
+                            object : Callback {
+                                override fun onSuccess() {
+                                    progressBar?.visibility = View.GONE
+                                }
+
+                                override fun onError(e: java.lang.Exception?) {
+                                    progressBar?.visibility = View.GONE
+                                }
+                            })
                 }
+            }
+
+            if (currentUserInfo?.photoUrl == null) {
+                progressBar?.visibility = View.GONE
             }
         }
     }
