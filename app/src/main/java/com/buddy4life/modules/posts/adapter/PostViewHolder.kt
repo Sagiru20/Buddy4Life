@@ -39,10 +39,10 @@ class PostViewHolder(
         dogImageImageView = itemView.findViewById(R.id.ivDogImage)
         readMoreButton = itemView.findViewById(R.id.btnReadMore)
         progressBar = itemView.findViewById(R.id.progressBar)
-        progressBar?.visibility = View.VISIBLE
     }
 
     fun bind(post: Post?) {
+        progressBar?.visibility = View.VISIBLE
         this.post = post
         nameTextView?.text = post?.name
         breedTextView?.text = post?.breed
@@ -77,8 +77,6 @@ class PostViewHolder(
                 })
             }
         } catch (e: Exception) {
-
-        } finally {
             progressBar?.visibility = View.GONE
         }
 

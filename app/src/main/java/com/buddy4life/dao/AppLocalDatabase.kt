@@ -10,6 +10,7 @@ import com.buddy4life.model.User.User
 @Database(entities = [Post::class, User::class], version = 9, exportSchema = false)
 abstract class AppLocalDbRepository : RoomDatabase() {
     abstract fun postDao(): PostDao
+    abstract fun userDao(): UserDao
 }
 
 object AppLocalDatabase {
