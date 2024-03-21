@@ -38,6 +38,7 @@ class EditPostFragment : Fragment() {
     private var imageSelectedUri: String? = null
     private var isPostImageChanged = false
     private var breedsNames: List<String>? = null
+    private var breedsDescription: List<String>? = null
 
     private var launcher = registerForActivityResult<PickVisualMediaRequest, Uri>(
         ActivityResultContracts.PickVisualMedia()
@@ -78,6 +79,7 @@ class EditPostFragment : Fragment() {
             // Get all the dog breeds names from an external API using an HTTP request
             responseLiveData.observe(viewLifecycleOwner, Observer { response ->
                 breedsNames = response.body()?.map { it.breedName } ?: emptyList()
+                breedsDescription = response.body()?.map { it.breedDescription } ?: emptyList()
                 val breedsAdapter = ArrayAdapter(
                     view.context, R.layout.simple_dropdown_item_1line, breedsNames!!
                 )
@@ -133,6 +135,7 @@ class EditPostFragment : Fragment() {
                 val ageText: String? = binding.tvDogInfoAge.text?.toString()
                 val weightText: String? = binding.tvDogInfoWeight.text?.toString()
                 val heightText: String? = binding.tvDogInfoHeight.text?.toString()
+                var breedDescription: String? = ""
                 val gender: Gender = Gender.valueOf(
                     binding.spnrDogInfoGender.selectedItem.toString().uppercase()
                 )
@@ -156,6 +159,9 @@ class EditPostFragment : Fragment() {
 
                 if (!name.isNullOrEmpty() && !breed.isNullOrEmpty() && breedsNames?.contains(breed) == true && gender != null && age != null && !description.isNullOrEmpty()) {
 
+                    // add the breed description from the list
+                    breedDescription = breedsNames?.indexOf(breed)
+                        ?.let { breedsDescription?.get(it) }
                     val newPost = Post(
                         post!!.id,
                         name,
@@ -168,7 +174,9 @@ class EditPostFragment : Fragment() {
                         height,
                         post!!.createdTime,
                         post!!.lastUpdated,
-                        post?.ownerId
+                        post?.ownerId,
+                        true,
+                        breedDescription
                     )
 
                     PostModel.instance.updatePost(newPost, isPostImageChanged) {
