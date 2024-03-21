@@ -1,5 +1,6 @@
 package com.buddy4life.modules.posts.adapter
 
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -63,6 +64,10 @@ class PostViewHolder(
             })
         }
 
+        if (post?.dogImageUri.isNullOrEmpty()) {
+            progressBar?.visibility = View.GONE
+        }
+
         try {
             PostModel.instance.getPostDogImageUri(post?.id) { uri ->
                 Picasso.get().load(uri).placeholder(R.drawable.dog_icon).into(dogImageImageView, object :
@@ -72,13 +77,12 @@ class PostViewHolder(
                     }
 
                     override fun onError(e: java.lang.Exception?) {
-                        progressBar?.visibility = View.GONE
+                        Log.w("TAG", "Couldn't load ${post?.name}'s image")
                     }
                 })
             }
         } catch (e: Exception) {
-            progressBar?.visibility = View.GONE
+            Log.w("TAG", "Couldn't load ${post?.name}'s image")
         }
-
     }
 }
